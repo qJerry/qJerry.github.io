@@ -556,7 +556,7 @@ xxl<span class="token operator">-</span>job<span class="token operator">-</span>
 <h4 id="部署项目"><a href="#部署项目" class="headerlink" title="部署项目"></a>部署项目</h4><p><a name="KcwZA"></a></p>
 <h5 id="方式一：项目打包部署"><a href="#方式一：项目打包部署" class="headerlink" title="方式一：项目打包部署"></a>方式一：项目打包部署</h5><ul>
 <li>打包xxl-job-admin</li>
-<li>调度中心访问地址：<a href="http://localhost:8080/xxl-job-admin" target="_blank" rel="noopener">http://localhost:8080/xxl-job-admin</a> (该地址执行器将会使用到，作为回调地址)<br><br />默认登录账号：admin    默认登录密码：123456</li>
+<li>调度中心访问地址：<a href="http://localhost:8080/xxl-job-admin" target="_blank" rel="noopener">http://localhost:8080/xxl-job-admin</a> (该地址执行器将会使用到，作为回调地址)<br><br>默认登录账号：admin    默认登录密码：123456</li>
 </ul>
 <p><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582786646307-a2fc191b-157e-4652-bd27-4a04bb881c71.jpeg#align=left&display=inline&height=689&name=center.jpg&originHeight=689&originWidth=1274&size=49771&status=done&style=none&width=1274" alt="center.jpg"></p>
 <p><a name="d4afdc1b"></a></p>
@@ -575,9 +575,9 @@ xxl<span class="token operator">-</span>job<span class="token operator">-</span>
 <li>运行<pre class=" language-shell"><code class="language-shell">mvn clean package
 docker build -t xuxueli/xxl-job-admin ./xxl-job-admin
 docker run --name xxl-job-admin -p 8080:8080 -d xuxueli/xxl-job-admin</code></pre>
-<a name="f68af6d7"></a><h5 id=""><a href="#" class="headerlink" title=""></a></h5><a name="hg5x5"></a><h5 id="调度中心集群（可选-）"><a href="#调度中心集群（可选-）" class="headerlink" title="调度中心集群（可选 ）"></a>调度中心集群（可选 ）</h5></li>
+<a name="f68af6d7"></a><h5 id><a href="#" class="headerlink" title></a></h5><a name="hg5x5"></a><h5 id="调度中心集群（可选-）"><a href="#调度中心集群（可选-）" class="headerlink" title="调度中心集群（可选 ）"></a>调度中心集群（可选 ）</h5></li>
 </ul>
-<p>调度中心支持集群部署，提升调度系统容灾和可用性。<br />调度中心集群部署时，几点要求和建议：</p>
+<p>调度中心支持集群部署，提升调度系统容灾和可用性。<br>调度中心集群部署时，几点要求和建议：</p>
 <ul>
 <li>DB配置保持一致；</li>
 <li>登陆账号配置保持一致；</li>
@@ -613,7 +613,7 @@ xxl<span class="token punctuation">.</span>job<span class="token punctuation">.<
 ### 执行器日志保存天数 <span class="token punctuation">[</span>选填<span class="token punctuation">]</span> ：值大于<span class="token number">3</span>时生效，启用执行器Log文件定期清理功能，否则不生效
 xxl<span class="token punctuation">.</span>job<span class="token punctuation">.</span>executor<span class="token punctuation">.</span>logretentiondays<span class="token operator">=</span><span class="token operator">-</span><span class="token number">1</span></code></pre>
 <ul>
-<li>部署项目<br />官方提供了多种执行器的示例项目，这里默认使用springboot。<br>执行器集群（可选）<br /><br><br />执行器支持集群部署，提升调度系统可用性，同时提升任务处理能力。<br><br />执行器集群部署时，几点要求和建议：<ul>
+<li>部署项目<br>官方提供了多种执行器的示例项目，这里默认使用springboot。<br>执行器集群（可选）<br><br><br>执行器支持集群部署，提升调度系统可用性，同时提升任务处理能力。<br><br>执行器集群部署时，几点要求和建议：<ul>
 <li>执行器回调地址（xxl.job.admin.addresses）需要保持一致；执行器根据该配置进行执行器自动注册等操作。</li>
 <li>同一个执行器集群内AppName（xxl.job.executor.appname）需要保持一致；调度中心根据该配置动态发现不同集群的在线执行器列表。</li>
 </ul>
@@ -707,11 +707,11 @@ xxl<span class="token punctuation">.</span>job<span class="token punctuation">.<
 </blockquote>
 <p>拿GULE模式（JAVA）来解释，每一个GLUE模式的代码，在“执行器”接受到调度请求时，会通过Groovy类加载器加载出代码，并实例化成Java对象，同时注入此代码中声明的Spring服务（这里要确保代码中所引用的类或服务在“执行器项目中存在”），接着调用该对象的execute方法，执行具体的任务逻辑。</p>
 <ul>
-<li>步骤一：任务管理，新建调度任务<br /></li>
+<li>步骤一：任务管理，新建调度任务<br></li>
 </ul>
 <p><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582786826556-7207d017-d8a7-4837-aabd-48381a7d4824.jpeg#align=left&display=inline&height=533&name=task_glue.jpg&originHeight=533&originWidth=902&size=24651&status=done&style=none&width=902" alt="task_glue.jpg"></p>
 <ul>
-<li>步骤二：点击操作，选择GLUE IDE，进入Web Ide界面<br /></li>
+<li>步骤二：点击操作，选择GLUE IDE，进入Web Ide界面<br></li>
 </ul>
 <p><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582786835674-f696b25f-cb86-48ff-ae46-f60eb95a042e.jpeg#align=left&display=inline&height=408&name=web_ide.jpg&originHeight=408&originWidth=694&size=13347&status=done&style=none&width=694" alt="web_ide.jpg"></p>
 <p><a name="21449655"></a></p>
@@ -775,19 +775,19 @@ XxlJobLogger<span class="token punctuation">.</span><span class="token function"
 <h2 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h2><p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1582786987822-69688faa-9f2b-4d55-aea8-012599876e51.png#align=left&display=inline&height=822&name=architecture.png&originHeight=822&originWidth=1562&size=376301&status=done&style=none&width=1562" alt="architecture.png"></p>
 <p><a name="ec0ef4cd"></a></p>
 <h3 id="架构特性"><a href="#架构特性" class="headerlink" title="架构特性"></a>架构特性</h3><ul>
-<li>解耦<br><br /><code>调度中心</code> 通过类rpc的调用模式，调用<code>执行器</code>暴露的远程服务；<br><br />详见日志远程调用源码：</li>
+<li>解耦<br><br><code>调度中心</code> 通过类rpc的调用模式，调用<code>执行器</code>暴露的远程服务；<br><br>详见日志远程调用源码：</li>
 </ul>
 <pre class=" language-java"><code class="language-java">com<span class="token punctuation">.</span>xxl<span class="token punctuation">.</span>rpc<span class="token punctuation">.</span>remoting<span class="token punctuation">.</span>invoker<span class="token punctuation">.</span>reference<span class="token punctuation">.</span>XxlRpcReferenceBean#getObject</code></pre>
 <ul>
-<li><p>线程池<br><br />调度采用线程池方式实现，避免用单线程出现阻塞而导致任务调度延迟；</p>
+<li><p>线程池<br><br>调度采用线程池方式实现，避免用单线程出现阻塞而导致任务调度延迟；</p>
 </li>
-<li><p>并行调度<br><br />调度模块采用并行机制，而调度传递到<code>执行器</code>则是串行执行</p>
+<li><p>并行调度<br><br>调度模块采用并行机制，而调度传递到<code>执行器</code>则是串行执行</p>
 </li>
 <li><p>多种路由策略</p>
 </li>
-<li><p>过期处理策略<br><br />过期5s内立即触发一次，过期超5s则忽略</p>
+<li><p>过期处理策略<br><br>过期5s内立即触发一次，过期超5s则忽略</p>
 </li>
-<li><p>日志回调服务<br><br /><code>“执行器”</code>在收到调度请求并执行任务后，会将任务的执行结果回调通知给调度中心，调度中心再对应更新日志表。<br><br />执行器触发回调线程处理源码：</p>
+<li><p>日志回调服务<br><br><code>“执行器”</code>在收到调度请求并执行任务后，会将任务的执行结果回调通知给调度中心，调度中心再对应更新日志表。<br><br>执行器触发回调线程处理源码：</p>
 </li>
 </ul>
 <pre class=" language-java"><code class="language-java">com<span class="token punctuation">.</span>xxl<span class="token punctuation">.</span>job<span class="token punctuation">.</span>core<span class="token punctuation">.</span>thread<span class="token punctuation">.</span>TriggerCallbackThread#doCallback</code></pre>
@@ -795,7 +795,7 @@ XxlJobLogger<span class="token punctuation">.</span><span class="token function"
 <li><p>调度中心接受回调源码：</p>
 <pre class=" language-java"><code class="language-java">com<span class="token punctuation">.</span>xxl<span class="token punctuation">.</span>job<span class="token punctuation">.</span>admin<span class="token punctuation">.</span>service<span class="token punctuation">.</span>impl<span class="token punctuation">.</span>AdminBizImpl#<span class="token function">callback</span><span class="token punctuation">(</span>com<span class="token punctuation">.</span>xxl<span class="token punctuation">.</span>job<span class="token punctuation">.</span>core<span class="token punctuation">.</span>biz<span class="token punctuation">.</span>model<span class="token punctuation">.</span>HandleCallbackParam<span class="token punctuation">)</span></code></pre>
 </li>
-<li><p>任务集群<br><br />执行器如若集群部署，调度中心将会感知到在线的所有执行器</p>
+<li><p>任务集群<br><br>执行器如若集群部署，调度中心将会感知到在线的所有执行器</p>
 </li>
 <li><p>全异步化</p>
 <ul>
@@ -803,7 +803,7 @@ XxlJobLogger<span class="token punctuation">.</span><span class="token function"
 <li>异步执行：执行器会将请求存入“异步执行队列”并且立即响应调度中心，异步运行。</li>
 </ul>
 </li>
-<li><p>轻量级设计<br><br />XXL-JOB调度中心中每个JOB逻辑非常 “轻”，在全异步化的基础上，单个JOB一次运行平均耗时基本在 “10ms” 之内（基本为一次请求的网络开销）；因此，可以保证使用有限的线程支撑大量的JOB并发运行</p>
+<li><p>轻量级设计<br><br>XXL-JOB调度中心中每个JOB逻辑非常 “轻”，在全异步化的基础上，单个JOB一次运行平均耗时基本在 “10ms” 之内（基本为一次请求的网络开销）；因此，可以保证使用有限的线程支撑大量的JOB并发运行</p>
 </li>
 </ul>
 <p><a name="ab715697"></a></p>
@@ -1397,7 +1397,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">23.8k</span>&nbsp;字
+                class="white-color">33.8k</span>&nbsp;字
             
             
             

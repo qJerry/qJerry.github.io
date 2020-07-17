@@ -475,7 +475,7 @@
 </tr>
 <tr>
 <td><code>iproute</code> 或 <code>iproute2</code></td>
-<td>用于监控** Linux流量QoS **<br />如果<code>iproute</code>提示不可用或已过时，请使用<code>iproute2</code></td>
+<td>用于监控** Linux流量QoS **<br>如果<code>iproute</code>提示不可用或已过时，请使用<code>iproute2</code></td>
 </tr>
 <tr>
 <td><code>python</code></td>
@@ -495,11 +495,11 @@
 </tr>
 <tr>
 <td><code>python-ipaddress</code></td>
-<td>用于监控** DHCPd **<br />只有Python V2才需要此软件包。Python V3已经嵌入了此功能</td>
+<td>用于监控** DHCPd **<br>只有Python V2才需要此软件包。Python V3已经嵌入了此功能</td>
 </tr>
 <tr>
-<td><code>python-mysqldb</code><br />或<br /><code>python-pymysql</code></td>
-<td>用于监控<strong>mysql</strong>或<strong>mariadb</strong> 数据库<br /><code>python-mysqldb</code>会运行地更快，所以它是首选</td>
+<td><code>python-mysqldb</code><br>或<br><code>python-pymysql</code></td>
+<td>用于监控<strong>mysql</strong>或<strong>mariadb</strong> 数据库<br><code>python-mysqldb</code>会运行地更快，所以它是首选</td>
 </tr>
 <tr>
 <td><code>python-psycopg2</code></td>
@@ -540,15 +540,15 @@ bash <(curl -Ss https://my-netdata.io/kickstart.sh)</code></pre>
 <p>如果自动安装不顺利的同学， 可以采用手动安装的方式。</p>
 <p><a name="2RgXA"></a></p>
 <h2 id="手动安装"><a href="#手动安装" class="headerlink" title="手动安装"></a>手动安装</h2><p><a name="deBqx"></a></p>
-<h3 id="安装Netdata所需的软件包"><a href="#安装Netdata所需的软件包" class="headerlink" title="安装Netdata所需的软件包"></a>安装Netdata所需的软件包<br /></h3><p><a name="djGNn"></a></p>
+<h3 id="安装Netdata所需的软件包"><a href="#安装Netdata所需的软件包" class="headerlink" title="安装Netdata所需的软件包"></a>安装Netdata所需的软件包<br></h3><p><a name="djGNn"></a></p>
 <h4 id="基本安装"><a href="#基本安装" class="headerlink" title="基本安装"></a>基本安装</h4><p>系统监控和许多应用程序监控，它没有mysql /mariadb，postgres，named，硬件监控和SNMP。</p>
 <pre class=" language-shell"><code class="language-shell">curl -Ss 'https://raw.githubusercontent.com/netdata/netdata-demo-site/master/install-required-packages.sh' >/tmp/kickstart.sh && bash /tmp/kickstart.sh -i netdata</code></pre>
-<br />
+<br>
 <a name="G0hej"></a>
 #### 完整安装
 
 <pre class=" language-shell"><code class="language-shell">curl -Ss 'https://raw.githubusercontent.com/netdata/netdata-demo-site/master/install-required-packages.sh' >/tmp/kickstart.sh && bash /tmp/kickstart.sh -i netdata-all</code></pre>
-<br />
+<br>
 <a name="eEtu9"></a>
 ### 安装Netdata
 
@@ -578,7 +578,7 @@ systemctl restart netdata
 /etc/init.d/netdata stop
 /etc/init.d/netdata restart</code></pre>
 <p><a name="OpWZX"></a></p>
-<h2 id="访问Netdata仪表盘"><a href="#访问Netdata仪表盘" class="headerlink" title="访问Netdata仪表盘"></a>访问Netdata仪表盘</h2><p>打开<a href="http://YOUR-HOST:19999" target="_blank" rel="noopener">http://YOUR-HOST:19999</a><br />当出现无法访问的时候，检查下防火墙的状态，测试环境下将它关闭即可（生产环境不建议）。或者查看安全组是否屏蔽了该端口</p>
+<h2 id="访问Netdata仪表盘"><a href="#访问Netdata仪表盘" class="headerlink" title="访问Netdata仪表盘"></a>访问Netdata仪表盘</h2><p>打开<a href="http://YOUR-HOST:19999" target="_blank" rel="noopener">http://YOUR-HOST:19999</a><br>当出现无法访问的时候，检查下防火墙的状态，测试环境下将它关闭即可（生产环境不建议）。或者查看安全组是否屏蔽了该端口</p>
 <pre class=" language-shell"><code class="language-shell"># 查看防火墙状态
 firewall-cmd --state
 # 关闭，或者指定开启某个端口的入站
@@ -596,50 +596,50 @@ systemctl stop firewalld.service</code></pre>
 </thead>
 <tbody><tr>
 <td><code>/etc/netdata</code></td>
-<td>用户  <code>root</code><br />组 <code>netdata</code></td>
-<td>目录<code>0755</code><br />文件<code>0640</code></td>
+<td>用户  <code>root</code><br>组 <code>netdata</code></td>
+<td>目录<code>0755</code><br>文件<code>0640</code></td>
 <td>读</td>
-<td><strong>Netdata配置文件</strong><br />可能包含敏感信息，因此<code>netdata</code>允许组读取它们。</td>
+<td><strong>Netdata配置文件</strong><br>可能包含敏感信息，因此<code>netdata</code>允许组读取它们。</td>
 </tr>
 <tr>
 <td><code>/usr/libexec/netdata</code></td>
-<td>用户  <code>root</code><br />组 <code>root</code></td>
-<td>任何人都可以执行<br />dirs <code>0755</code><br />文件<code>0644</code>或<code>0755</code></td>
+<td>用户  <code>root</code><br>组 <code>root</code></td>
+<td>任何人都可以执行<br>dirs <code>0755</code><br>文件<code>0644</code>或<code>0755</code></td>
 <td>执行</td>
-<td><strong>Netdata插件</strong><br />权限取决于文件-并非所有<strong>插件</strong>都应具有可执行标志。<br />有一些带有升级权限（Linux功能或<code>setuid</code>）的插件-这些插件应该仅按组可执行<code>netdata</code>。</td>
+<td><strong>Netdata插件</strong><br>权限取决于文件-并非所有<strong>插件</strong>都应具有可执行标志。<br>有一些带有升级权限（Linux功能或<code>setuid</code>）的插件-这些插件应该仅按组可执行<code>netdata</code>。</td>
 </tr>
 <tr>
 <td><code>/usr/share/netdata</code></td>
-<td>用户  <code>root</code><br />组 <code>netdata</code></td>
-<td>任何人的<br />目录<code>0755</code><br />文件都可读<code>0644</code></td>
+<td>用户  <code>root</code><br>组 <code>netdata</code></td>
+<td>任何人的<br>目录<code>0755</code><br>文件都可读<code>0644</code></td>
 <td>通过网络读取和发送</td>
-<td><strong>Netdata Web静态文件</strong><br />这些文件通过网络发送给有权访问Netdata Web服务器的任何人。Netdata会检查这些文件的所有权（使用的<code>[web]</code>部分的设置<code>netdata.conf</code>），如果文件所有权不正确，则拒绝提供这些文件。不支持符号链接。Netdata也拒绝提供<code>..</code>名称中的URL 。</td>
+<td><strong>Netdata Web静态文件</strong><br>这些文件通过网络发送给有权访问Netdata Web服务器的任何人。Netdata会检查这些文件的所有权（使用的<code>[web]</code>部分的设置<code>netdata.conf</code>），如果文件所有权不正确，则拒绝提供这些文件。不支持符号链接。Netdata也拒绝提供<code>..</code>名称中的URL 。</td>
 </tr>
 <tr>
 <td><code>/var/cache/netdata</code></td>
-<td>用户  <code>netdata</code><br />组 <code>netdata</code></td>
-<td>目录<code>0750</code><br />文件<code>0660</code></td>
+<td>用户  <code>netdata</code><br>组 <code>netdata</code></td>
+<td>目录<code>0750</code><br>文件<code>0660</code></td>
 <td>读取，写入，创建，删除</td>
-<td><strong>Netdata临时数据库文件</strong><br />Netdata在此处存储其临时实时数据库。</td>
+<td><strong>Netdata临时数据库文件</strong><br>Netdata在此处存储其临时实时数据库。</td>
 </tr>
 <tr>
 <td><code>/var/lib/netdata</code></td>
-<td>用户  <code>netdata</code><br />组 <code>netdata</code></td>
-<td>目录<code>0750</code><br />文件<code>0660</code></td>
+<td>用户  <code>netdata</code><br>组 <code>netdata</code></td>
+<td>目录<code>0750</code><br>文件<code>0660</code></td>
 <td>读取，写入，创建，删除</td>
-<td><strong>Netdata永久数据库文件</strong><br />Netdata在此处存储注册表数据，运行状况警报日志db等。</td>
+<td><strong>Netdata永久数据库文件</strong><br>Netdata在此处存储注册表数据，运行状况警报日志db等。</td>
 </tr>
 <tr>
 <td><code>/var/log/netdata</code></td>
-<td>用户  <code>netdata</code><br />组 <code>root</code></td>
-<td>目录<code>0755</code><br />文件<code>0644</code></td>
+<td>用户  <code>netdata</code><br>组 <code>root</code></td>
+<td>目录<code>0755</code><br>文件<code>0644</code></td>
 <td>写，创造</td>
-<td><strong>Netdata日志记录</strong><br />所有Netdata应用程序，将它们的错误或其他参考消息记录到此目录中的文件中。这些文件应进行日志轮换。</td>
+<td><strong>Netdata日志记录</strong><br>所有Netdata应用程序，将它们的错误或其他参考消息记录到此目录中的文件中。这些文件应进行日志轮换。</td>
 </tr>
 </tbody></table>
 <p><a name="wvtdc"></a></p>
 <h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><p><a name="5aT8C"></a></p>
-<h2 id="netdata-conf"><a href="#netdata-conf" class="headerlink" title="netdata.conf"></a>netdata.conf</h2><p>参考<a href="https://docs.netdata.cloud/daemon/config/" target="_blank" rel="noopener">https://docs.netdata.cloud/daemon/config/</a><br />可通过<a href="http://YOUR-HOST:19999" target="_blank" rel="noopener">http://YOUR-HOST:19999</a><a href="http://your_server_ip:19999/netdata.conf" target="_blank" rel="noopener">/netdata.conf</a> 查看netdata的配置信息，注释的配置使用对应的默认值<br />包含了很多配置项，如global、web、plugins、health、registry、cloud、backend、statsd等。每一个配置项下，有key-value的配置，通过key我们能比较快速地知道其含义。</p>
+<h2 id="netdata-conf"><a href="#netdata-conf" class="headerlink" title="netdata.conf"></a>netdata.conf</h2><p>参考<a href="https://docs.netdata.cloud/daemon/config/" target="_blank" rel="noopener">https://docs.netdata.cloud/daemon/config/</a><br>可通过<a href="http://YOUR-HOST:19999" target="_blank" rel="noopener">http://YOUR-HOST:19999</a><a href="http://your_server_ip:19999/netdata.conf" target="_blank" rel="noopener">/netdata.conf</a> 查看netdata的配置信息，注释的配置使用对应的默认值<br>包含了很多配置项，如global、web、plugins、health、registry、cloud、backend、statsd等。每一个配置项下，有key-value的配置，通过key我们能比较快速地知道其含义。</p>
 <p><a name="JP3Wj"></a></p>
 <h3 id="修改端口"><a href="#修改端口" class="headerlink" title="修改端口"></a>修改端口</h3><p>默认端口为19999</p>
 <pre class=" language-shell"><code class="language-shell">[web]
@@ -667,12 +667,12 @@ systemctl stop firewalld.service</code></pre>
 <pre class=" language-shell"><code class="language-shell">[global]
         history = 7200</code></pre>
 <p><a name="3doYv"></a></p>
-<h2 id="设置代理"><a href="#设置代理" class="headerlink" title="设置代理"></a>设置代理</h2><p>参考<a href="https://docs.netdata.cloud/docs/step-by-step/step-10/#required-before-you-start" target="_blank" rel="noopener">https://docs.netdata.cloud/docs/step-by-step/step-10/#required-before-you-start</a><br />为了提高性能和安全性，Netdata官方十分建议在Netdata前面添加一个代理。在这里，我们通常使用Nginx作为代理工具，并结合Cerbot来使用。</p>
+<h2 id="设置代理"><a href="#设置代理" class="headerlink" title="设置代理"></a>设置代理</h2><p>参考<a href="https://docs.netdata.cloud/docs/step-by-step/step-10/#required-before-you-start" target="_blank" rel="noopener">https://docs.netdata.cloud/docs/step-by-step/step-10/#required-before-you-start</a><br>为了提高性能和安全性，Netdata官方十分建议在Netdata前面添加一个代理。在这里，我们通常使用Nginx作为代理工具，并结合Cerbot来使用。</p>
 <blockquote>
 <p>什么是Cerbot？<br>Certbot是一种工具，可帮助您为您的域创建和续订证书+密钥对，注意，它是免费的！</p>
 </blockquote>
 <p><a name="18wXs"></a></p>
-<h3 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h3><p>怎么安装和配置Nginx就不说了，这里贴一下官方建议的代理Netdata的配置<br />创建一个文件/etc/nginx/sites-available/netdata，内容如下 </p>
+<h3 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h3><p>怎么安装和配置Nginx就不说了，这里贴一下官方建议的代理Netdata的配置<br>创建一个文件/etc/nginx/sites-available/netdata，内容如下 </p>
 <pre class=" language-shell"><code class="language-shell">upstream backend {
     server 127.0.0.1:19999;
     keepalive 64;
@@ -728,14 +728,14 @@ sudo sh -c "openssl passwd -apr1 >> /etc/nginx/.htpasswd"</code></pre>
 <p><a name="AOm0c"></a></p>
 <h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p><a name="q69aK"></a></p>
 <h2 id="仪表板区域"><a href="#仪表板区域" class="headerlink" title="仪表板区域"></a>仪表板区域</h2><p>Netdata的仪表板主要分为了三个区域：栏目、菜单、节点菜单<br><a name="n4R4n"></a></p>
-<h3 id="栏目"><a href="#栏目" class="headerlink" title="栏目"></a>栏目</h3><p>分为多个部分，例如系统概述，CPU，磁盘，内存等<br />例如下面的内存栏目<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1584091930943-803eeaa8-14b8-46e2-83cd-e7b6987b027a.png#align=left&display=inline&height=1747&name=memorysection.png&originHeight=1747&originWidth=1108&size=218059&status=done&style=none&width=1108" alt="memorysection.png"></p>
+<h3 id="栏目"><a href="#栏目" class="headerlink" title="栏目"></a>栏目</h3><p>分为多个部分，例如系统概述，CPU，磁盘，内存等<br>例如下面的内存栏目<br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1584091930943-803eeaa8-14b8-46e2-83cd-e7b6987b027a.png#align=left&display=inline&height=1747&name=memorysection.png&originHeight=1747&originWidth=1108&size=218059&status=done&style=none&width=1108" alt="memorysection.png"></p>
 <p><a name="up7Ct"></a></p>
-<h3 id="菜单"><a href="#菜单" class="headerlink" title="菜单"></a>菜单</h3><p>菜单显示在标准仪表板的右侧，Netdata为每个部分生成一个菜单，菜单链接到它们所关联的部分。<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1584091853647-8a8daaf5-edd2-4864-aa2c-05f7987dca3c.png#align=left&display=inline&height=823&name=menu.png&originHeight=823&originWidth=218&size=29721&status=done&style=none&width=218" alt="menu.png"></p>
+<h3 id="菜单"><a href="#菜单" class="headerlink" title="菜单"></a>菜单</h3><p>菜单显示在标准仪表板的右侧，Netdata为每个部分生成一个菜单，菜单链接到它们所关联的部分。<br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1584091853647-8a8daaf5-edd2-4864-aa2c-05f7987dca3c.png#align=left&display=inline&height=823&name=menu.png&originHeight=823&originWidth=218&size=29721&status=done&style=none&width=218" alt="menu.png"></p>
 <p><a name="8SCAR"></a></p>
-<h3 id="节点菜单"><a href="#节点菜单" class="headerlink" title="节点菜单"></a>节点菜单</h3><p>节点菜单出现在标准仪表板的左上角，并标有Netdata正在监视的系统的主机名。<br />单击它会显示一个下拉菜单，其中包含您可能已通过Netdata注册表连接的所有节点。<br />默认情况下，“我的节点”标题下没有任何内容，但是您可以尝试使用任何演示Netdata节点来查看节点菜单的工作方式。<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1584091944663-e505e9ef-b2fc-4fa7-bf7e-87dabde524f7.png#align=left&display=inline&height=527&name=nodemenu.png&originHeight=527&originWidth=498&size=53129&status=done&style=none&width=498" alt="nodemenu.png"></p>
+<h3 id="节点菜单"><a href="#节点菜单" class="headerlink" title="节点菜单"></a>节点菜单</h3><p>节点菜单出现在标准仪表板的左上角，并标有Netdata正在监视的系统的主机名。<br>单击它会显示一个下拉菜单，其中包含您可能已通过Netdata注册表连接的所有节点。<br>默认情况下，“我的节点”标题下没有任何内容，但是您可以尝试使用任何演示Netdata节点来查看节点菜单的工作方式。<br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1584091944663-e505e9ef-b2fc-4fa7-bf7e-87dabde524f7.png#align=left&display=inline&height=527&name=nodemenu.png&originHeight=527&originWidth=498&size=53129&status=done&style=none&width=498" alt="nodemenu.png"></p>
 <p>通过Netdata Cloud或专用注册表添加节点后，您将看到它们出现在“我的节点”标题下。</p>
 <p><a name="RA1Ep"></a></p>
-<h2 id="自定义仪表板"><a href="#自定义仪表板" class="headerlink" title="自定义仪表板"></a>自定义仪表板</h2><p>Netdata将有关各个图表的信息存储在/netdata/web/dashboard_info.js文件中。<br />例如，以下是dashboard_info.js如何定义“系统概述”部分的方式。</p>
+<h2 id="自定义仪表板"><a href="#自定义仪表板" class="headerlink" title="自定义仪表板"></a>自定义仪表板</h2><p>Netdata将有关各个图表的信息存储在/netdata/web/dashboard_info.js文件中。<br>例如，以下是dashboard_info.js如何定义“系统概述”部分的方式。</p>
 <pre class=" language-shell"><code class="language-shell">netdataDashboard.menu = {
   'system': {
     title: 'System Overview',
@@ -749,7 +749,7 @@ sudo cp dashboard_info_custom_example.js your_dashboard_info_file.js</code></pre
 <pre class=" language-shell"><code class="language-shell">[web]
  custom dashboard_info.js = your_dashboard_info_file.js</code></pre>
 <p><a name="T1J1H"></a></p>
-<h2 id="使用Netdata-Cloud监视多个系统"><a href="#使用Netdata-Cloud监视多个系统" class="headerlink" title="使用Netdata Cloud监视多个系统"></a>使用Netdata Cloud监视多个系统</h2><p>在第一个节点的仪表板上右上角点击登录按钮，此时Netdata将会发送一封验证邮件，点击链接后，该节点将自动链接到Netdata Cloud的账户，并重定向回仪表板。<br />其他节点也按同样的操作，即可。<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1584331860428-276e3ea3-bfc4-4150-b9e5-186ecc0dc38b.png#align=left&display=inline&height=228&name=image.png&originHeight=456&originWidth=1903&size=112935&status=done&style=none&width=951.5" alt="image.png"></p>
+<h2 id="使用Netdata-Cloud监视多个系统"><a href="#使用Netdata-Cloud监视多个系统" class="headerlink" title="使用Netdata Cloud监视多个系统"></a>使用Netdata Cloud监视多个系统</h2><p>在第一个节点的仪表板上右上角点击登录按钮，此时Netdata将会发送一封验证邮件，点击链接后，该节点将自动链接到Netdata Cloud的账户，并重定向回仪表板。<br>其他节点也按同样的操作，即可。<br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1584331860428-276e3ea3-bfc4-4150-b9e5-186ecc0dc38b.png#align=left&display=inline&height=228&name=image.png&originHeight=456&originWidth=1903&size=112935&status=done&style=none&width=951.5" alt="image.png"></p>
 <p><a name="MTK90"></a></p>
 <h1 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h1><p><a name="MFI0z"></a></p>
 <h2 id="核心功能"><a href="#核心功能" class="headerlink" title="核心功能"></a>核心功能</h2><p><a name="Nnxqc"></a></p>
@@ -762,7 +762,7 @@ sudo cp dashboard_info_custom_example.js your_dashboard_info_file.js</code></pre
 <p><a name="HYtLj"></a></p>
 <h3 id="高速，资源少的收集器"><a href="#高速，资源少的收集器" class="headerlink" title="高速，资源少的收集器"></a><strong>高速，资源少的收集器</strong></h3><p>每秒可以收集数千个指标，同时仅使用系统CPU资源的一小部分和少量MiB RAM。</p>
 <p><a name="ghJbb"></a></p>
-<h3 id="Netdata-Cloud"><a href="#Netdata-Cloud" class="headerlink" title="Netdata Cloud"></a>Netdata Cloud</h3><p>可帮助Netdata用户监视整个基础结构的运行状况和性能，无论它们是两千个（或两千个（或更多）！）系统。<br />如果使用Netdata监视多个系统，则Netdata Cloud可以提供集中监控解决方案的所有优势，同时又可以将工作负载分配给每个代理。<br />而且，更好的是，Netdata Cloud不存储系统的任何指标。它存储有关系统IP，主机名和随机创建的GUID的元数据，仅此而已。指标从系统直接流式传输到Web浏览器。<br />本质上，Web浏览器托管一个SaaS应用程序，并将Netdata Cloud的所有功能直接嵌入到仪表板中。<br />**<br><a name="mA1hH"></a></p>
+<h3 id="Netdata-Cloud"><a href="#Netdata-Cloud" class="headerlink" title="Netdata Cloud"></a>Netdata Cloud</h3><p>可帮助Netdata用户监视整个基础结构的运行状况和性能，无论它们是两千个（或两千个（或更多）！）系统。<br>如果使用Netdata监视多个系统，则Netdata Cloud可以提供集中监控解决方案的所有优势，同时又可以将工作负载分配给每个代理。<br>而且，更好的是，Netdata Cloud不存储系统的任何指标。它存储有关系统IP，主机名和随机创建的GUID的元数据，仅此而已。指标从系统直接流式传输到Web浏览器。<br>本质上，Web浏览器托管一个SaaS应用程序，并将Netdata Cloud的所有功能直接嵌入到仪表板中。<br>**<br><a name="mA1hH"></a></p>
 <h2 id="安全性"><a href="#安全性" class="headerlink" title="安全性"></a>安全性</h2><p>祥见：<a href="https://docs.netdata.cloud/zh/docs/netdata-security/" target="_blank" rel="noopener">https://docs.netdata.cloud/zh/docs/netdata-security/</a></p>
 <p><a name="1KwLD"></a></p>
 <h3 id="数据安全性"><a href="#数据安全性" class="headerlink" title="数据安全性"></a>数据安全性</h3><p>Netdata连接的数据源获取的原始数据只会保留在收集的主机，暴露出去的数据是图表元数据和度量标准值。</p>
@@ -1022,30 +1022,32 @@ sudo cp dashboard_info_custom_example.js your_dashboard_info_file.js</code></pre
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2020/05/31/fu-wu-qi-xi-tong-ri-zhi-guan-li-logrotate/">
+                <a href="/2020/03/25/rabbitmq-yin-fa-de-nei-cun-yi-chu/">
                     <div class="card-image">
                         
-                        <img src="http://img.qiujy.com/cover2.jpg" class="responsive-img" alt="服务器系统日志管理logrotate">
+                        <img src="http://img.qiujy.com/cover_rabbitmq.jpeg" class="responsive-img" alt="Rabbitmq引发的内存溢出">
                         
-                        <span class="card-title">服务器系统日志管理logrotate</span>
+                        <span class="card-title">Rabbitmq引发的内存溢出</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            场景对于业务系统，每天都会输出大量的日志，并且增长极快，久而久之在有限的容量内总会消耗完服务器的磁盘空间；当我们遇到故障需要排查的时候，日志往往是第一选择，然而当日志日渐庞大的时候，排查成问题，空间也成问题；线上埋点系统出现问题，排查发现硬
+                            背景某一天，和我们配合的中台组给我们部门发了一组新的MQ配置，用于支付回调消息的接收，原来我们的某个项目已经有一个MQ，所以项目需要适配两个MQ（该项目都是作为消费者的角色）。rabbitmq使用的版本是
+&lt;dependency>
+ 
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-05-31
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-03-25
                         </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/logrotate/" class="post-category">
-                                    logrotate
+                            <a href="/categories/Rabbitmq/" class="post-category">
+                                    Rabbitmq
                                 </a>
                             
                             
@@ -1055,8 +1057,8 @@ sudo cp dashboard_info_custom_example.js your_dashboard_info_file.js</code></pre
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E6%97%A5%E5%BF%97/">
-                        <span class="chip bg-color">日志</span>
+                    <a href="/tags/Rabbitmq/">
+                        <span class="chip bg-color">Rabbitmq</span>
                     </a>
                     
                 </div>
@@ -1355,7 +1357,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">23.8k</span>&nbsp;字
+                class="white-color">33.8k</span>&nbsp;字
             
             
             

@@ -296,21 +296,21 @@
                     <div class="post-statis col l4 hide-on-med-and-down" data-aos="zoom-in-right">
                         
 <div class="statis">
-    <span class="count"><a href="/">6</a></span>
+    <span class="count"><a href="/">11</a></span>
     <span class="name">文章</span>
 </div>
 
 
 
 <div class="statis">
-    <span class="count"><a href="/categories">5</a></span>
+    <span class="count"><a href="/categories">8</a></span>
     <span class="name">分类</span>
 </div>
 
 
 
 <div class="statis">
-    <span class="count"><a href="/tags">8</a></span>
+    <span class="count"><a href="/tags">12</a></span>
     <span class="name">标签</span>
 </div>
 
@@ -326,21 +326,21 @@
                                 <div class="post-statis hide-on-large-only" data-aos="zoom-in-right">
                                     
 <div class="statis">
-    <span class="count"><a href="/">6</a></span>
+    <span class="count"><a href="/">11</a></span>
     <span class="name">文章</span>
 </div>
 
 
 
 <div class="statis">
-    <span class="count"><a href="/categories">5</a></span>
+    <span class="count"><a href="/categories">8</a></span>
     <span class="name">分类</span>
 </div>
 
 
 
 <div class="statis">
-    <span class="count"><a href="/tags">8</a></span>
+    <span class="count"><a href="/tags">12</a></span>
     <span class="name">标签</span>
 </div>
 
@@ -476,7 +476,7 @@
                 name: '文章篇数',
                 type: 'line',
                 color: ['#6772e5'],
-                data: [0,0,0,0,0,0,0,4,1,0,1,0,0],
+                data: [0,0,0,0,0,0,0,4,2,0,1,1,3],
                 markPoint: {
                     symbolSize: 45,
                     color: ['#fa755a','#3ecf8e','#82d3f4'],
@@ -518,7 +518,7 @@
                 type: 'pie',
                 radius: '50%',
                 color: ['#6772e5', '#ff9e0f', '#fa755a', '#3ecf8e', '#82d3f4', '#ab47bc', '#525f7f', '#f51c47', '#26A69A'],
-                data: [{"name":"老生常谈","value":2},{"name":"分布式","value":1},{"name":"JVM","value":1},{"name":"logrotate","value":1},{"name":"监控","value":1}],
+                data: [{"name":"AWS","value":1},{"name":"JVM","value":1},{"name":"Rabbitmq","value":1},{"name":"Spring缓存组件","value":3},{"name":"分布式","value":1},{"name":"logrotate","value":1},{"name":"监控","value":1},{"name":"老生常谈","value":2}],
                 itemStyle: {
                     emphasis: {
                         shadowBlur: 10,
@@ -542,7 +542,7 @@
         xAxis: [
             {
                 type: 'category',
-                data: ["JAVA","JVM","TCP","网络","分布式","XXL-JOB","日志","netdata"]
+                data: ["Spring cache","Caffeine","JAVA","-- AWS -- AWS Lambda -- AWS APIGateway","JVM","Rabbitmq","分布式","XXL-JOB","日志","netdata"]
             }
         ],
         yAxis: [
@@ -555,7 +555,7 @@
                 type: 'bar',
                 color: ['#82d3f4'],
                 barWidth : 18,
-                data: [2,1,1,1,1,1,1,1],
+                data: [3,3,2,1,1,1,1,1,1,1],
                 markPoint: {
                     symbolSize: 45,
                     data: [{
@@ -725,6 +725,12 @@
         <div class="tag-chips center-align">
             
             
+            <a href="/tags/AWS-AWS-Lambda-AWS-APIGateway/">
+                <span class="chip center-align waves-effect waves-light chip-default">-- AWS -- AWS Lambda -- AWS APIGateway</span>
+            </a>
+            
+            
+            
             <a href="/tags/JAVA/">
                 <span class="chip center-align waves-effect waves-light chip-default">JAVA</span>
             </a>
@@ -737,14 +743,20 @@
             
             
             
-            <a href="/tags/TCP/">
-                <span class="chip center-align waves-effect waves-light chip-default">TCP</span>
+            <a href="/tags/Rabbitmq/">
+                <span class="chip center-align waves-effect waves-light chip-default">Rabbitmq</span>
             </a>
             
             
             
-            <a href="/tags/%E7%BD%91%E7%BB%9C/">
-                <span class="chip center-align waves-effect waves-light chip-default">网络</span>
+            <a href="/tags/Spring-cache/">
+                <span class="chip center-align waves-effect waves-light chip-default">Spring cache</span>
+            </a>
+            
+            
+            
+            <a href="/tags/Caffeine/">
+                <span class="chip center-align waves-effect waves-light chip-default">Caffeine</span>
             </a>
             
             
@@ -769,6 +781,18 @@
             
             <a href="/tags/netdata/">
                 <span class="chip center-align waves-effect waves-light chip-default">netdata</span>
+            </a>
+            
+            
+            
+            <a href="/tags/TCP/">
+                <span class="chip center-align waves-effect waves-light chip-default">TCP</span>
+            </a>
+            
+            
+            
+            <a href="/tags/%E7%BD%91%E7%BB%9C/">
+                <span class="chip center-align waves-effect waves-light chip-default">网络</span>
             </a>
             
             
@@ -896,7 +920,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">23.8k</span>&nbsp;字
+                class="white-color">33.8k</span>&nbsp;字
             
             
             
