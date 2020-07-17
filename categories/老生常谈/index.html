@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="404, 进击的阿黑">
+    <meta name="keywords" content="分类: 老生常谈, 进击的阿黑">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>404 | 进击的阿黑</title>
+    <title>分类: 老生常谈 | 进击的阿黑</title>
     <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -238,35 +238,235 @@
 
 </header>
 
-    <style type="text/css">
-    /* don't remove. */
-    .about-cover {
-        height: 90.2vh;
-    }
-</style>
-<div class="bg-cover pd-header about-cover">
+    <div class="bg-cover pd-header about-cover">
     <div class="container">
-        <div class="row">
-            <div class="col s10 offset-s1 m8 offset-m2 l8 offset-l2">
-                <div class="brand">
-                    <div class="title center-align">
-                        404
-                    </div>
-                    <div class="description center-align">
-                        Oops～，我崩溃了！找不到你想要的页面 :(
-                    </div>
-                </div>
+    <div class="row">
+    <div class="col s10 offset-s1 m8 offset-m2 l8 offset-l2">
+        <div class="brand">
+            <div class="title center-align">
+                
+                    subtitle
+                
+            </div>
+
+            <div class="description center-align">
+                
+                <span id="subtitle"></span>
+                <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script>
+                <script>
+                    var typed = new Typed("#subtitle", {
+                        strings: ['从来没有真正的绝境, 只有心灵的迷途','Never really desperate, only the lost of the soul'],
+                        startDelay: 300,
+                        typeSpeed: 100,
+                        loop: true,
+                        backSpeed: 50,
+                        showCursor: true
+                    });
+                </script>
+                
             </div>
         </div>
     </div>
 </div>
 
 
-    <script>
-        // 每天切换 banner 图.  Switch banner image every day.
-        var bannerUrl = "/medias/banner/" + new Date().getDay() + '.jpg';
-        $('.bg-cover').css('background-image', 'url(' + bannerUrl + ')');
-    </script>
+<script>
+    // 每天切换 banner 图.  Switch banner image every day.
+    var bannerUrl = "/medias/banner/" + new Date().getDay() + '.jpg';
+    $('.bg-cover').css('background-image', 'url(' + bannerUrl + ')');
+</script>
+
+
+    </div>
+</div>
+
+<main class="content">
+
+    
+
+<div id="category-cloud" class="container chip-container">
+    <div class="card">
+        <div class="card-content">
+            <div class="tag-title center-align">
+                <i class="fas fa-bookmark"></i>&nbsp;&nbsp;文章分类
+            </div>
+            <div class="tag-chips">
+                
+                
+                
+                <a href="/categories/%E8%80%81%E7%94%9F%E5%B8%B8%E8%B0%88/" title="老生常谈: 2">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-active "
+                            style="background-color: #F9EBEA;">老生常谈
+                        <span class="tag-length">2</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/" title="分布式: 1">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            style="background-color: #F5EEF8;">分布式
+                        <span class="tag-length">1</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/categories/JVM/" title="JVM: 1">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            style="background-color: #D5F5E3;">JVM
+                        <span class="tag-length">1</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/categories/logrotate/" title="logrotate: 1">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            style="background-color: #E8F8F5;">logrotate
+                        <span class="tag-length">1</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/categories/%E7%9B%91%E6%8E%A7/" title="监控: 1">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            style="background-color: #FEF9E7;">监控
+                        <span class="tag-length">1</span>
+                    </span>
+                </a>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    
+
+    <article id="articles" class="container articles">
+        <div class="row tags-posts">
+            
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2020/02/20/lao-sheng-chang-tan-er-java-ji-he/">
+                        <div class="card-image tag-image">
+                            
+                            <img src="http://img.qiujy.com/cover1.jpg" class="responsive-img" alt="老生常谈（二）JAVA集合">
+                            
+                            <span class="card-title">老生常谈（二）JAVA集合</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                java.util.ListArraylist
+底层是基于（可调整大小）数组的数据结构，使用一块连续的内存空间保存数据
+性能
+添加（或删除）操作。
+在不需要调整数组大小（即在末尾操作）的情况下，时间复杂度为O(1)；
+在超过大小 时，会触发
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-02-20
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/%E8%80%81%E7%94%9F%E5%B8%B8%E8%B0%88/" class="post-category">
+                                    老生常谈
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/JAVA/">
+                            <span class="chip bg-color">JAVA</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2020/02/20/lao-sheng-chang-tan-yi-tcp-yu-udp/">
+                        <div class="card-image tag-image">
+                            
+                            <img src="http://img.qiujy.com/cover1.jpg" class="responsive-img" alt="老生常谈（一）TCP与UDP">
+                            
+                            <span class="card-title">老生常谈（一）TCP与UDP</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                
+为了更进一步了解网络层面的知识，先晒出一张网络体系结构图，加深理解。
+
+
+计算机网络体系结构图
+TCP UDP的区别
+
+
+TCP
+UDP
+
+
+
+面向连接的协议。基于这种连接方式， 通信设备应在传输数据前建立连接，并应在传输数据后关闭连接
+
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-02-20
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/%E8%80%81%E7%94%9F%E5%B8%B8%E8%B0%88/" class="post-category">
+                                    老生常谈
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/TCP/">
+                            <span class="chip bg-color">TCP</span>
+                        </a>
+                        
+                        <a href="/tags/%E7%BD%91%E7%BB%9C/">
+                            <span class="chip bg-color">网络</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </div>
+    </article>
+</main>
+
 
 
 

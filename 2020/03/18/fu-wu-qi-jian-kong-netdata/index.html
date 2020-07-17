@@ -1,0 +1,1490 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="服务器监控netdata">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>服务器监控netdata | 进击的阿黑</title>
+    <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">进击的阿黑</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">进击的阿黑</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/blinkfox/hexo-theme-matery" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/blinkfox/hexo-theme-matery" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('http://img.qiujy.com/cover_netdata.gif')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">服务器监控netdata</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/netdata/">
+                                <span class="chip bg-color">netdata</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E7%9B%91%E6%8E%A7/" class="post-category">
+                                监控
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2020-03-18
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    3.6k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    13 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="什么是Netdata"><a href="#什么是Netdata" class="headerlink" title="什么是Netdata"></a>什么是Netdata</h1><p>简单一句话，Netdata是一个分布式的实时健康监测系统。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>对象</td>
+<td>针对系统和应用程序的分布式，实时，性能和运行状况监视</td>
+</tr>
+<tr>
+<td>可视化</td>
+<td>Netdata使用高度互动的Web仪表板实时提供无与伦比的洞察力，以实时了解其运行的系统（包括Web服务器，数据库，应用程序）上发生的一切</td>
+</tr>
+<tr>
+<td>自动化与集成化</td>
+<td>它可以自动运行，无需任何第三方组件，也可以集成到现有的监视工具链（Prometheus，Graphite，OpenTSDB，Kafka，Grafana等）</td>
+</tr>
+<tr>
+<td>高效</td>
+<td>Netdata快速高效，旨在永久在所有系统（物理和虚拟服务器，容器，IoT设备）上运行，而不会中断其核心功能</td>
+</tr>
+<tr>
+<td>分布式</td>
+<td>可以针对多个节点进行统一管理</td>
+</tr>
+<tr>
+<td>开源</td>
+<td>Netdata是免费的开源软件，目前可在Linux，FreeBSD和MacOS上运行。</td>
+</tr>
+</tbody></table>
+<p>Netdata诞生的背景，有兴趣的同学可以看看：<a href="https://blog.netdata.cloud/posts/redefining-monitoring-netdata/" target="_blank" rel="noopener">使用Netdata重新定义监视</a></p>
+<p><a name="gXXM9"></a></p>
+<h1 id="快速启动"><a href="#快速启动" class="headerlink" title="快速启动"></a>快速启动</h1><p>参考：<a href="https://docs.netdata.cloud/zh/packaging/installer/#install-netdata-on-linux-manually" target="_blank" rel="noopener">https://docs.netdata.cloud/zh/packaging/installer/#install-netdata-on-linux-manually</a></p>
+<p><a name="eRo7M"></a></p>
+<h2 id="Netdata插件"><a href="#Netdata插件" class="headerlink" title="Netdata插件"></a>Netdata插件</h2><p>以下插件，在安装时可以选择启用或禁用</p>
+<table>
+<thead>
+<tr>
+<th>软件包名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>bash</code></td>
+<td>用于Shell插件和<strong>警报通知</strong></td>
+</tr>
+<tr>
+<td><code>curl</code></td>
+<td>用于Shell插件和<strong>警报通知</strong></td>
+</tr>
+<tr>
+<td><code>iproute</code> 或 <code>iproute2</code></td>
+<td>用于监控** Linux流量QoS **<br />如果<code>iproute</code>提示不可用或已过时，请使用<code>iproute2</code></td>
+</tr>
+<tr>
+<td><code>python</code></td>
+<td>这对于大多数外部插件来说都是必须的</td>
+</tr>
+<tr>
+<td><code>python-yaml</code></td>
+<td>用于监控<strong>beanstalkd</strong></td>
+</tr>
+<tr>
+<td><code>python-beanstalkc</code></td>
+<td>用于监控<strong>beanstalkd</strong></td>
+</tr>
+<tr>
+<td><code>python-dnspython</code></td>
+<td>用于监控DNS的查询时间</td>
+</tr>
+<tr>
+<td><code>python-ipaddress</code></td>
+<td>用于监控** DHCPd **<br />只有Python V2才需要此软件包。Python V3已经嵌入了此功能</td>
+</tr>
+<tr>
+<td><code>python-mysqldb</code><br />或<br /><code>python-pymysql</code></td>
+<td>用于监控<strong>mysql</strong>或<strong>mariadb</strong> 数据库<br /><code>python-mysqldb</code>会运行地更快，所以它是首选</td>
+</tr>
+<tr>
+<td><code>python-psycopg2</code></td>
+<td>用于监控<strong>postgresql</strong>数据库</td>
+</tr>
+<tr>
+<td><code>python-pymongo</code></td>
+<td>用于监控<strong>mongodb</strong>数据库</td>
+</tr>
+<tr>
+<td><code>nodejs</code></td>
+<td>用于<code>node.js</code>插件来监控<strong>named</strong>和<strong>SNMP</strong>设备</td>
+</tr>
+<tr>
+<td><code>lm-sensors</code></td>
+<td>用于监控<strong>hardware sensors</strong></td>
+</tr>
+<tr>
+<td><code>libmnl</code></td>
+<td>用于收集netfilter指标</td>
+</tr>
+<tr>
+<td><code>netcat</code></td>
+<td>用于从远程系统中收集指标的Shell插件</td>
+</tr>
+</tbody></table>
+<p>如果安装了上述软件包，Netdata功能将大大增加，但如果没有它们，Netdata仍然可以正常工作</p>
+<p><a name="byYm9"></a></p>
+<h2 id="自动安装"><a href="#自动安装" class="headerlink" title="自动安装"></a>自动安装</h2><blockquote>
+<p>要在任何Linux系统（物理，虚拟，容器，IoT，边缘）上从源代码安装Netdata并使其与最新的版本自动保持最新，请运行以下命令</p>
+</blockquote>
+<pre class=" language-shell"><code class="language-shell"># make sure you run `bash` for your shell
+bash
+
+# install Netdata directly from GitHub source
+bash <(curl -Ss https://my-netdata.io/kickstart.sh)</code></pre>
+<p>自动安装后，netdata默认的配置文件放在<code>/etc/netdata/netdata.conf</code>中</p>
+<p>如果自动安装不顺利的同学， 可以采用手动安装的方式。</p>
+<p><a name="2RgXA"></a></p>
+<h2 id="手动安装"><a href="#手动安装" class="headerlink" title="手动安装"></a>手动安装</h2><p><a name="deBqx"></a></p>
+<h3 id="安装Netdata所需的软件包"><a href="#安装Netdata所需的软件包" class="headerlink" title="安装Netdata所需的软件包"></a>安装Netdata所需的软件包<br /></h3><p><a name="djGNn"></a></p>
+<h4 id="基本安装"><a href="#基本安装" class="headerlink" title="基本安装"></a>基本安装</h4><p>系统监控和许多应用程序监控，它没有mysql /mariadb，postgres，named，硬件监控和SNMP。</p>
+<pre class=" language-shell"><code class="language-shell">curl -Ss 'https://raw.githubusercontent.com/netdata/netdata-demo-site/master/install-required-packages.sh' >/tmp/kickstart.sh && bash /tmp/kickstart.sh -i netdata</code></pre>
+<br />
+<a name="G0hej"></a>
+#### 完整安装
+
+<pre class=" language-shell"><code class="language-shell">curl -Ss 'https://raw.githubusercontent.com/netdata/netdata-demo-site/master/install-required-packages.sh' >/tmp/kickstart.sh && bash /tmp/kickstart.sh -i netdata-all</code></pre>
+<br />
+<a name="eEtu9"></a>
+### 安装Netdata
+
+<pre class=" language-shell"><code class="language-shell"># 下载Netdata（同时创建netdata目录）
+git clone https://github.com/netdata/netdata.git --depth=1
+cd netdata
+
+# 运行具有root权限的脚本来编译安装Netdata并启动它
+./netdata-installer.sh</code></pre>
+<p>注意</p>
+<ul>
+<li>如果不想安装完后启动Netdata，加上<code>--dont-start-it</code> 参数</li>
+<li>如果不想安装在默认目录，则可以这样，<code>./netdata-installer.sh --install /opt</code>，即可安装到<code>/opt/netdata</code> 中</li>
+<li>安装完后， <code>/opt/netdata/etc/netdata/netdata.conf</code>配置文件会自动被创建，可以编辑此文件以更改设置首选项。一个最常见被调整选项是history，它控制Netdata将使用的内存数据库大小。其默认情况下应为“3600”秒（图表中一小时的数据），这使得Netdata将使用大约10-15MB的RAM（取决于系统检测到的图表数量）。请检查内存要求。  当修改配置后，需要重启</li>
+</ul>
+<p><a name="HBX6N"></a></p>
+<h2 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h2><p>启动，停止和重新启动Netdata</p>
+<pre class=" language-shell"><code class="language-shell">service netdata start
+service netdata stop
+service netdata restart</code></pre>
+<p>当使用<code>service</code>（系统首选基于系统启动或停止的方法）无法实现的时候，可以尝试对<code>systemd</code>和<code>init.d</code>使用等效命令</p>
+<pre class=" language-shell"><code class="language-shell">systemctl start netdata
+systemctl stop netdata
+systemctl restart netdata
+
+/etc/init.d/netdata start
+/etc/init.d/netdata stop
+/etc/init.d/netdata restart</code></pre>
+<p><a name="OpWZX"></a></p>
+<h2 id="访问Netdata仪表盘"><a href="#访问Netdata仪表盘" class="headerlink" title="访问Netdata仪表盘"></a>访问Netdata仪表盘</h2><p>打开<a href="http://YOUR-HOST:19999" target="_blank" rel="noopener">http://YOUR-HOST:19999</a><br />当出现无法访问的时候，检查下防火墙的状态，测试环境下将它关闭即可（生产环境不建议）。或者查看安全组是否屏蔽了该端口</p>
+<pre class=" language-shell"><code class="language-shell"># 查看防火墙状态
+firewall-cmd --state
+# 关闭，或者指定开启某个端口的入站
+systemctl stop firewalld.service</code></pre>
+<p><a name="qIvfM"></a></p>
+<h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><table>
+<thead>
+<tr>
+<th>路径</th>
+<th>所有者</th>
+<th>权限</th>
+<th>Netdata</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/etc/netdata</code></td>
+<td>用户  <code>root</code><br />组 <code>netdata</code></td>
+<td>目录<code>0755</code><br />文件<code>0640</code></td>
+<td>读</td>
+<td><strong>Netdata配置文件</strong><br />可能包含敏感信息，因此<code>netdata</code>允许组读取它们。</td>
+</tr>
+<tr>
+<td><code>/usr/libexec/netdata</code></td>
+<td>用户  <code>root</code><br />组 <code>root</code></td>
+<td>任何人都可以执行<br />dirs <code>0755</code><br />文件<code>0644</code>或<code>0755</code></td>
+<td>执行</td>
+<td><strong>Netdata插件</strong><br />权限取决于文件-并非所有<strong>插件</strong>都应具有可执行标志。<br />有一些带有升级权限（Linux功能或<code>setuid</code>）的插件-这些插件应该仅按组可执行<code>netdata</code>。</td>
+</tr>
+<tr>
+<td><code>/usr/share/netdata</code></td>
+<td>用户  <code>root</code><br />组 <code>netdata</code></td>
+<td>任何人的<br />目录<code>0755</code><br />文件都可读<code>0644</code></td>
+<td>通过网络读取和发送</td>
+<td><strong>Netdata Web静态文件</strong><br />这些文件通过网络发送给有权访问Netdata Web服务器的任何人。Netdata会检查这些文件的所有权（使用的<code>[web]</code>部分的设置<code>netdata.conf</code>），如果文件所有权不正确，则拒绝提供这些文件。不支持符号链接。Netdata也拒绝提供<code>..</code>名称中的URL 。</td>
+</tr>
+<tr>
+<td><code>/var/cache/netdata</code></td>
+<td>用户  <code>netdata</code><br />组 <code>netdata</code></td>
+<td>目录<code>0750</code><br />文件<code>0660</code></td>
+<td>读取，写入，创建，删除</td>
+<td><strong>Netdata临时数据库文件</strong><br />Netdata在此处存储其临时实时数据库。</td>
+</tr>
+<tr>
+<td><code>/var/lib/netdata</code></td>
+<td>用户  <code>netdata</code><br />组 <code>netdata</code></td>
+<td>目录<code>0750</code><br />文件<code>0660</code></td>
+<td>读取，写入，创建，删除</td>
+<td><strong>Netdata永久数据库文件</strong><br />Netdata在此处存储注册表数据，运行状况警报日志db等。</td>
+</tr>
+<tr>
+<td><code>/var/log/netdata</code></td>
+<td>用户  <code>netdata</code><br />组 <code>root</code></td>
+<td>目录<code>0755</code><br />文件<code>0644</code></td>
+<td>写，创造</td>
+<td><strong>Netdata日志记录</strong><br />所有Netdata应用程序，将它们的错误或其他参考消息记录到此目录中的文件中。这些文件应进行日志轮换。</td>
+</tr>
+</tbody></table>
+<p><a name="wvtdc"></a></p>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><p><a name="5aT8C"></a></p>
+<h2 id="netdata-conf"><a href="#netdata-conf" class="headerlink" title="netdata.conf"></a>netdata.conf</h2><p>参考<a href="https://docs.netdata.cloud/daemon/config/" target="_blank" rel="noopener">https://docs.netdata.cloud/daemon/config/</a><br />可通过<a href="http://YOUR-HOST:19999" target="_blank" rel="noopener">http://YOUR-HOST:19999</a><a href="http://your_server_ip:19999/netdata.conf" target="_blank" rel="noopener">/netdata.conf</a> 查看netdata的配置信息，注释的配置使用对应的默认值<br />包含了很多配置项，如global、web、plugins、health、registry、cloud、backend、statsd等。每一个配置项下，有key-value的配置，通过key我们能比较快速地知道其含义。</p>
+<p><a name="JP3Wj"></a></p>
+<h3 id="修改端口"><a href="#修改端口" class="headerlink" title="修改端口"></a>修改端口</h3><p>默认端口为19999</p>
+<pre class=" language-shell"><code class="language-shell">[web]
+        # default port = 19999</code></pre>
+<p><a name="5EehV"></a></p>
+<h3 id="修改左上角hostname"><a href="#修改左上角hostname" class="headerlink" title="修改左上角hostname"></a>修改左上角hostname</h3><p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1584350636961-acbafd22-e45c-43f3-ad1c-e21b62fe18f5.png#align=left&display=inline&height=81&name=image.png&originHeight=162&originWidth=438&size=11915&status=done&style=none&width=219" alt="image.png"></p>
+<pre class=" language-shell"><code class="language-shell">[global]
+        hostname = localhost-1</code></pre>
+<p><a name="6QA90"></a></p>
+<h3 id="当配置多个节点后，修改注册节点的名称"><a href="#当配置多个节点后，修改注册节点的名称" class="headerlink" title="当配置多个节点后，修改注册节点的名称"></a>当配置多个节点后，修改注册节点的名称</h3><p><strong><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1584350889946-22b8be07-eb61-41c8-9d86-d355b365c606.png#align=left&display=inline&height=170&name=image.png&originHeight=340&originWidth=558&size=28206&status=done&style=none&width=279" alt="image.png"></strong></p>
+<pre class=" language-shell"><code class="language-shell">[registry]
+        registry hostname = local192.168.2.57</code></pre>
+<p><a name="jcWWM"></a></p>
+<h3 id="修改内存使用"><a href="#修改内存使用" class="headerlink" title="修改内存使用"></a>修改内存使用</h3><p>Netdata使用history标签作为配置内存使用的key，默认为3996秒，即在图表中你能看到的条目数。</p>
+<p>参考以下估算标准，条目数与对应使用的内存</p>
+<ul>
+<li>3600秒（图表数据保留1小时）使用15 MB RAM</li>
+<li>7200秒（图表数据保留2小时）使用30 MB RAM</li>
+<li>14400秒（图表数据保留4小时）使用60 MB RAM</li>
+<li>28800秒（图表数据保留8小时）使用120 MB RAM</li>
+<li>43200秒（图表数据保留12小时）使用180 MB RAM</li>
+<li>86400秒（24小时图表数据保留）使用360 MB RAM</li>
+</ul>
+<p>假设我想让Netdata保留2个小时的图表数据，则可以配置为</p>
+<pre class=" language-shell"><code class="language-shell">[global]
+        history = 7200</code></pre>
+<p><a name="3doYv"></a></p>
+<h2 id="设置代理"><a href="#设置代理" class="headerlink" title="设置代理"></a>设置代理</h2><p>参考<a href="https://docs.netdata.cloud/docs/step-by-step/step-10/#required-before-you-start" target="_blank" rel="noopener">https://docs.netdata.cloud/docs/step-by-step/step-10/#required-before-you-start</a><br />为了提高性能和安全性，Netdata官方十分建议在Netdata前面添加一个代理。在这里，我们通常使用Nginx作为代理工具，并结合Cerbot来使用。</p>
+<blockquote>
+<p>什么是Cerbot？<br>Certbot是一种工具，可帮助您为您的域创建和续订证书+密钥对，注意，它是免费的！</p>
+</blockquote>
+<p><a name="18wXs"></a></p>
+<h3 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h3><p>怎么安装和配置Nginx就不说了，这里贴一下官方建议的代理Netdata的配置<br />创建一个文件/etc/nginx/sites-available/netdata，内容如下 </p>
+<pre class=" language-shell"><code class="language-shell">upstream backend {
+    server 127.0.0.1:19999;
+    keepalive 64;
+}
+
+server {
+    listen 80;
+
+    # Change `example.com` to match your domain name.
+    server_name netdata.example.com;
+
+    location / {
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Server $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://backend;
+        proxy_http_version 1.1;
+        proxy_pass_request_headers on;
+        proxy_set_header Connection "keep-alive";
+        proxy_store off;
+    }
+}</code></pre>
+<p>运行测试配置文件是否正常</p>
+<pre class=" language-shell"><code class="language-shell">sudo nginx -t</code></pre>
+<p>如果没返回错误，再运行以下命令，在<code>sites-enabled</code>目录中创建软链接，重启以生效</p>
+<pre class=" language-shell"><code class="language-shell">sudo ln -s /etc/nginx/sites-available/netdata /etc/nginx/sites-enabled/netdata</code></pre>
+<p><a name="Dcdvn"></a></p>
+<h3 id="Certbot"><a href="#Certbot" class="headerlink" title="Certbot"></a>Certbot</h3><p>Netdata还建议我们尽可能最大化地使用好代理：加密的HTTPS连接。所以Netdata给我们提供了一个免费的证书生成工具Certbot，使用它，我们将能自动生成证书，并能够支持自动地更新证书，运行以下命令</p>
+<pre class=" language-shell"><code class="language-shell">sudo certbot --nginx</code></pre>
+<p>系统会提示您一些问题。在Which names would you like to activate HTTPS for?提问时，点击 Enter。接下来是这个问题：</p>
+<pre class=" language-shell"><code class="language-shell">Please choose whether or not to redirect HTTP traffic to HTTPS, removing HTTP access.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+1: No redirect - Make no further changes to the webserver configuration.
+2: Redirect - Make all requests redirect to secure HTTPS access. Choose this for
+new sites, or if you're confident your site works on HTTPS. You can undo this
+change by editing your web server's configuration.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</code></pre>
+<p>如果确定想要强制使用HTTPS的话，则选择2，并且确定。</p>
+<p>这样，我们就真正完成了代理的配置。</p>
+<p><a name="FoKgv"></a></p>
+<h3 id="密码保护"><a href="#密码保护" class="headerlink" title="密码保护"></a>密码保护</h3><p>当我们把代理设置完后，我们可能还需要一个密码验证，运行以下命令</p>
+<pre class=" language-shell"><code class="language-shell"># 指定用户名为user，添加到.htpasswd文件中
+sudo sh -c "echo -n 'user:' >> /etc/nginx/.htpasswd"
+# 创建密码，系统将提示您创建一个密码
+sudo sh -c "openssl passwd -apr1 >> /etc/nginx/.htpasswd"</code></pre>
+<p>打开Nginx配置文件，添加权限校验的配置吗，授权用户文件指向刚才创建的.htpasswd</p>
+<pre class=" language-shell"><code class="language-shell">location / {
+        auth_basic "Restricted Content";
+        auth_basic_user_file /etc/nginx/.htpasswd;
+        ...
+}</code></pre>
+<p>接着再重启nginx，即可开启密码校验功能。</p>
+<p><a name="AOm0c"></a></p>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p><a name="q69aK"></a></p>
+<h2 id="仪表板区域"><a href="#仪表板区域" class="headerlink" title="仪表板区域"></a>仪表板区域</h2><p>Netdata的仪表板主要分为了三个区域：栏目、菜单、节点菜单<br><a name="n4R4n"></a></p>
+<h3 id="栏目"><a href="#栏目" class="headerlink" title="栏目"></a>栏目</h3><p>分为多个部分，例如系统概述，CPU，磁盘，内存等<br />例如下面的内存栏目<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1584091930943-803eeaa8-14b8-46e2-83cd-e7b6987b027a.png#align=left&display=inline&height=1747&name=memorysection.png&originHeight=1747&originWidth=1108&size=218059&status=done&style=none&width=1108" alt="memorysection.png"></p>
+<p><a name="up7Ct"></a></p>
+<h3 id="菜单"><a href="#菜单" class="headerlink" title="菜单"></a>菜单</h3><p>菜单显示在标准仪表板的右侧，Netdata为每个部分生成一个菜单，菜单链接到它们所关联的部分。<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1584091853647-8a8daaf5-edd2-4864-aa2c-05f7987dca3c.png#align=left&display=inline&height=823&name=menu.png&originHeight=823&originWidth=218&size=29721&status=done&style=none&width=218" alt="menu.png"></p>
+<p><a name="8SCAR"></a></p>
+<h3 id="节点菜单"><a href="#节点菜单" class="headerlink" title="节点菜单"></a>节点菜单</h3><p>节点菜单出现在标准仪表板的左上角，并标有Netdata正在监视的系统的主机名。<br />单击它会显示一个下拉菜单，其中包含您可能已通过Netdata注册表连接的所有节点。<br />默认情况下，“我的节点”标题下没有任何内容，但是您可以尝试使用任何演示Netdata节点来查看节点菜单的工作方式。<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1584091944663-e505e9ef-b2fc-4fa7-bf7e-87dabde524f7.png#align=left&display=inline&height=527&name=nodemenu.png&originHeight=527&originWidth=498&size=53129&status=done&style=none&width=498" alt="nodemenu.png"></p>
+<p>通过Netdata Cloud或专用注册表添加节点后，您将看到它们出现在“我的节点”标题下。</p>
+<p><a name="RA1Ep"></a></p>
+<h2 id="自定义仪表板"><a href="#自定义仪表板" class="headerlink" title="自定义仪表板"></a>自定义仪表板</h2><p>Netdata将有关各个图表的信息存储在/netdata/web/dashboard_info.js文件中。<br />例如，以下是dashboard_info.js如何定义“系统概述”部分的方式。</p>
+<pre class=" language-shell"><code class="language-shell">netdataDashboard.menu = {
+  'system': {
+    title: 'System Overview',
+    icon: '<i class="fas fa-bookmark"></i>',
+    info: 'Overview of the key system metrics.'
+  },</code></pre>
+<p>注意，不能直接更改dashboard_info.js，而是应另外新建一个文件，Netdata已经提供了一个示例文件：dashboard_info_custom_example.js</p>
+<pre class=" language-shell"><code class="language-shell">cd /netdata/web/
+sudo cp dashboard_info_custom_example.js your_dashboard_info_file.js</code></pre>
+<p>自定义文件编写完后，在/netdata/web的目录下使用新建自定义文件的名称即可。</p>
+<pre class=" language-shell"><code class="language-shell">[web]
+ custom dashboard_info.js = your_dashboard_info_file.js</code></pre>
+<p><a name="T1J1H"></a></p>
+<h2 id="使用Netdata-Cloud监视多个系统"><a href="#使用Netdata-Cloud监视多个系统" class="headerlink" title="使用Netdata Cloud监视多个系统"></a>使用Netdata Cloud监视多个系统</h2><p>在第一个节点的仪表板上右上角点击登录按钮，此时Netdata将会发送一封验证邮件，点击链接后，该节点将自动链接到Netdata Cloud的账户，并重定向回仪表板。<br />其他节点也按同样的操作，即可。<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1584331860428-276e3ea3-bfc4-4150-b9e5-186ecc0dc38b.png#align=left&display=inline&height=228&name=image.png&originHeight=456&originWidth=1903&size=112935&status=done&style=none&width=951.5" alt="image.png"></p>
+<p><a name="MTK90"></a></p>
+<h1 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h1><p><a name="MFI0z"></a></p>
+<h2 id="核心功能"><a href="#核心功能" class="headerlink" title="核心功能"></a>核心功能</h2><p><a name="Nnxqc"></a></p>
+<h3 id="无需配置"><a href="#无需配置" class="headerlink" title="无需配置"></a>无需配置</h3><p><a name="Giiq1"></a></p>
+<h3 id="长期指标存储"><a href="#长期指标存储" class="headerlink" title="长期指标存储"></a>长期指标存储</h3><p>使用我们的新数据库引擎，您可以存储每秒数天，数周或数月的历史指标。或者，您可以将指标归档到另一个数据库，例如MongoDB或Prometheus。</p>
+<p><a name="bySdN"></a></p>
+<h3 id="分布式，按系统安装"><a href="#分布式，按系统安装" class="headerlink" title="分布式，按系统安装"></a>分布式，按系统安装</h3><p>您无需将度量标准集中在一个位置，而是在每个系统上安装Netdata ，每个系统负责其度量标准。拥有分布式代理可以降低成本，并使Netdata可以在资源很少的设备（例如IoT和边缘设备）上运行，而不会影响其核心目的。</p>
+<p><a name="jlznB"></a></p>
+<h3 id="完善的健康监控功能"><a href="#完善的健康监控功能" class="headerlink" title="完善的健康监控功能"></a>完善的健康监控功能</h3><p>可确保您始终知道异常发生的时间</p>
+<p><a name="HYtLj"></a></p>
+<h3 id="高速，资源少的收集器"><a href="#高速，资源少的收集器" class="headerlink" title="高速，资源少的收集器"></a><strong>高速，资源少的收集器</strong></h3><p>每秒可以收集数千个指标，同时仅使用系统CPU资源的一小部分和少量MiB RAM。</p>
+<p><a name="ghJbb"></a></p>
+<h3 id="Netdata-Cloud"><a href="#Netdata-Cloud" class="headerlink" title="Netdata Cloud"></a>Netdata Cloud</h3><p>可帮助Netdata用户监视整个基础结构的运行状况和性能，无论它们是两千个（或两千个（或更多）！）系统。<br />如果使用Netdata监视多个系统，则Netdata Cloud可以提供集中监控解决方案的所有优势，同时又可以将工作负载分配给每个代理。<br />而且，更好的是，Netdata Cloud不存储系统的任何指标。它存储有关系统IP，主机名和随机创建的GUID的元数据，仅此而已。指标从系统直接流式传输到Web浏览器。<br />本质上，Web浏览器托管一个SaaS应用程序，并将Netdata Cloud的所有功能直接嵌入到仪表板中。<br />**<br><a name="mA1hH"></a></p>
+<h2 id="安全性"><a href="#安全性" class="headerlink" title="安全性"></a>安全性</h2><p>祥见：<a href="https://docs.netdata.cloud/zh/docs/netdata-security/" target="_blank" rel="noopener">https://docs.netdata.cloud/zh/docs/netdata-security/</a></p>
+<p><a name="1KwLD"></a></p>
+<h3 id="数据安全性"><a href="#数据安全性" class="headerlink" title="数据安全性"></a>数据安全性</h3><p>Netdata连接的数据源获取的原始数据只会保留在收集的主机，暴露出去的数据是图表元数据和度量标准值。</p>
+<p><a name="Dwlwi"></a></p>
+<h3 id="系统安全性"><a href="#系统安全性" class="headerlink" title="系统安全性"></a>系统安全性</h3><ul>
+<li>Netdata守护程序，在收集系统以及因应用程序的各项指标时，以普通系统用户身份运行，没有构造特殊的特权。</li>
+<li>从Netdata插件到Netdata守护程序，是通讯单向的，原始数据的不会离开收集过程，不会被保存；</li>
+</ul>
+<p><a name="KlAz0"></a></p>
+<h3 id="只读收集指标"><a href="#只读收集指标" class="headerlink" title="只读收集指标"></a>只读收集指标</h3><p>Netdata只可以读取收集的指标，但是不能进行其他操作，也不会公开敏感信息和业务数据，如内核版本、O/S版本，应用程序版本等</p>
+<p><a name="N0MJH"></a></p>
+<h3 id="身份验证"><a href="#身份验证" class="headerlink" title="身份验证"></a>身份验证</h3><p>作为一个监视系统，查看者可以看到监视器上的所有的指标信息，此时应当受到保护，否则会出现 </p>
+<ul>
+<li><p>根据视图内容，进行探索测试DDOS攻击的入口</p>
+<blockquote>
+<p>什么是DDOS攻击？<br>分布式拒绝服务。短时间内发起大量请求，耗尽服务器的资源，无法响应正常的访问，造成网站实质下线</p>
+</blockquote>
+</li>
+<li><p>使用Netdata本身来给服务器施加压力，尽管只具有最低的进程优先级，仍可以导致OOM</p>
+</li>
+</ul>
+<p><a name="e9VtT"></a></p>
+<h1 id="github传送门"><a href="#github传送门" class="headerlink" title="github传送门"></a><a href="https://github.com/netdata/netdata/" target="_blank" rel="noopener">github传送门</a></h1><p><a name="bmtLw"></a></p>
+<h1 id="Netdata中文汉化版"><a href="#Netdata中文汉化版" class="headerlink" title="Netdata中文汉化版"></a><a href="https://github.com/Fhaohaizi/netdata" target="_blank" rel="noopener">Netdata中文汉化版</a></h1>
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">阿黑</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://grr.qiujy.com/2020/03/18/fu-wu-qi-jian-kong-netdata/">https://grr.qiujy.com/2020/03/18/fu-wu-qi-jian-kong-netdata/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">阿黑</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/netdata/">
+                                    <span class="chip bg-color">netdata</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.jpg" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2020/05/31/fu-wu-qi-xi-tong-ri-zhi-guan-li-logrotate/">
+                    <div class="card-image">
+                        
+                        <img src="http://img.qiujy.com/cover2.jpg" class="responsive-img" alt="服务器系统日志管理logrotate">
+                        
+                        <span class="card-title">服务器系统日志管理logrotate</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            场景对于业务系统，每天都会输出大量的日志，并且增长极快，久而久之在有限的容量内总会消耗完服务器的磁盘空间；当我们遇到故障需要排查的时候，日志往往是第一选择，然而当日志日渐庞大的时候，排查成问题，空间也成问题；线上埋点系统出现问题，排查发现硬
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-05-31
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/logrotate/" class="post-category">
+                                    logrotate
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E6%97%A5%E5%BF%97/">
+                        <span class="chip bg-color">日志</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2020/02/27/fen-bu-shi-ren-wu-diao-du-ping-tai-xxl-job/">
+                    <div class="card-image">
+                        
+                        <img src="/images/conver_xxljob.jpg" class="responsive-img" alt="分布式任务调度平台XXL-JOB">
+                        
+                        <span class="card-title">分布式任务调度平台XXL-JOB</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            一、需求背景以往系统中的周期性任务执行，一般有以下几种方式
+
+引入quartz or spring-task ，每一个任务对应编写一个执行类，配置调度规则执行
+使用系统的执行器，比如centos的crontab，每一个任务对应编写一个执行类
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-02-27
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/" class="post-category">
+                                    分布式
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">
+                        <span class="chip bg-color">分布式</span>
+                    </a>
+                    
+                    <a href="/tags/XXL-JOB/">
+                        <span class="chip bg-color">XXL-JOB</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: 进击的阿黑<br />'
+            + '文章作者: 阿黑<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="503838841"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+
+    
+    <div class="container row center-align" style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="/about" target="_blank">阿黑</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">23.8k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/qJerry" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:mail@qiujy.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/search.xml", 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
