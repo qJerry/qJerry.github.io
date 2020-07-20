@@ -364,8 +364,16 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/AWS-AWS-Lambda-AWS-APIGateway/">
-                                <span class="chip bg-color">-- AWS -- AWS Lambda -- AWS APIGateway</span>
+                            <a href="/tags/AWS/">
+                                <span class="chip bg-color">AWS</span>
+                            </a>
+                        
+                            <a href="/tags/AWS-Lambda/">
+                                <span class="chip bg-color">AWS Lambda</span>
+                            </a>
+                        
+                            <a href="/tags/AWS-APIGateway/">
+                                <span class="chip bg-color">AWS APIGateway</span>
                             </a>
                         
                     </div>
@@ -420,12 +428,12 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>由于项目不大，但是使用了AWS的服务，挺贵的。。咨询了AWS的技术人员后，他们提供了lambda + Apigateway的方案，可以节省很多的资源。<br><br><br>尝试过以java为开发语言，springboot为函数框架，冷启动时间很长，响应慢的情况下，还会导致收费增加，故我这里改成脚本语言去实现<br></p>
+                <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>由于项目不大，但是使用了AWS的服务，挺贵的。。咨询了AWS的技术人员后，他们提供了lambda + Apigateway的方案，可以节省很多的资源。<br /><br><br />尝试过以java为开发语言，springboot为函数框架，冷启动时间很长，响应慢的情况下，还会导致收费增加，故我这里改成脚本语言去实现<br /></p>
 <p><a name="9cjSK"></a></p>
 <h2 id="配置流程"><a href="#配置流程" class="headerlink" title="配置流程"></a>配置流程</h2><p><a name="nTF9S"></a></p>
-<h3 id="1-创建lamda函数"><a href="#1-创建lamda函数" class="headerlink" title="1. 创建lamda函数"></a>1. 创建lamda函数</h3><p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1589954896351-0c676797-73b9-468b-af75-865b5be48f62.png#align=left&display=inline&height=367&margin=%5Bobject%20Object%5D&name=image.png&originHeight=367&originWidth=1795&size=33210&status=done&style=none&width=1795" alt="image.png"><br>下面创建了一个函数名为test-function，运行时为python<br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663472276-7f372b8f-fd59-4c05-b1cc-238848425296.png#align=left&display=inline&height=755&margin=%5Bobject%20Object%5D&name=image.png&originHeight=755&originWidth=1794&size=84896&status=done&style=none&width=1794" alt="image.png"><br></p>
+<h3 id="1-创建lamda函数"><a href="#1-创建lamda函数" class="headerlink" title="1. 创建lamda函数"></a>1. 创建lamda函数</h3><p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1589954896351-0c676797-73b9-468b-af75-865b5be48f62.png#align=left&display=inline&height=367&margin=%5Bobject%20Object%5D&name=image.png&originHeight=367&originWidth=1795&size=33210&status=done&style=none&width=1795" alt="image.png"><br />下面创建了一个函数名为test-function，运行时为python<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663472276-7f372b8f-fd59-4c05-b1cc-238848425296.png#align=left&display=inline&height=755&margin=%5Bobject%20Object%5D&name=image.png&originHeight=755&originWidth=1794&size=84896&status=done&style=none&width=1794" alt="image.png"><br /></p>
 <p><a name="M1May"></a></p>
-<h3 id="2-配置测试事件"><a href="#2-配置测试事件" class="headerlink" title="2. 配置测试事件"></a>2. 配置测试事件</h3><p>主要用于测试这个函数有没有跑成功<br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663537636-1b758b45-a1e5-4a1c-9c4a-afc530b3756a.png#align=left&display=inline&height=117&margin=%5Bobject%20Object%5D&name=image.png&originHeight=117&originWidth=676&size=8127&status=done&style=none&width=676" alt="image.png"><br>下面配置了一个事件名称为test的测试事件<br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1589956651446-b410c5f1-f57d-4718-a61e-08cfeac2cb38.png#align=left&display=inline&height=538&margin=%5Bobject%20Object%5D&name=image.png&originHeight=538&originWidth=826&size=32547&status=done&style=none&width=826" alt="image.png"><br></p>
+<h3 id="2-配置测试事件"><a href="#2-配置测试事件" class="headerlink" title="2. 配置测试事件"></a>2. 配置测试事件</h3><p>主要用于测试这个函数有没有跑成功<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663537636-1b758b45-a1e5-4a1c-9c4a-afc530b3756a.png#align=left&display=inline&height=117&margin=%5Bobject%20Object%5D&name=image.png&originHeight=117&originWidth=676&size=8127&status=done&style=none&width=676" alt="image.png"><br />下面配置了一个事件名称为test的测试事件<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1589956651446-b410c5f1-f57d-4718-a61e-08cfeac2cb38.png#align=left&display=inline&height=538&margin=%5Bobject%20Object%5D&name=image.png&originHeight=538&originWidth=826&size=32547&status=done&style=none&width=826" alt="image.png"><br /></p>
 <p><a name="I7wNH"></a></p>
 <h3 id="3-添加函数代码"><a href="#3-添加函数代码" class="headerlink" title="3. 添加函数代码"></a>3. 添加函数代码</h3><p>由于上面设置的运行时环境是JAVA8，AWS暂时不支持在面板上编辑代码，故我们可以通过本地写完代码后，上传到S3、或者直接手动上传。这个待定~~<br><a name="HdGAJ"></a></p>
 <h4 id="使用python实现一个函数"><a href="#使用python实现一个函数" class="headerlink" title="使用python实现一个函数"></a>使用python实现一个函数</h4><pre class=" language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">handler</span><span class="token punctuation">(</span>event<span class="token punctuation">,</span> context<span class="token punctuation">)</span><span class="token punctuation">:</span>
@@ -450,14 +458,14 @@
     <span class="token keyword">return</span> <span class="token punctuation">{</span><span class="token string">"statusCode"</span><span class="token punctuation">:</span> <span class="token number">200</span><span class="token punctuation">,</span> <span class="token string">"body"</span><span class="token punctuation">:</span> <span class="token string">'success.'</span><span class="token punctuation">}</span></code></pre>
 <p>注意，如果用到了其他需安装的依赖的话，需要先将依赖下载到和python文件同个文件夹下</p>
 <pre class=" language-shell"><code class="language-shell">pip install pymsql -t .</code></pre>
-<p>如下，我安装了pymsql的依赖到文件夹中，并将其和python文件一起打成zip包，用于上传到lambda后台<br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663135995-fa241d55-774f-4a3a-8baf-acdc1561e52d.png#align=left&display=inline&height=87&margin=%5Bobject%20Object%5D&name=image.png&originHeight=87&originWidth=261&size=4027&status=done&style=none&width=261" alt="image.png"><br>接着开始上传函数文件，后台支持在线编辑代码，但是由于函数引了其他依赖，故以zip包上传的形式打包上去<br>这里需要注意，处理程序要对应修改，形式为：文件名.方法名<br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663678059-be7b88fd-7851-4e2a-b3e9-a1a373c5786a.png#align=left&display=inline&height=289&margin=%5Bobject%20Object%5D&name=image.png&originHeight=289&originWidth=1624&size=26931&status=done&style=none&width=1624" alt="image.png"><br><br><br>上传后效果如下<br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663787533-95eb8e9a-4cce-48d2-813a-2418eb03ed25.png#align=left&display=inline&height=586&margin=%5Bobject%20Object%5D&name=image.png&originHeight=586&originWidth=1488&size=70260&status=done&style=none&width=1488" alt="image.png"><br></p>
+<p>如下，我安装了pymsql的依赖到文件夹中，并将其和python文件一起打成zip包，用于上传到lambda后台<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663135995-fa241d55-774f-4a3a-8baf-acdc1561e52d.png#align=left&display=inline&height=87&margin=%5Bobject%20Object%5D&name=image.png&originHeight=87&originWidth=261&size=4027&status=done&style=none&width=261" alt="image.png"><br />接着开始上传函数文件，后台支持在线编辑代码，但是由于函数引了其他依赖，故以zip包上传的形式打包上去<br />这里需要注意，处理程序要对应修改，形式为：文件名.方法名<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663678059-be7b88fd-7851-4e2a-b3e9-a1a373c5786a.png#align=left&display=inline&height=289&margin=%5Bobject%20Object%5D&name=image.png&originHeight=289&originWidth=1624&size=26931&status=done&style=none&width=1624" alt="image.png"><br /><br><br />上传后效果如下<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663787533-95eb8e9a-4cce-48d2-813a-2418eb03ed25.png#align=left&display=inline&height=586&margin=%5Bobject%20Object%5D&name=image.png&originHeight=586&originWidth=1488&size=70260&status=done&style=none&width=1488" alt="image.png"><br /></p>
 <p><a name="pINrp"></a></p>
 <h3 id="4-配置lambda环境"><a href="#4-配置lambda环境" class="headerlink" title="4. 配置lambda环境"></a>4. 配置lambda环境</h3><p><a name="GuVrW"></a></p>
-<h4 id="基本设置"><a href="#基本设置" class="headerlink" title="基本设置"></a>基本设置</h4><p>可根据函数实际运行情况，对其分配超时时间和内存<br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663814291-ed8334ee-9924-476e-83b6-fbe7318e7a50.png#align=left&display=inline&height=248&margin=%5Bobject%20Object%5D&name=image.png&originHeight=248&originWidth=814&size=11185&status=done&style=none&width=814" alt="image.png"><br></p>
+<h4 id="基本设置"><a href="#基本设置" class="headerlink" title="基本设置"></a>基本设置</h4><p>可根据函数实际运行情况，对其分配超时时间和内存<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663814291-ed8334ee-9924-476e-83b6-fbe7318e7a50.png#align=left&display=inline&height=248&margin=%5Bobject%20Object%5D&name=image.png&originHeight=248&originWidth=814&size=11185&status=done&style=none&width=814" alt="image.png"><br /></p>
 <p><a name="RbgOX"></a></p>
-<h4 id="并发设置"><a href="#并发设置" class="headerlink" title="并发设置"></a>并发设置</h4><p>可默认不改，使用预置并发需要收费<br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663878594-1da573f8-941e-401c-abdf-b3f3ed2f1602.png#align=left&display=inline&height=548&margin=%5Bobject%20Object%5D&name=image.png&originHeight=548&originWidth=1596&size=43076&status=done&style=none&width=1596" alt="image.png"><br></p>
+<h4 id="并发设置"><a href="#并发设置" class="headerlink" title="并发设置"></a>并发设置</h4><p>可默认不改，使用预置并发需要收费<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663878594-1da573f8-941e-401c-abdf-b3f3ed2f1602.png#align=left&display=inline&height=548&margin=%5Bobject%20Object%5D&name=image.png&originHeight=548&originWidth=1596&size=43076&status=done&style=none&width=1596" alt="image.png"><br /></p>
 <p><a name="OBySq"></a></p>
-<h4 id="VPC设置"><a href="#VPC设置" class="headerlink" title="VPC设置"></a>VPC设置</h4><p>当需要调用其他aws服务时，需要配置再同个VPC下<br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663931128-187af22c-fbc8-4b6a-a41a-2a7fd45773cb.png#align=left&display=inline&height=239&margin=%5Bobject%20Object%5D&name=image.png&originHeight=239&originWidth=1642&size=17212&status=done&style=none&width=1642" alt="image.png"><br></p>
+<h4 id="VPC设置"><a href="#VPC设置" class="headerlink" title="VPC设置"></a>VPC设置</h4><p>当需要调用其他aws服务时，需要配置再同个VPC下<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663931128-187af22c-fbc8-4b6a-a41a-2a7fd45773cb.png#align=left&display=inline&height=239&margin=%5Bobject%20Object%5D&name=image.png&originHeight=239&originWidth=1642&size=17212&status=done&style=none&width=1642" alt="image.png"><br /></p>
 <p><a name="FrfvT"></a></p>
 <h3 id="5-API-Gateway创建一个API"><a href="#5-API-Gateway创建一个API" class="headerlink" title="5. API Gateway创建一个API"></a>5. API Gateway创建一个API</h3><ul>
 <li>若用到了aws服务，则用REST API，否则可使用HTTP API</li>
@@ -498,15 +506,15 @@
 <ul>
 <li>部署成功，如下，</li>
 </ul>
-<p>访问url：<a href="https://elxv6vagga.execute-api.us-west-2.amazonaws.com/test?data=1" target="_blank" rel="noopener">https://****.com/test?data=1</a>，可返回函数内定义的“success”<br>访问url：<a href="https://elxv6vagga.execute-api.us-west-2.amazonaws.com/test/pets?data=1" target="_blank" rel="noopener">https://***m/test/pets?data=1</a>，同样可返回“success”<br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590664761645-44cb4f05-60bb-411f-8ca4-0f66f56adfb7.png#align=left&display=inline&height=745&margin=%5Bobject%20Object%5D&name=image.png&originHeight=745&originWidth=1508&size=77565&status=done&style=none&width=1508" alt="image.png"><br><br><br></p>
+<p>访问url：<a href="https://elxv6vagga.execute-api.us-west-2.amazonaws.com/test?data=1" target="_blank" rel="noopener">https://****.com/test?data=1</a>，可返回函数内定义的“success”<br />访问url：<a href="https://elxv6vagga.execute-api.us-west-2.amazonaws.com/test/pets?data=1" target="_blank" rel="noopener">https://***m/test/pets?data=1</a>，同样可返回“success”<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590664761645-44cb4f05-60bb-411f-8ca4-0f66f56adfb7.png#align=left&display=inline&height=745&margin=%5Bobject%20Object%5D&name=image.png&originHeight=745&originWidth=1508&size=77565&status=done&style=none&width=1508" alt="image.png"><br /><br><br /></p>
 <p><a name="YGQO9"></a></p>
-<h3 id="7-配置自定义域名"><a href="#7-配置自定义域名" class="headerlink" title="7. 配置自定义域名"></a>7. 配置自定义域名</h3><p>由于API Gateway 仅支持带证书的域名，所以这里我们要部署证书到aws<br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590664939795-95c9247a-5466-42ae-b750-627d84fb00d2.png#align=left&display=inline&height=823&margin=%5Bobject%20Object%5D&name=image.png&originHeight=823&originWidth=1581&size=79195&status=done&style=none&width=1581" alt="image.png"><br>我使用的是腾讯云，故在腾讯云申请到免费证书后，上传到ACM后台：<a href="https://us-west-2.console.aws.amazon.com/acm/home?region=us-west-2" target="_blank" rel="noopener">https://us-west-2.console.aws.amazon.com/acm/home?region=us-west-2</a><br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590665143414-c869099e-e5b5-43d4-b532-a36c8720facd.png#align=left&display=inline&height=636&margin=%5Bobject%20Object%5D&name=image.png&originHeight=636&originWidth=1253&size=47713&status=done&style=none&width=1253" alt="image.png"><br></p>
+<h3 id="7-配置自定义域名"><a href="#7-配置自定义域名" class="headerlink" title="7. 配置自定义域名"></a>7. 配置自定义域名</h3><p>由于API Gateway 仅支持带证书的域名，所以这里我们要部署证书到aws<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590664939795-95c9247a-5466-42ae-b750-627d84fb00d2.png#align=left&display=inline&height=823&margin=%5Bobject%20Object%5D&name=image.png&originHeight=823&originWidth=1581&size=79195&status=done&style=none&width=1581" alt="image.png"><br />我使用的是腾讯云，故在腾讯云申请到免费证书后，上传到ACM后台：<a href="https://us-west-2.console.aws.amazon.com/acm/home?region=us-west-2" target="_blank" rel="noopener">https://us-west-2.console.aws.amazon.com/acm/home?region=us-west-2</a><br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590665143414-c869099e-e5b5-43d4-b532-a36c8720facd.png#align=left&display=inline&height=636&margin=%5Bobject%20Object%5D&name=image.png&originHeight=636&originWidth=1253&size=47713&status=done&style=none&width=1253" alt="image.png"><br /></p>
 <p><a name="cgASv"></a></p>
 <h3 id="8-域名映射路径"><a href="#8-域名映射路径" class="headerlink" title="8. 域名映射路径"></a>8. 域名映射路径</h3><p>开放接口有：/app/offers/get 和 /offers/get<br><a name="rpGXM"></a></p>
 <h4 id="1-先配置API映射，路径为None"><a href="#1-先配置API映射，路径为None" class="headerlink" title="1. 先配置API映射，路径为None"></a>1. 先配置API映射，路径为None</h4><p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590831480790-cb5b3dec-fe08-4c5a-9395-040a0b0d9edd.png#align=left&display=inline&height=202&margin=%5Bobject%20Object%5D&name=image.png&originHeight=202&originWidth=1138&size=13714&status=done&style=none&width=1138" alt="image.png"><br><a name="3T6Tg"></a></p>
-<h4 id="2-在API-内定好资源和方法"><a href="#2-在API-内定好资源和方法" class="headerlink" title="2. 在API 内定好资源和方法"></a>2. 在API 内定好资源和方法</h4><p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590831529725-4f9a134f-0b4e-4bf8-be0d-e876adef1990.png#align=left&display=inline&height=257&margin=%5Bobject%20Object%5D&name=image.png&originHeight=257&originWidth=216&size=6132&status=done&style=none&width=216" alt="image.png"><br><br><br><br><br><del>这里我想实现的是，将原来的<a href="https://elxv6vagga.execute-api.us-west-2.amazonaws.com/test?data=1" target="_blank" rel="noopener">https://****.com/test?data=1</a>，通过自定义域名映射成，<a href="https://custom_domain.com?data=1" target="_blank" rel="noopener">https://custom_domain.com?data=1</a></del><br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590665287068-d22a62e2-22e2-4337-a9e0-e43361484313.png#align=left&display=inline&height=426&margin=%5Bobject%20Object%5D&name=image.png&originHeight=426&originWidth=1637&size=32241&status=done&style=none&width=1637" alt="image.png"><br><del>以上配置后发现不生效，只能<a href="https://custom_domain.com?data=1" target="_blank" rel="noopener">https://custom_domain.com/test?data=1</a></del><br><br><br><del>查看资料发现，aws默认给我们生成的url是有特征的</del><br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590665407264-05a69e95-2a46-4e60-87c7-66191b791f03.png#align=left&display=inline&height=467&margin=%5Bobject%20Object%5D&name=image.png&originHeight=467&originWidth=1195&size=60799&status=done&style=none&width=1195" alt="image.png"><br><del>所以在API映射中，我们是无法做到把stage通过映射关系替代掉的</del><br><br><br><del>幸好，后面查阅资料，翻到网友已经找到解决方案了：</del><a href="https://www.stacknoob.com/s/jNBYcCaDDAR5e7Y7GLPHbk" target="_blank" rel="noopener"><del>https://www.stacknoob.com/s/jNBYcCaDDAR5e7Y7GLPHbk</del></a><br><del>创建API（或使用现有的API，并修改资源）并为其提供代理资源，以及源自根路径的简单GET方法，即可实现自定义域名成功映射，不用被 阶段名state 所影响</del><br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590665560580-17ee7c74-f2ea-4d61-8a2b-54239687eb47.png#align=left&display=inline&height=404&margin=%5Bobject%20Object%5D&name=image.png&originHeight=404&originWidth=969&size=32201&status=done&style=none&width=969" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590665658504-b2207ca6-64a5-4b59-8f38-4c88f1a22169.png#align=left&display=inline&height=590&margin=%5Bobject%20Object%5D&name=image.png&originHeight=590&originWidth=1751&size=63806&status=done&style=none&width=1751" alt="image.png"><br><br><br><del>重新部署，访问<a href="https://custom_domain.com?data=1" target="_blank" rel="noopener">https://custom_domain.com?data=1</a>，即可成功返回“success”</del><br><del><br></del><br><a name="gKHWS"></a></p>
+<h4 id="2-在API-内定好资源和方法"><a href="#2-在API-内定好资源和方法" class="headerlink" title="2. 在API 内定好资源和方法"></a>2. 在API 内定好资源和方法</h4><p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590831529725-4f9a134f-0b4e-4bf8-be0d-e876adef1990.png#align=left&display=inline&height=257&margin=%5Bobject%20Object%5D&name=image.png&originHeight=257&originWidth=216&size=6132&status=done&style=none&width=216" alt="image.png"><br /><br><br /><br><br /><del>这里我想实现的是，将原来的<a href="https://elxv6vagga.execute-api.us-west-2.amazonaws.com/test?data=1" target="_blank" rel="noopener">https://****.com/test?data=1</a>，通过自定义域名映射成，<a href="https://custom_domain.com?data=1" target="_blank" rel="noopener">https://custom_domain.com?data=1</a></del><br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590665287068-d22a62e2-22e2-4337-a9e0-e43361484313.png#align=left&display=inline&height=426&margin=%5Bobject%20Object%5D&name=image.png&originHeight=426&originWidth=1637&size=32241&status=done&style=none&width=1637" alt="image.png"><br /><del>以上配置后发现不生效，只能<a href="https://custom_domain.com?data=1" target="_blank" rel="noopener">https://custom_domain.com/test?data=1</a></del><br /><br><br /><del>查看资料发现，aws默认给我们生成的url是有特征的</del><br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590665407264-05a69e95-2a46-4e60-87c7-66191b791f03.png#align=left&display=inline&height=467&margin=%5Bobject%20Object%5D&name=image.png&originHeight=467&originWidth=1195&size=60799&status=done&style=none&width=1195" alt="image.png"><br /><del>所以在API映射中，我们是无法做到把stage通过映射关系替代掉的</del><br /><br><br /><del>幸好，后面查阅资料，翻到网友已经找到解决方案了：</del><a href="https://www.stacknoob.com/s/jNBYcCaDDAR5e7Y7GLPHbk" target="_blank" rel="noopener"><del>https://www.stacknoob.com/s/jNBYcCaDDAR5e7Y7GLPHbk</del></a><br /><del>创建API（或使用现有的API，并修改资源）并为其提供代理资源，以及源自根路径的简单GET方法，即可实现自定义域名成功映射，不用被 阶段名state 所影响</del><br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590665560580-17ee7c74-f2ea-4d61-8a2b-54239687eb47.png#align=left&display=inline&height=404&margin=%5Bobject%20Object%5D&name=image.png&originHeight=404&originWidth=969&size=32201&status=done&style=none&width=969" alt="image.png"><br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590665658504-b2207ca6-64a5-4b59-8f38-4c88f1a22169.png#align=left&display=inline&height=590&margin=%5Bobject%20Object%5D&name=image.png&originHeight=590&originWidth=1751&size=63806&status=done&style=none&width=1751" alt="image.png"><br /><br><br /><del>重新部署，访问<a href="https://custom_domain.com?data=1" target="_blank" rel="noopener">https://custom_domain.com?data=1</a>，即可成功返回“success”</del><br /><del><br /></del><br><a name="gKHWS"></a></p>
 <h2 id="存在问题"><a href="#存在问题" class="headerlink" title="存在问题"></a>存在问题</h2><p><a name="TZoII"></a></p>
-<h3 id="1-Lambda存在函数有一定的约束条件"><a href="#1-Lambda存在函数有一定的约束条件" class="headerlink" title="1. Lambda存在函数有一定的约束条件"></a>1. Lambda存在函数有一定的约束条件</h3><p>参考<a href="https://docs.aws.amazon.com/zh_cn/lambda/latest/dg/gettingstarted-limits.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/zh_cn/lambda/latest/dg/gettingstarted-limits.html</a><br>实际项目中遇到返回的包体字节太大，导致报错，报错原因是因为LAMBDA函数设置的调用负载同步请求是6MB，实际大于6MB。<br>解决方案：参考<a href="https://theburningmonk.com/2020/04/hit-the-6mb-lambda-payload-limit-heres-what-you-can-do/" target="_blank" rel="noopener">https://theburningmonk.com/2020/04/hit-the-6mb-lambda-payload-limit-heres-what-you-can-do/</a></p>
+<h3 id="1-Lambda存在函数有一定的约束条件"><a href="#1-Lambda存在函数有一定的约束条件" class="headerlink" title="1. Lambda存在函数有一定的约束条件"></a>1. Lambda存在函数有一定的约束条件</h3><p>参考<a href="https://docs.aws.amazon.com/zh_cn/lambda/latest/dg/gettingstarted-limits.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/zh_cn/lambda/latest/dg/gettingstarted-limits.html</a><br />实际项目中遇到返回的包体字节太大，导致报错，报错原因是因为LAMBDA函数设置的调用负载同步请求是6MB，实际大于6MB。<br />解决方案：参考<a href="https://theburningmonk.com/2020/04/hit-the-6mb-lambda-payload-limit-heres-what-you-can-do/" target="_blank" rel="noopener">https://theburningmonk.com/2020/04/hit-the-6mb-lambda-payload-limit-heres-what-you-can-do/</a></p>
 
             </div>
             <hr/>
@@ -570,8 +578,16 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/AWS-AWS-Lambda-AWS-APIGateway/">
-                                    <span class="chip bg-color">-- AWS -- AWS Lambda -- AWS APIGateway</span>
+                                <a href="/tags/AWS/">
+                                    <span class="chip bg-color">AWS</span>
+                                </a>
+                            
+                                <a href="/tags/AWS-Lambda/">
+                                    <span class="chip bg-color">AWS Lambda</span>
+                                </a>
+                            
+                                <a href="/tags/AWS-APIGateway/">
+                                    <span class="chip bg-color">AWS APIGateway</span>
                                 </a>
                             
                         </div>
@@ -796,18 +812,18 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/05/31/fu-wu-qi-xi-tong-ri-zhi-guan-li-logrotate/">
+                <a href="/2020/05/31/netty-wa-jue-ji-si-jie-he-springboot-da-jian-netty-jiao-shou-jia/">
                     <div class="card-image">
                         
-                        <img src="http://img.qiujy.com/cover2.jpg" class="responsive-img" alt="服务器系统日志管理logrotate">
+                        <img src="http://img.qiujy.com/cover_netty.png" class="responsive-img" alt="Netty挖掘机（四）结合springboot搭建netty脚手架">
                         
-                        <span class="card-title">服务器系统日志管理logrotate</span>
+                        <span class="card-title">Netty挖掘机（四）结合springboot搭建netty脚手架</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            场景对于业务系统，每天都会输出大量的日志，并且增长极快，久而久之在有限的容量内总会消耗完服务器的磁盘空间；当我们遇到故障需要排查的时候，日志往往是第一选择，然而当日志日渐庞大的时候，排查成问题，空间也成问题；线上埋点系统出现问题，排查发现硬
+                            上文《Netty挖掘机（三）结合spring搭建netty脚手架》，结合Spring+Netty实现API接口服务模块，本文继续码字，以Springboot的方式接入Netty实现API接口服务。我们知道，spring-boot-start
                         
                     </div>
                     <div class="publish-info">
@@ -818,8 +834,8 @@
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/logrotate/" class="post-category">
-                                    logrotate
+                            <a href="/categories/Netty%E6%8C%96%E6%8E%98%E6%9C%BA/" class="post-category">
+                                    Netty挖掘机
                                 </a>
                             
                             
@@ -829,8 +845,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E6%97%A5%E5%BF%97/">
-                        <span class="chip bg-color">日志</span>
+                    <a href="/tags/Netty/">
+                        <span class="chip bg-color">Netty</span>
                     </a>
                     
                 </div>
@@ -1074,7 +1090,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">33.8k</span>&nbsp;字
+                class="white-color">46.3k</span>&nbsp;字
             
             
             
