@@ -1,0 +1,1480 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Netty挖掘机（八）EventLoop底层原理-2章节">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>Netty挖掘机（八）EventLoop底层原理-2章节 | Jerry Blog</title>
+    <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">Jerry Blog</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">Jerry Blog</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/qJerry" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/qJerry" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('http://img.qiujy.com/cover_netty.png')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Netty挖掘机（八）EventLoop底层原理-2章节</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Netty/">
+                                <span class="chip bg-color">Netty</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Netty%E6%8C%96%E6%8E%98%E6%9C%BA/" class="post-category">
+                                Netty挖掘机
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2020-06-02
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    3.2k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    13 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p>上一章节《Netty挖掘机（七）EventLoop底层原理-1章节》，主要分析了EventLoopGroup的创建流程，这一章继续讲后续操作，EventLoop的创建。<br /></p>
+<p><a name="IwOIs"></a></p>
+<h1 id="创建NioEventLoop时，发生了什么？"><a href="#创建NioEventLoop时，发生了什么？" class="headerlink" title="创建NioEventLoop时，发生了什么？"></a>创建NioEventLoop时，发生了什么？</h1><p><a name="RR3gQ"></a></p>
+<h2 id="分析源码"><a href="#分析源码" class="headerlink" title="分析源码"></a>分析源码</h2><p><a name="Rarq1"></a></p>
+<h3 id="4-创建带有队列的事件循环器，并打开选择器"><a href="#4-创建带有队列的事件循环器，并打开选择器" class="headerlink" title="4. 创建带有队列的事件循环器，并打开选择器"></a>4. 创建带有队列的事件循环器，并打开选择器</h3><blockquote>
+<p>Netty基于JDK原生NIO做了优化，以此提升了性能。具体优化内容看下面红色字体。</p>
+</blockquote>
+<pre class=" language-java"><code class="language-java"><span class="token function">NioEventLoop</span><span class="token punctuation">(</span>NioEventLoopGroup parent<span class="token punctuation">,</span> Executor executor<span class="token punctuation">,</span> SelectorProvider selectorProvider<span class="token punctuation">,</span>
+                 SelectStrategy strategy<span class="token punctuation">,</span> RejectedExecutionHandler rejectedExecutionHandler<span class="token punctuation">,</span>
+                 EventLoopTaskQueueFactory queueFactory<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">super</span><span class="token punctuation">(</span>parent<span class="token punctuation">,</span> executor<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token function">newTaskQueue</span><span class="token punctuation">(</span>queueFactory<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">newTaskQueue</span><span class="token punctuation">(</span>queueFactory<span class="token punctuation">)</span><span class="token punctuation">,</span>
+          rejectedExecutionHandler<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>selectorProvider <span class="token operator">==</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">NullPointerException</span><span class="token punctuation">(</span><span class="token string">"selectorProvider"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>strategy <span class="token operator">==</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">NullPointerException</span><span class="token punctuation">(</span><span class="token string">"selectStrategy"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// 获取selector提供者信息，一般以操作系统做区分，如Linux一般用epoll机制</span>
+    provider <span class="token operator">=</span> selectorProvider<span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 打开选择器</span>
+    <span class="token keyword">final</span> SelectorTuple selectorTuple <span class="token operator">=</span> <span class="token function">openSelector</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    selector <span class="token operator">=</span> selectorTuple<span class="token punctuation">.</span>selector<span class="token punctuation">;</span>
+    unwrappedSelector <span class="token operator">=</span> selectorTuple<span class="token punctuation">.</span>unwrappedSelector<span class="token punctuation">;</span>
+    selectStrategy <span class="token operator">=</span> strategy<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p><a name="oeoQI"></a></p>
+<h4 id="创建周期任务"><a href="#创建周期任务" class="headerlink" title="创建周期任务"></a>创建周期任务</h4><p><br />回顾上一章的类图，我们可以知道NioEventLoop向上有一个接口是<code>ScheduledExecutorService</code>，即实现了定时任务的相关接口。<br /><br><br />在io.netty.util.concurrent.AbstractScheduledEventExecutor内，已经实现了schedule()，并且在其中创建了周期任务队列并按指定周期执行。<br /></p>
+<pre class=" language-java"><code class="language-java">PriorityQueue<span class="token operator">&lt;</span>ScheduledFutureTask<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">>></span> scheduledTaskQueue<span class="token punctuation">;</span>
+
+PriorityQueue<span class="token operator">&lt;</span>ScheduledFutureTask<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">>></span> <span class="token function">scheduledTaskQueue</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>scheduledTaskQueue <span class="token operator">==</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        scheduledTaskQueue <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultPriorityQueue</span><span class="token operator">&lt;</span>ScheduledFutureTask<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">>></span><span class="token punctuation">(</span>
+            SCHEDULED_FUTURE_TASK_COMPARATOR<span class="token punctuation">,</span>
+            <span class="token comment" spellcheck="true">// Use same initial capacity as java.util.PriorityQueue</span>
+            <span class="token number">11</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> scheduledTaskQueue<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p><a name="mbwjR"></a></p>
+<h4 id="构造的每个事件循环器（线程）还都维护了一个任务队列taskQueue和尾部队列tailTasks，通过newTaskQueue-可看到"><a href="#构造的每个事件循环器（线程）还都维护了一个任务队列taskQueue和尾部队列tailTasks，通过newTaskQueue-可看到" class="headerlink" title="构造的每个事件循环器（线程）还都维护了一个任务队列taskQueue和尾部队列tailTasks，通过newTaskQueue()可看到"></a>构造的每个事件循环器（线程）还都维护了一个任务队列taskQueue和尾部队列tailTasks，通过newTaskQueue()可看到</h4><p><br />知识点来了，这里用到了JCTools的并发队列，对于JCTools的知识，后续开一篇文章讲解<br /><br><br />MPSC：用于多生产单消费者模式，且支持在多生产时是无锁操作以保证线程安全，同一时刻只支持单一消费者消费。<br /><br><br />为什么不用<code>LinkedBlockingQueue</code> 来做队列呢？<br /><br><br />无锁就是答案了，性能方面比jdk原生队列好太多了，而且Netty本身就是会存在多个生产者同时生产任务，而仅有EventLoop去处理队列中的任务，恰恰MPSC符合该场景。<br /></p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// NioEventLoop.java</span>
+<span class="token keyword">private</span> <span class="token keyword">static</span> Queue<span class="token operator">&lt;</span>Runnable<span class="token operator">></span> <span class="token function">newTaskQueue0</span><span class="token punctuation">(</span><span class="token keyword">int</span> maxPendingTasks<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// This event loop never calls takeTask()</span>
+    <span class="token comment" spellcheck="true">// 默认采用无参构造方法</span>
+    <span class="token keyword">return</span> maxPendingTasks <span class="token operator">==</span> Integer<span class="token punctuation">.</span>MAX_VALUE <span class="token operator">?</span> PlatformDependent<span class="token punctuation">.</span>&lt;Runnable<span class="token operator">></span><span class="token function">newMpscQueue</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token operator">:</span> PlatformDependent<span class="token punctuation">.</span>&lt;Runnable<span class="token operator">></span><span class="token function">newMpscQueue</span><span class="token punctuation">(</span>maxPendingTasks<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">// PlatformDependent.java</span>
+<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token operator">&lt;</span>T<span class="token operator">></span> Queue<span class="token operator">&lt;</span>T<span class="token operator">></span> <span class="token function">newMpscQueue</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> Mpsc<span class="token punctuation">.</span><span class="token function">newMpscQueue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">// Mpsc.java</span>
+<span class="token keyword">static</span> <span class="token operator">&lt;</span>T<span class="token operator">></span> Queue<span class="token operator">&lt;</span>T<span class="token operator">></span> <span class="token function">newMpscQueue</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> USE_MPSC_CHUNKED_ARRAY_QUEUE <span class="token operator">?</span> <span class="token keyword">new</span> <span class="token class-name">MpscUnboundedArrayQueue</span><span class="token operator">&lt;</span>T<span class="token operator">></span><span class="token punctuation">(</span>MPSC_CHUNK_SIZE<span class="token punctuation">)</span>
+        <span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">MpscUnboundedAtomicArrayQueue</span><span class="token operator">&lt;</span>T<span class="token operator">></span><span class="token punctuation">(</span>MPSC_CHUNK_SIZE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p><a name="Fye5b"></a></p>
+<h4 id="打开选择器"><a href="#打开选择器" class="headerlink" title="打开选择器"></a>打开选择器</h4><p>具体流程是：<br /><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1591094744230-420a4bd0-2186-4eb0-a3ae-9ac9cf558386.jpeg#align=left&display=inline&height=509&margin=%5Bobject%20Object%5D&name=open_selector.jpg&originHeight=509&originWidth=1085&size=51709&status=done&style=none&width=1085" alt="open_selector.jpg"><br /></p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> SelectorTuple <span class="token function">openSelector</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">final</span> Selector unwrappedSelector<span class="token punctuation">;</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 根据系统底层io模型创建一个selector（Windows系统的话这里是WindowsSelectorImpl）</span>
+        unwrappedSelector <span class="token operator">=</span> provider<span class="token punctuation">.</span><span class="token function">openSelector</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">ChannelException</span><span class="token punctuation">(</span><span class="token string">"failed to open a new selector"</span><span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// 禁用键集优化，通过io.netty.noKeySetOptimization配置，默认false，即开启优化</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>DISABLE_KEY_SET_OPTIMIZATION<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// SelectorTuple 类似一个持有selector引用的句柄</span>
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">SelectorTuple</span><span class="token punctuation">(</span>unwrappedSelector<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// 使用JAVA 安全模型中的特权手段，执行对应的“特权”，这里应该是指尝试获取特权读取java核心库下的class对象</span>
+    <span class="token comment" spellcheck="true">// 获取SelectorImpl 类对象</span>
+    Object maybeSelectorImplClass <span class="token operator">=</span> AccessController<span class="token punctuation">.</span><span class="token function">doPrivileged</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">PrivilegedAction</span><span class="token operator">&lt;</span>Object<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token annotation punctuation">@Override</span>
+        <span class="token keyword">public</span> Object <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                <span class="token keyword">return</span> Class<span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span>
+                    <span class="token string">"sun.nio.ch.SelectorImpl"</span><span class="token punctuation">,</span>
+                    <span class="token boolean">false</span><span class="token punctuation">,</span>
+                    PlatformDependent<span class="token punctuation">.</span><span class="token function">getSystemClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Throwable</span> cause<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">return</span> cause<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 若不是一个class对象 或 不是unwrappedSelector的子类，则直接return</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>maybeSelectorImplClass <span class="token keyword">instanceof</span> <span class="token class-name">Class</span><span class="token punctuation">)</span> <span class="token operator">||</span>
+        <span class="token comment" spellcheck="true">// ......</span>
+        <span class="token comment" spellcheck="true">// 直接返回未经优化selector的SelectorTuple</span>
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">SelectorTuple</span><span class="token punctuation">(</span>unwrappedSelector<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">final</span> Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> selectorImplClass <span class="token operator">=</span> <span class="token punctuation">(</span>Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span><span class="token punctuation">)</span> maybeSelectorImplClass<span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 初始化SelectedSelectionKeySet，内部定义了一个SelectionKey数组，长度为1024</span>
+    <span class="token keyword">final</span> SelectedSelectionKeySet selectedKeySet <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SelectedSelectionKeySet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 使用“特权”，获取类变量，</span>
+    Object maybeException <span class="token operator">=</span> AccessController<span class="token punctuation">.</span><span class="token function">doPrivileged</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">PrivilegedAction</span><span class="token operator">&lt;</span>Object<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token annotation punctuation">@Override</span>
+        <span class="token keyword">public</span> Object <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                Field selectedKeysField <span class="token operator">=</span> selectorImplClass<span class="token punctuation">.</span><span class="token function">getDeclaredField</span><span class="token punctuation">(</span><span class="token string">"selectedKeys"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                Field publicSelectedKeysField <span class="token operator">=</span> selectorImplClass<span class="token punctuation">.</span><span class="token function">getDeclaredField</span><span class="token punctuation">(</span><span class="token string">"publicSelectedKeys"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>PlatformDependent<span class="token punctuation">.</span><span class="token function">javaVersion</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">>=</span> <span class="token number">9</span> <span class="token operator">&amp;&amp;</span> PlatformDependent<span class="token punctuation">.</span><span class="token function">hasUnsafe</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                   <span class="token comment" spellcheck="true">// jdk9 及以上版本，直接使用Unsafe类底层实现替换</span>
+                <span class="token punctuation">}</span>
+
+                Throwable cause <span class="token operator">=</span> ReflectionUtil<span class="token punctuation">.</span><span class="token function">trySetAccessible</span><span class="token punctuation">(</span>selectedKeysField<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>cause <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    <span class="token keyword">return</span> cause<span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+                cause <span class="token operator">=</span> ReflectionUtil<span class="token punctuation">.</span><span class="token function">trySetAccessible</span><span class="token punctuation">(</span>publicSelectedKeysField<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>cause <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    <span class="token keyword">return</span> cause<span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+                <span class="token comment" spellcheck="true">// 使用反射将jdk原生Selector的selectedKeys、publicSelectedKeys改为Netty内部定义的SelectedSelectionKeySet</span>
+                selectedKeysField<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>unwrappedSelector<span class="token punctuation">,</span> selectedKeySet<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                publicSelectedKeysField<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>unwrappedSelector<span class="token punctuation">,</span> selectedKeySet<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">return</span> null<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">NoSuchFieldException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">return</span> e<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IllegalAccessException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">return</span> e<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>maybeException <span class="token keyword">instanceof</span> <span class="token class-name">Exception</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// ......</span>
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">SelectorTuple</span><span class="token punctuation">(</span>unwrappedSelector<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    selectedKeys <span class="token operator">=</span> selectedKeySet<span class="token punctuation">;</span>
+    logger<span class="token punctuation">.</span><span class="token function">trace</span><span class="token punctuation">(</span><span class="token string">"instrumented a special java.util.Set into: {}"</span><span class="token punctuation">,</span> unwrappedSelector<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">SelectorTuple</span><span class="token punctuation">(</span>unwrappedSelector<span class="token punctuation">,</span>
+                             <span class="token keyword">new</span> <span class="token class-name">SelectedSelectionKeySetSelector</span><span class="token punctuation">(</span>unwrappedSelector<span class="token punctuation">,</span> selectedKeySet<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p><a name="U3Rxc"></a></p>
+<h3 id="5-执行NioEventLoop的run"><a href="#5-执行NioEventLoop的run" class="headerlink" title="5. 执行NioEventLoop的run()"></a>5. 执行NioEventLoop的run()</h3><blockquote>
+<p><strong>这是整一块体中最核心的方法！</strong><br>尝试启动有且仅有一个Eventloop线程（如果当前线程非Eventloop线程的话），并在程序运行期间死循环执行NioEventLoop的run()，检测当前队列中是否有任务要执行。</p>
+</blockquote>
+<p><br />执行run()的入口是SingleThreadEventExecutor的execute()，哪里触发execute()的执行？<br /><br><br />在Bootstrap绑定端口时，会初始化注册channel到EventLoop内，并且开始执行EventLoop的execute()；在连接进来时，数据写到Channel，触发执行EventLoop的execute()；在处理好连接并返回时，注销，触发执行EventLoop的execute()。<br /><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1591094818411-c7caeebf-a495-49ea-9048-57ffa957c023.jpeg#align=left&display=inline&height=303&margin=%5Bobject%20Object%5D&name=debug.jpg&originHeight=303&originWidth=392&size=21490&status=done&style=none&width=392" alt="debug.jpg">)<img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1591094819754-98c9a687-5732-45c2-8a64-553a26ae11ba.jpeg#align=left&display=inline&height=301&margin=%5Bobject%20Object%5D&name=debug2.jpg&originHeight=301&originWidth=389&size=20406&status=done&style=none&width=389" alt="debug2.jpg">)<img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1591094821128-a97dc731-8bf1-42cc-a8b4-7bae0083ed5b.jpeg#align=left&display=inline&height=298&margin=%5Bobject%20Object%5D&name=debug3.jpg&originHeight=298&originWidth=393&size=21082&status=done&style=none&width=393" alt="debug3.jpg"><br /><br><br />下面先看下run()涉及的一个流程图，理清下思路<br /><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1591094829054-52adb1c8-ba13-41a9-b287-166afdfbab77.jpeg#align=left&display=inline&height=494&margin=%5Bobject%20Object%5D&name=eventloop_run.jpg&originHeight=494&originWidth=909&size=46758&status=done&style=none&width=909" alt="eventloop_run.jpg"><br /></p>
+<p><a name="rNeFe"></a></p>
+<h4 id="执行器开始执行"><a href="#执行器开始执行" class="headerlink" title="执行器开始执行"></a>执行器开始执行</h4><p><br />翻阅代码后，最终的execute()执行在<code>io.netty.util.concurrent.SingleThreadEventExecutor</code>内。<br /><br><br />过程主要是添加任务到队列，启动线程，轮询，执行任务<br /></p>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">execute</span><span class="token punctuation">(</span>Runnable task<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>task <span class="token operator">==</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">NullPointerException</span><span class="token punctuation">(</span><span class="token string">"task"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// 判断当前线程是否事件循环线程</span>
+    <span class="token keyword">boolean</span> inEventLoop <span class="token operator">=</span> <span class="token function">inEventLoop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 添加任务到MPSC任务队列中</span>
+    <span class="token function">addTask</span><span class="token punctuation">(</span>task<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 若非事件循环线程，则执行开启事件循环线程逻辑</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>inEventLoop<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 通过Unsafe，将当前标识的线程状态从未启动变为已启动，并new线程，在线程内执行NioEventLoop的run()</span>
+        <span class="token function">startThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// ......</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// inEventLoop为false，并且线程状态为shuttingdown，则唤醒以解除线程阻塞</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>addTaskWakesUp <span class="token operator">&amp;&amp;</span> <span class="token function">wakesUpForTask</span><span class="token punctuation">(</span>task<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">wakeup</span><span class="token punctuation">(</span>inEventLoop<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p><a name="h72m7"></a></p>
+<h4 id="事件循环器轮询队列任务"><a href="#事件循环器轮询队列任务" class="headerlink" title="事件循环器轮询队列任务"></a>事件循环器轮询队列任务</h4><p><br />NioEventLoop本质上就是一个单线程去执行特定的任务，所以它的run()，我们需要留意。<br /></p>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 死循环，直到线程shutdown</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token punctuation">;</span><span class="token punctuation">;</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">try</span> <span class="token punctuation">{</span>
+            <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                <span class="token keyword">switch</span> <span class="token punctuation">(</span>selectStrategy<span class="token punctuation">.</span><span class="token function">calculateStrategy</span><span class="token punctuation">(</span>selectNowSupplier<span class="token punctuation">,</span> <span class="token function">hasTasks</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    <span class="token keyword">case</span> SelectStrategy<span class="token punctuation">.</span>CONTINUE<span class="token operator">:</span>
+                        <span class="token keyword">continue</span><span class="token punctuation">;</span>
+                   <span class="token comment" spellcheck="true">// 不属于NIO的范畴，它不支持繁忙等待</span>
+                    <span class="token keyword">case</span> SelectStrategy<span class="token punctuation">.</span>BUSY_WAIT<span class="token operator">:</span>
+                    <span class="token keyword">case</span> SelectStrategy<span class="token punctuation">.</span>SELECT<span class="token operator">:</span>
+                        <span class="token function">select</span><span class="token punctuation">(</span>wakenUp<span class="token punctuation">.</span><span class="token function">getAndSet</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        <span class="token keyword">if</span> <span class="token punctuation">(</span>wakenUp<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                            selector<span class="token punctuation">.</span><span class="token function">wakeup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        <span class="token punctuation">}</span>
+                    <span class="token keyword">default</span><span class="token operator">:</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token comment" spellcheck="true">// 若出现IOException，则重新建立选择器</span>
+                <span class="token function">rebuildSelector0</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token function">handleLoopException</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">continue</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+
+            cancelledKeys <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+            needsToSelectAgain <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+            <span class="token keyword">final</span> <span class="token keyword">int</span> ioRatio <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>ioRatio<span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>ioRatio <span class="token operator">==</span> <span class="token number">100</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                    <span class="token function">processSelectedKeys</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
+                    <span class="token function">runAllTasks</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+                <span class="token keyword">final</span> <span class="token keyword">long</span> ioStartTime <span class="token operator">=</span> System<span class="token punctuation">.</span><span class="token function">nanoTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                    <span class="token function">processSelectedKeys</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
+                    <span class="token comment" spellcheck="true">// Ensure we always run tasks.</span>
+                    <span class="token keyword">final</span> <span class="token keyword">long</span> ioTime <span class="token operator">=</span> System<span class="token punctuation">.</span><span class="token function">nanoTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> ioStartTime<span class="token punctuation">;</span>
+                    <span class="token function">runAllTasks</span><span class="token punctuation">(</span>ioTime <span class="token operator">*</span> <span class="token punctuation">(</span><span class="token number">100</span> <span class="token operator">-</span> ioRatio<span class="token punctuation">)</span> <span class="token operator">/</span> ioRatio<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Throwable</span> t<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token function">handleLoopException</span><span class="token punctuation">(</span>t<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment" spellcheck="true">// 取消通道在Selector上的注册，关闭通道，并让NioEventLoop线程退出循环，结束运行...</span>
+        <span class="token keyword">try</span> <span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isShuttingDown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token function">closeAll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">confirmShutdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    <span class="token keyword">return</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Throwable</span> t<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token function">handleLoopException</span><span class="token punctuation">(</span>t<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p><br />文字流程如下：<br /></p>
+<ul>
+<li>Selector轮询检测。检测到队列中有任务，则当即唤醒Selector，执行selectNow()并立即返回就绪的channel 数量，若有通道准备（进行I/O操作）就绪则返回数&gt;0；检测到队列中没有任务，则直接返回-1，并调用select(wakenUp.getAndSet(false))；</li>
+<li>获取ioRatio，即io比率。默认50，通过io比率可以控制执行任务的时长；</li>
+<li>处理io事件。对应方法为processSelectedKeys()。如果有io事件的话，则遍历获取，其中会校验是连接就绪，写就绪或者读就绪；</li>
+<li>运行队列任务。对应方法为runAllTasks()。如果io比率=100，则不限制任务的执行时长，确保执行完所有任务；否则通过io比率折算出时长，执行任务超过该时长则退出！</li>
+</ul>
+<p><a name="GnIF5"></a></p>
+<h4 id="任务队列上未有任务，执行Netty的select"><a href="#任务队列上未有任务，执行Netty的select" class="headerlink" title="任务队列上未有任务，执行Netty的select"></a>任务队列上未有任务，执行Netty的select</h4><p><br />当检测到任务队列上未有任务时，会执行select(wakenUp.getAndSet(false));<br /></p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">select</span><span class="token punctuation">(</span><span class="token keyword">boolean</span> oldWakenUp<span class="token punctuation">)</span> <span class="token keyword">throws</span> IOException <span class="token punctuation">{</span>
+    Selector selector <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>selector<span class="token punctuation">;</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        <span class="token keyword">int</span> selectCnt <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token keyword">long</span> currentTimeNanos <span class="token operator">=</span> System<span class="token punctuation">.</span><span class="token function">nanoTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">long</span> selectDeadLineNanos <span class="token operator">=</span> currentTimeNanos <span class="token operator">+</span> <span class="token function">delayNanos</span><span class="token punctuation">(</span>currentTimeNanos<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token punctuation">;</span><span class="token punctuation">;</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">long</span> timeoutMillis <span class="token operator">=</span> <span class="token punctuation">(</span>selectDeadLineNanos <span class="token operator">-</span> currentTimeNanos <span class="token operator">+</span> 500000L<span class="token punctuation">)</span> <span class="token operator">/</span> 1000000L<span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>timeoutMillis <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>selectCnt <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    selector<span class="token punctuation">.</span><span class="token function">selectNow</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    selectCnt <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+                <span class="token keyword">break</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token comment" spellcheck="true">// 如果先将wakeUp设置为true再有任务提交，此时必须会导致任务挂起，直到select操作超时（或者管道中存在IdleStateHandler，则要等到空闲超时）；所以在执行Selector.select操作之前，需再次检查任务队列！</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">hasTasks</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> wakenUp<span class="token punctuation">.</span><span class="token function">compareAndSet</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                selector<span class="token punctuation">.</span><span class="token function">selectNow</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                selectCnt <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+                <span class="token keyword">break</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token keyword">int</span> selectedKeys <span class="token operator">=</span> selector<span class="token punctuation">.</span><span class="token function">select</span><span class="token punctuation">(</span>timeoutMillis<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            selectCnt <span class="token operator">++</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>selectedKeys <span class="token operator">!=</span> <span class="token number">0</span> <span class="token operator">||</span> oldWakenUp <span class="token operator">||</span> wakenUp<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token function">hasTasks</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token function">hasScheduledTasks</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">break</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>Thread<span class="token punctuation">.</span><span class="token function">interrupted</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>logger<span class="token punctuation">.</span><span class="token function">isDebugEnabled</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    logger<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"Selector.select() returned prematurely because "</span> <span class="token operator">+</span>
+                                 <span class="token string">"Thread.currentThread().interrupt() was called. Use "</span> <span class="token operator">+</span>
+                                 <span class="token string">"NioEventLoop.shutdownGracefully() to shutdown the NioEventLoop."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+                selectCnt <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+                <span class="token keyword">break</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token comment" spellcheck="true">// epoll 空论询的检测逻辑代码</span>
+            <span class="token keyword">long</span> time <span class="token operator">=</span> System<span class="token punctuation">.</span><span class="token function">nanoTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>time <span class="token operator">-</span> TimeUnit<span class="token punctuation">.</span>MILLISECONDS<span class="token punctuation">.</span><span class="token function">toNanos</span><span class="token punctuation">(</span>timeoutMillis<span class="token punctuation">)</span> <span class="token operator">>=</span> currentTimeNanos<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token comment" spellcheck="true">// timeoutMillis elapsed without anything selected.</span>
+                selectCnt <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>SELECTOR_AUTO_REBUILD_THRESHOLD <span class="token operator">></span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span>
+                       selectCnt <span class="token operator">>=</span> SELECTOR_AUTO_REBUILD_THRESHOLD<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                selector <span class="token operator">=</span> <span class="token function">selectRebuildSelector</span><span class="token punctuation">(</span>selectCnt<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                selectCnt <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+                <span class="token keyword">break</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            currentTimeNanos <span class="token operator">=</span> time<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>selectCnt <span class="token operator">></span> MIN_PREMATURE_SELECTOR_RETURNS<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>logger<span class="token punctuation">.</span><span class="token function">isDebugEnabled</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                logger<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"Selector.select() returned prematurely {} times in a row for Selector {}."</span><span class="token punctuation">,</span>
+                             selectCnt <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> selector<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">CancelledKeyException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>logger<span class="token punctuation">.</span><span class="token function">isDebugEnabled</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            logger<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span>CancelledKeyException<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">.</span><span class="token function">getSimpleName</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">" raised by a Selector {} - JDK bug?"</span><span class="token punctuation">,</span>
+                         selector<span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p><br />文字流程如下<br /></p>
+<ol>
+<li>获得当前时间，加上即将执行定时任务的剩余时间，得到Selector执行的“预计”剩余时间selectDeadLineNanos；</li>
+<li>selectDeadLineNanos减当前时间，加上0.5ms的缓冲值，再除以1ms得到的Selector.select的阻塞超时时间timeoutMillis</li>
+<li>当timeoutMillis  &lt;= 0，说明定时任务准备执行了！（如果是第一次进方法，此时立即唤醒Selector，执行selectNow()并立即返回就绪的channel 数量），接着退出方法体；</li>
+<li>若当前队列有任务，并且wakeUp通过cas设置为true，此时立即唤醒Selector，执行selectNow()并立即返回就绪的channel 数量，接着退出方法体；（为什么要做这一步，代码注释已声明）</li>
+<li>执行Select.select(timeoutMillis)，会一直阻塞直到超时，这里调用的是JDK原生的select；</li>
+<li>执行select后，如果Selector被唤醒，或者队列有任务，或者定时任务开始执行，则退出方法体  ；</li>
+<li>由于程序处理中可能出现错误，而导致线程被中断，此时Netty帮我们做了处理，记录日志，并退出方法体 ；</li>
+<li>重点来了，当select实际的阻塞时间&lt;timeoutMillis，并且计数器selectCnt&gt;=SELECTOR_AUTO_REBUILD_THRESHOLD，即循环超过了重试次数阈值（默认512），则Netty认为JDK触发了epoll空论询的bug，于是重建选择器，并立即唤醒Selector，执行selectNow()并立即返回就绪的channel 数量，接着退出方法体；</li>
+<li>退出方法体后，继续执行后续的处理I/O事件和执行队列任务；</li>
+</ol>
+<p><a name="D8jrw"></a></p>
+<h4 id="处理IO事件和队列任务"><a href="#处理IO事件和队列任务" class="headerlink" title="处理IO事件和队列任务"></a>处理IO事件和队列任务</h4><p><br />这一块，等下一篇章继续讲解！<br /></p>
+<p><a name="p9SwR"></a></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><a name="7SleK"></a></p>
+<h2 id="Netty中是如何结合事件模型使用NIO同步非阻塞的特性"><a href="#Netty中是如何结合事件模型使用NIO同步非阻塞的特性" class="headerlink" title="Netty中是如何结合事件模型使用NIO同步非阻塞的特性"></a>Netty中是如何结合事件模型使用NIO同步非阻塞的特性</h2><ul>
+<li>回顾BIO模型，由于单线程无法更好地利用CPU，socket的读写函数无法立即返回于是有了多线程，即一个请求对应一个处理线程，但还是同步阻塞的IO，发起请求同步，实际的IO操作阻塞，且线程的利用率非常地高，在海量请求下不切实际；</li>
+<li>回到NIO，得益于Buffer、Channel、Selector三个组件，socket的读写函数可以立即返回。发起请求仍是同步，实际的I/O操作是非阻塞，它把数据交给Channel，进而有一个特定的线程去执行I/O操作。实现了“不用多开线程利用CPU”。<br><br />如何使用事件模型单线程处理所有I/O请求？<br><br />在NIO中主要有三个事件：连接就绪、读就绪、写就绪。首先需要注册这几个事件就绪时对应的处理器，接着用一个单线程死循环执行Selector.select 阻塞式地检测Channel的事件状态，等待并获取就绪事件的到来，当就绪事件到来时，告诉事件处理器。</li>
+<li>来到Netty，在NIO的基础上，增加了Eventloop事件循环器，对原生Selector做了增强，不仅仅是一个死循环这么简单，在线程中断等用户行为错误、epoll空论询bug、适时唤醒Selector上下了很多功夫。还增加了JCTools 的无界队列MPSCQueue来存放待执行任务。</li>
+</ul>
+<p><a name="dBSB9"></a></p>
+<h2 id="Netty解决了JDK的哪些bug"><a href="#Netty解决了JDK的哪些bug" class="headerlink" title="Netty解决了JDK的哪些bug"></a>Netty解决了JDK的哪些bug</h2><blockquote>
+<p>在EventLoop的创建和执行过程中，Netty主要解决了哪些JDK的bug？</p>
+</blockquote>
+<ul>
+<li>Netty优化JDK原生的Selector<br><br />通过Unsafe类或反射，去改动SelectorImpl中的变量值，如下，将数据结构从HashSet改为了数组，解决了遍历效率、HashSet因为扩容而带来的性能问题。</li>
+</ul>
+<pre class=" language-java"><code class="language-java">Set<span class="token operator">&lt;</span>SelectionKey<span class="token operator">></span> selectedKeys<span class="token punctuation">;</span>
+Set<span class="token operator">&lt;</span>SelectionKey<span class="token operator">></span> publicSelectedKeys</code></pre>
+<ul>
+<li>Netty解决了JDK NIO 中 臭名昭著的epoll空轮询的bug<br><br />回顾之前《Netty挖掘机（一）初识Java Nio》，里面写到了如何用JAVA NIO 来写服务端应用</li>
+</ul>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">listener</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> IOException <span class="token punctuation">{</span>
+    <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token punctuation">;</span><span class="token punctuation">;</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 阻塞，获取已就绪的key个数</span>
+        <span class="token keyword">int</span> wait <span class="token operator">=</span> selector<span class="token punctuation">.</span><span class="token function">select</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">if</span><span class="token punctuation">(</span>wait <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token keyword">continue</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// 获取所有的事件key</span>
+        Set<span class="token operator">&lt;</span>SelectionKey<span class="token operator">></span> readykeys <span class="token operator">=</span> selector<span class="token punctuation">.</span><span class="token function">selectedKeys</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Iterator<span class="token operator">&lt;</span>SelectionKey<span class="token operator">></span> iterator <span class="token operator">=</span> readykeys<span class="token punctuation">.</span><span class="token function">iterator</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">while</span> <span class="token punctuation">(</span>iterator<span class="token punctuation">.</span><span class="token function">hasNext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            SelectionKey key <span class="token operator">=</span> iterator<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment" spellcheck="true">// 移除已处理数据</span>
+            iterator<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment" spellcheck="true">// 处理逻辑</span>
+            <span class="token function">process</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<ul>
+<li>在原生JDK NIO中，Selector.select()默认会一直阻塞直到有就绪事件进来。然而却可能出现没有任何就绪事件就直接返回，导致select外层的循环不断执行，最终导致服务器的CPU核心利用率飙涨到100%，即epoll空论询的bug，这是Linux系统下所导致的，不知最新版本是否处理了这个问题？<br><br />而在Netty中，实现了自定义的一个select方法，同样它会调用原生的Selector.select()，但是它做了向上增强的检测机制：<ul>
+<li>检查实际超时时间是否小于预设超时时间；</li>
+<li>检查循环次数是否超过设定重试次数阈值；</li>
+<li>重建选择器</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>Ending……<br /><br><br />阿黑在下一章节继续分析…！<br /><br><br />请关注微信公众号：进击的阿黑，谢谢。</p>
+
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">阿黑</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://grr.qiujy.com/2020/06/02/netty-wa-jue-ji-ba-eventloop-di-ceng-yuan-li-2-zhang-jie/">https://grr.qiujy.com/2020/06/02/netty-wa-jue-ji-ba-eventloop-di-ceng-yuan-li-2-zhang-jie/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">阿黑</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Netty/">
+                                    <span class="chip bg-color">Netty</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.jpg" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2020/06/02/netty-wa-jue-ji-jiu-eventloop-di-ceng-yuan-li-3-zhang-jie/">
+                    <div class="card-image">
+                        
+                        <img src="http://img.qiujy.com/cover_netty.png" class="responsive-img" alt="Netty挖掘机（九）EventLoop底层原理-3章节">
+                        
+                        <span class="card-title">Netty挖掘机（九）EventLoop底层原理-3章节</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            上一章节《Netty挖掘机（八）EventLoop底层原理-2章节》，主要分析了EventLoop的创建流程。其中有一块还没讲到，处理IO事件和队列任务。
+@Override
+protected void run() {
+    for (
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-06-02
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Netty%E6%8C%96%E6%8E%98%E6%9C%BA/" class="post-category">
+                                    Netty挖掘机
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Netty/">
+                        <span class="chip bg-color">Netty</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2020/06/02/netty-wa-jue-ji-qi-eventloop-di-ceng-yuan-li-1-zhang-jie/">
+                    <div class="card-image">
+                        
+                        <img src="http://img.qiujy.com/cover_netty.png" class="responsive-img" alt="Netty挖掘机（七）EventLoop底层原理-1章节">
+                        
+                        <span class="card-title">Netty挖掘机（七）EventLoop底层原理-1章节</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+EventLoop
+顾名思义，事件循环。在前面的文章已经讲到，NIO内部使用了Reactor模型，而Reactor模型的核心就是事件驱动。事件驱动中就有这么一个事件循环器在工作。接下来我们开始从源码入手，了解Netty的EventLoop
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-06-02
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Netty%E6%8C%96%E6%8E%98%E6%9C%BA/" class="post-category">
+                                    Netty挖掘机
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Netty/">
+                        <span class="chip bg-color">Netty</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: Jerry Blog<br />'
+            + '文章作者: 阿黑<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="503838841"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+
+    
+    <div class="container row center-align" style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="/about" target="_blank">阿黑</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">56.3k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/qJerry" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:mail@qiujy.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/search.xml", 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>

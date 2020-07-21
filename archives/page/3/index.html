@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="归档: 2020, Jerry Blog">
+    <meta name="keywords" content="归档, Jerry Blog">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>归档: 2020 | Jerry Blog</title>
+    <title>归档 | Jerry Blog</title>
     <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -386,41 +386,55 @@
             
             
             <div class="cd-timeline-img month" data-aos="zoom-in-up">
-                <a href="/archives/2020/07">07</a>
+                <a href="/archives/2020/02">02</a>
             </div>
             
 
             
             <div class="cd-timeline-img day" data-aos="zoom-in-up">
-                <span>15</span>
+                <span>20</span>
             </div>
             <article class="cd-timeline-content" data-aos="fade-up">
                 <div class="article col s12 m6">
                     <div class="card">
-                        <a href="/2020/07/15/spring-huan-cun-wa-jue-ji-3-zi-ding-yi-huan-cun/">
+                        <a href="/2020/02/20/lao-sheng-chang-tan-yi-tcp-yu-udp/">
                             <div class="card-image">
                                 
-                                <img src="http://img.qiujy.com/cover_spring_cache.png" class="responsive-img" alt="Spring缓存挖掘机（三）- 自定义缓存">
+                                <img src="http://img.qiujy.com/cover1.jpg" class="responsive-img" alt="老生常谈（一）TCP与UDP">
                                 
-                                <span class="card-title">Spring缓存挖掘机（三）- 自定义缓存</span>
+                                <span class="card-title">老生常谈（一）TCP与UDP</span>
                             </div>
                         </a>
                         <div class="card-content article-content">
                             <div class="summary block-with-text">
                                 
-                                    Spring缓存挖掘机（三）- 自定义缓存如何实现多级缓存参考上一篇的源码分析，Spring提供了缓存实现接口，并且又在support包中实现了几种缓存方案，但都仅支持单一缓存。这时，我们可以把需要的几种缓存组件组装起来，新建一个缓存类Ca
+                                    
+为了更进一步了解网络层面的知识，先晒出一张网络体系结构图，加深理解。
+
+
+计算机网络体系结构图
+TCP UDP的区别
+
+
+TCP
+UDP
+
+
+
+面向连接的协议。基于这种连接方式， 通信设备应在传输数据前建立连接，并应在传输数据后关闭连接
+
                                 
                             </div>
                             <div class="publish-info">
                                 <span class="publish-date">
-                                    <i class="far fa-clock fa-fw icon-date"></i>2020-07-15
+                                    <i class="far fa-clock fa-fw icon-date"></i>2020-02-20
                                 </span>
                                 <span class="publish-author">
                                     
                                     <i class="fas fa-bookmark fa-fw icon-category"></i>
                                     
-                                    <a href="/categories/Spring%E7%BC%93%E5%AD%98%E7%BB%84%E4%BB%B6/" class="post-category">
-                                    Spring缓存组件
+                                    <a href="/categories/%E8%80%81%E7%94%9F%E5%B8%B8%E8%B0%88/" class="post-category">
+                                    老生常谈
                                     </a>
                                     
                                     
@@ -431,9 +445,9 @@
                         
                         <div class="card-action article-tags">
                             
-                            <a href="/tags/Spring-cache/"><span class="chip bg-color">Spring cache</span></a>
+                            <a href="/tags/TCP/"><span class="chip bg-color">TCP</span></a>
                             
-                            <a href="/tags/Caffeine/"><span class="chip bg-color">Caffeine</span></a>
+                            <a href="/tags/%E7%BD%91%E7%BB%9C/"><span class="chip bg-color">网络</span></a>
                             
                         </div>
                         
@@ -452,37 +466,43 @@
 
             
             <div class="cd-timeline-img day" data-aos="zoom-in-up">
-                <span>12</span>
+                <span>20</span>
             </div>
             <article class="cd-timeline-content" data-aos="fade-up">
                 <div class="article col s12 m6">
                     <div class="card">
-                        <a href="/2020/07/12/spring-huan-cun-wa-jue-ji-2-huan-cun-ji-guan-li-qi/">
+                        <a href="/2020/02/20/jvm-chang-jian-zhi-shi-dian-zheng-li/">
                             <div class="card-image">
                                 
-                                <img src="http://img.qiujy.com/cover_spring_cache.png" class="responsive-img" alt="Spring缓存挖掘机（二）- 缓存及管理器">
+                                <img src="http://img.qiujy.com/cover_jvm.jpeg" class="responsive-img" alt="JVM常见知识点整理">
                                 
-                                <span class="card-title">Spring缓存挖掘机（二）- 缓存及管理器</span>
+                                <span class="card-title">JVM常见知识点整理</span>
                             </div>
                         </a>
                         <div class="card-content article-content">
                             <div class="summary block-with-text">
                                 
-                                    缓存管理器
-Spring提供了中央缓存管理器的底层SPI接口：org.springframework.cache.CacheManager，在spring-context 模块内。
-以上是CacheManager 以及不同的缓存方案的管理器
+                                    JVM常见知识点整理
+JAVA 代码执行顺序代码—编译器→字节码文件—JVM的解释器（类加载器）→机器码
+
+JVM 内存区域
+分为直接内存，线程私有内存，线程共享内存。私有内存包括程序计数器，虚拟机栈，本地方法栈
+
+
+
+程序计数器，当前线程
                                 
                             </div>
                             <div class="publish-info">
                                 <span class="publish-date">
-                                    <i class="far fa-clock fa-fw icon-date"></i>2020-07-12
+                                    <i class="far fa-clock fa-fw icon-date"></i>2020-02-20
                                 </span>
                                 <span class="publish-author">
                                     
                                     <i class="fas fa-bookmark fa-fw icon-category"></i>
                                     
-                                    <a href="/categories/Spring%E7%BC%93%E5%AD%98%E7%BB%84%E4%BB%B6/" class="post-category">
-                                    Spring缓存组件
+                                    <a href="/categories/JVM/" class="post-category">
+                                    JVM
                                     </a>
                                     
                                     
@@ -493,501 +513,9 @@ Spring提供了中央缓存管理器的底层SPI接口：org.springframework.cac
                         
                         <div class="card-action article-tags">
                             
-                            <a href="/tags/Spring-cache/"><span class="chip bg-color">Spring cache</span></a>
+                            <a href="/tags/JAVA/"><span class="chip bg-color">JAVA</span></a>
                             
-                            <a href="/tags/Caffeine/"><span class="chip bg-color">Caffeine</span></a>
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-            </article>
-        </div>
-        
-        <div class="cd-timeline-block">
-
-            
-            
-
-            
-            
-
-            
-            <div class="cd-timeline-img day" data-aos="zoom-in-up">
-                <span>10</span>
-            </div>
-            <article class="cd-timeline-content" data-aos="fade-up">
-                <div class="article col s12 m6">
-                    <div class="card">
-                        <a href="/2020/07/10/spring-huan-cun-wa-jue-ji-1-demo-ji-yuan-ma-pou-xi/">
-                            <div class="card-image">
-                                
-                                <img src="http://img.qiujy.com/cover_spring_cache.png" class="responsive-img" alt="Spring缓存挖掘机（一）- demo及源码剖析">
-                                
-                                <span class="card-title">Spring缓存挖掘机（一）- demo及源码剖析</span>
-                            </div>
-                        </a>
-                        <div class="card-content article-content">
-                            <div class="summary block-with-text">
-                                
-                                    背景由于系统中存在多方请求设备服务获取设备运行状态的现象，易出现重复请求的问题，故需要使用缓存去减缓调取频率，具体的方案是多级缓存操作本地缓存+redis缓存+调设备服务（慢，耗资源）先查本地缓存，若无则查redis缓存，否则再调服务
-缓存
-                                
-                            </div>
-                            <div class="publish-info">
-                                <span class="publish-date">
-                                    <i class="far fa-clock fa-fw icon-date"></i>2020-07-10
-                                </span>
-                                <span class="publish-author">
-                                    
-                                    <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                    
-                                    <a href="/categories/Spring%E7%BC%93%E5%AD%98%E7%BB%84%E4%BB%B6/" class="post-category">
-                                    Spring缓存组件
-                                    </a>
-                                    
-                                    
-                                </span>
-                            </div>
-                        </div>
-
-                        
-                        <div class="card-action article-tags">
-                            
-                            <a href="/tags/Spring-cache/"><span class="chip bg-color">Spring cache</span></a>
-                            
-                            <a href="/tags/Caffeine/"><span class="chip bg-color">Caffeine</span></a>
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-            </article>
-        </div>
-        
-        <div class="cd-timeline-block">
-
-            
-            
-
-            
-            
-            
-            <div class="cd-timeline-img month" data-aos="zoom-in-up">
-                <a href="/archives/2020/06">06</a>
-            </div>
-            
-
-            
-            <div class="cd-timeline-img day" data-aos="zoom-in-up">
-                <span>04</span>
-            </div>
-            <article class="cd-timeline-content" data-aos="fade-up">
-                <div class="article col s12 m6">
-                    <div class="card">
-                        <a href="/2020/06/04/aws-ji-cheng-lambda-apigateway/">
-                            <div class="card-image">
-                                
-                                <img src="http://img.qiujy.com/cover_aws_lambda.png" class="responsive-img" alt="AWS集成lambda+ApiGateway">
-                                
-                                <span class="card-title">AWS集成lambda+ApiGateway</span>
-                            </div>
-                        </a>
-                        <div class="card-content article-content">
-                            <div class="summary block-with-text">
-                                
-                                    背景由于项目不大，但是使用了AWS的服务，挺贵的。。咨询了AWS的技术人员后，他们提供了lambda + Apigateway的方案，可以节省很多的资源。尝试过以java为开发语言，springboot为函数框架，冷启动时间很长，响应慢的情
-                                
-                            </div>
-                            <div class="publish-info">
-                                <span class="publish-date">
-                                    <i class="far fa-clock fa-fw icon-date"></i>2020-06-04
-                                </span>
-                                <span class="publish-author">
-                                    
-                                    <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                    
-                                    <a href="/categories/AWS/" class="post-category">
-                                    AWS
-                                    </a>
-                                    
-                                    
-                                </span>
-                            </div>
-                        </div>
-
-                        
-                        <div class="card-action article-tags">
-                            
-                            <a href="/tags/AWS/"><span class="chip bg-color">AWS</span></a>
-                            
-                            <a href="/tags/AWS-Lambda/"><span class="chip bg-color">AWS Lambda</span></a>
-                            
-                            <a href="/tags/AWS-APIGateway/"><span class="chip bg-color">AWS APIGateway</span></a>
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-            </article>
-        </div>
-        
-        <div class="cd-timeline-block">
-
-            
-            
-
-            
-            
-
-            
-            <div class="cd-timeline-img day" data-aos="zoom-in-up">
-                <span>02</span>
-            </div>
-            <article class="cd-timeline-content" data-aos="fade-up">
-                <div class="article col s12 m6">
-                    <div class="card">
-                        <a href="/2020/06/02/netty-wa-jue-ji-jiu-eventloop-di-ceng-yuan-li-3-zhang-jie/">
-                            <div class="card-image">
-                                
-                                <img src="http://img.qiujy.com/cover_netty.png" class="responsive-img" alt="Netty挖掘机（九）EventLoop底层原理-3章节">
-                                
-                                <span class="card-title">Netty挖掘机（九）EventLoop底层原理-3章节</span>
-                            </div>
-                        </a>
-                        <div class="card-content article-content">
-                            <div class="summary block-with-text">
-                                
-                                    上一章节《Netty挖掘机（八）EventLoop底层原理-2章节》，主要分析了EventLoop的创建流程。其中有一块还没讲到，处理IO事件和队列任务。
-@Override
-protected void run() {
-    for (
-                                
-                            </div>
-                            <div class="publish-info">
-                                <span class="publish-date">
-                                    <i class="far fa-clock fa-fw icon-date"></i>2020-06-02
-                                </span>
-                                <span class="publish-author">
-                                    
-                                    <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                    
-                                    <a href="/categories/Netty%E6%8C%96%E6%8E%98%E6%9C%BA/" class="post-category">
-                                    Netty挖掘机
-                                    </a>
-                                    
-                                    
-                                </span>
-                            </div>
-                        </div>
-
-                        
-                        <div class="card-action article-tags">
-                            
-                            <a href="/tags/Netty/"><span class="chip bg-color">Netty</span></a>
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-            </article>
-        </div>
-        
-        <div class="cd-timeline-block">
-
-            
-            
-
-            
-            
-
-            
-            <div class="cd-timeline-img day" data-aos="zoom-in-up">
-                <span>02</span>
-            </div>
-            <article class="cd-timeline-content" data-aos="fade-up">
-                <div class="article col s12 m6">
-                    <div class="card">
-                        <a href="/2020/06/02/netty-wa-jue-ji-ba-eventloop-di-ceng-yuan-li-2-zhang-jie/">
-                            <div class="card-image">
-                                
-                                <img src="http://img.qiujy.com/cover_netty.png" class="responsive-img" alt="Netty挖掘机（八）EventLoop底层原理-2章节">
-                                
-                                <span class="card-title">Netty挖掘机（八）EventLoop底层原理-2章节</span>
-                            </div>
-                        </a>
-                        <div class="card-content article-content">
-                            <div class="summary block-with-text">
-                                
-                                    上一章节《Netty挖掘机（七）EventLoop底层原理-1章节》，主要分析了EventLoopGroup的创建流程，这一章继续讲后续操作，EventLoop的创建。
-
-创建NioEventLoop时，发生了什么？
-分析源码
-4. 创建带
-                                
-                            </div>
-                            <div class="publish-info">
-                                <span class="publish-date">
-                                    <i class="far fa-clock fa-fw icon-date"></i>2020-06-02
-                                </span>
-                                <span class="publish-author">
-                                    
-                                    <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                    
-                                    <a href="/categories/Netty%E6%8C%96%E6%8E%98%E6%9C%BA/" class="post-category">
-                                    Netty挖掘机
-                                    </a>
-                                    
-                                    
-                                </span>
-                            </div>
-                        </div>
-
-                        
-                        <div class="card-action article-tags">
-                            
-                            <a href="/tags/Netty/"><span class="chip bg-color">Netty</span></a>
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-            </article>
-        </div>
-        
-        <div class="cd-timeline-block">
-
-            
-            
-
-            
-            
-
-            
-            <div class="cd-timeline-img day" data-aos="zoom-in-up">
-                <span>02</span>
-            </div>
-            <article class="cd-timeline-content" data-aos="fade-up">
-                <div class="article col s12 m6">
-                    <div class="card">
-                        <a href="/2020/06/02/netty-wa-jue-ji-qi-eventloop-di-ceng-yuan-li-1-zhang-jie/">
-                            <div class="card-image">
-                                
-                                <img src="http://img.qiujy.com/cover_netty.png" class="responsive-img" alt="Netty挖掘机（七）EventLoop底层原理-1章节">
-                                
-                                <span class="card-title">Netty挖掘机（七）EventLoop底层原理-1章节</span>
-                            </div>
-                        </a>
-                        <div class="card-content article-content">
-                            <div class="summary block-with-text">
-                                
-                                    
-EventLoop
-顾名思义，事件循环。在前面的文章已经讲到，NIO内部使用了Reactor模型，而Reactor模型的核心就是事件驱动。事件驱动中就有这么一个事件循环器在工作。接下来我们开始从源码入手，了解Netty的EventLoop
-                                
-                            </div>
-                            <div class="publish-info">
-                                <span class="publish-date">
-                                    <i class="far fa-clock fa-fw icon-date"></i>2020-06-02
-                                </span>
-                                <span class="publish-author">
-                                    
-                                    <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                    
-                                    <a href="/categories/Netty%E6%8C%96%E6%8E%98%E6%9C%BA/" class="post-category">
-                                    Netty挖掘机
-                                    </a>
-                                    
-                                    
-                                </span>
-                            </div>
-                        </div>
-
-                        
-                        <div class="card-action article-tags">
-                            
-                            <a href="/tags/Netty/"><span class="chip bg-color">Netty</span></a>
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-            </article>
-        </div>
-        
-        <div class="cd-timeline-block">
-
-            
-            
-
-            
-            
-
-            
-            <div class="cd-timeline-img day" data-aos="zoom-in-up">
-                <span>02</span>
-            </div>
-            <article class="cd-timeline-content" data-aos="fade-up">
-                <div class="article col s12 m6">
-                    <div class="card">
-                        <a href="/2020/06/02/netty-wa-jue-ji-liu-shi-me-shi-reactor-io-style/">
-                            <div class="card-image">
-                                
-                                <img src="http://img.qiujy.com/cover_netty.png" class="responsive-img" alt="Netty挖掘机（六）什么是Reactor_IO_Style">
-                                
-                                <span class="card-title">Netty挖掘机（六）什么是Reactor_IO_Style</span>
-                            </div>
-                        </a>
-                        <div class="card-content article-content">
-                            <div class="summary block-with-text">
-                                
-                                    前面几篇文章讲解的内容都是偏向表面，比如介绍了JAVA NIO，Netty的实现流程，实现一套基于Spring+Netty的API服务模块等。 接下来开始深入挖掘，汲取Netty底层的设计思想和引用的优秀的框架、原理等。
-
-总之，拭目以待吧
-                                
-                            </div>
-                            <div class="publish-info">
-                                <span class="publish-date">
-                                    <i class="far fa-clock fa-fw icon-date"></i>2020-06-02
-                                </span>
-                                <span class="publish-author">
-                                    
-                                    <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                    
-                                    <a href="/categories/Netty%E6%8C%96%E6%8E%98%E6%9C%BA/" class="post-category">
-                                    Netty挖掘机
-                                    </a>
-                                    
-                                    
-                                </span>
-                            </div>
-                        </div>
-
-                        
-                        <div class="card-action article-tags">
-                            
-                            <a href="/tags/Netty/"><span class="chip bg-color">Netty</span></a>
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-            </article>
-        </div>
-        
-        <div class="cd-timeline-block">
-
-            
-            
-
-            
-            
-
-            
-            <div class="cd-timeline-img day" data-aos="zoom-in-up">
-                <span>02</span>
-            </div>
-            <article class="cd-timeline-content" data-aos="fade-up">
-                <div class="article col s12 m6">
-                    <div class="card">
-                        <a href="/2020/06/02/netty-wa-jue-ji-wu-di-ceng-lian-jie-pei-zhi-zhi-channeloption/">
-                            <div class="card-image">
-                                
-                                <img src="http://img.qiujy.com/cover_netty.png" class="responsive-img" alt="Netty挖掘机（五）底层连接配置之ChannelOption">
-                                
-                                <span class="card-title">Netty挖掘机（五）底层连接配置之ChannelOption</span>
-                            </div>
-                        </a>
-                        <div class="card-content article-content">
-                            <div class="summary block-with-text">
-                                
-                                    上两篇主要介绍了如何结合spring和springboot搭建netty脚手架，其中在启动类中，我们通常会通过ServerBootstrap.option或者ServerBootstrap.childOption来配置TCP参数，合理的TC
-                                
-                            </div>
-                            <div class="publish-info">
-                                <span class="publish-date">
-                                    <i class="far fa-clock fa-fw icon-date"></i>2020-06-02
-                                </span>
-                                <span class="publish-author">
-                                    
-                                    <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                    
-                                    <a href="/categories/Netty%E6%8C%96%E6%8E%98%E6%9C%BA/" class="post-category">
-                                    Netty挖掘机
-                                    </a>
-                                    
-                                    
-                                </span>
-                            </div>
-                        </div>
-
-                        
-                        <div class="card-action article-tags">
-                            
-                            <a href="/tags/Netty/"><span class="chip bg-color">Netty</span></a>
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-            </article>
-        </div>
-        
-        <div class="cd-timeline-block">
-
-            
-            
-
-            
-            
-            
-            <div class="cd-timeline-img month" data-aos="zoom-in-up">
-                <a href="/archives/2020/05">05</a>
-            </div>
-            
-
-            
-            <div class="cd-timeline-img day" data-aos="zoom-in-up">
-                <span>31</span>
-            </div>
-            <article class="cd-timeline-content" data-aos="fade-up">
-                <div class="article col s12 m6">
-                    <div class="card">
-                        <a href="/2020/05/31/netty-wa-jue-ji-si-jie-he-springboot-da-jian-netty-jiao-shou-jia/">
-                            <div class="card-image">
-                                
-                                <img src="http://img.qiujy.com/cover_netty.png" class="responsive-img" alt="Netty挖掘机（四）结合springboot搭建netty脚手架">
-                                
-                                <span class="card-title">Netty挖掘机（四）结合springboot搭建netty脚手架</span>
-                            </div>
-                        </a>
-                        <div class="card-content article-content">
-                            <div class="summary block-with-text">
-                                
-                                    上文《Netty挖掘机（三）结合spring搭建netty脚手架》，结合Spring+Netty实现API接口服务模块，本文继续码字，以Springboot的方式接入Netty实现API接口服务。我们知道，spring-boot-start
-                                
-                            </div>
-                            <div class="publish-info">
-                                <span class="publish-date">
-                                    <i class="far fa-clock fa-fw icon-date"></i>2020-05-31
-                                </span>
-                                <span class="publish-author">
-                                    
-                                    <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                    
-                                    <a href="/categories/Netty%E6%8C%96%E6%8E%98%E6%9C%BA/" class="post-category">
-                                    Netty挖掘机
-                                    </a>
-                                    
-                                    
-                                </span>
-                            </div>
-                        </div>
-
-                        
-                        <div class="card-action article-tags">
-                            
-                            <a href="/tags/Netty/"><span class="chip bg-color">Netty</span></a>
+                            <a href="/tags/JVM/"><span class="chip bg-color">JVM</span></a>
                             
                         </div>
                         
@@ -1005,18 +533,18 @@ EventLoop
     <div class="row">
         <div class="col s6 m4 l4">
             
-            <a class="left btn-floating btn-large disabled">
+            <a href="/archives/page/2/"
+               class="left btn-floating btn-large waves-effect waves-light bg-color">
                 <i class="fas fa-angle-left"></i>
             </a>
             
         </div>
         <div class="page-info col m4 l4 hide-on-small-only">
-            <div class="center-align b-text-gray">1 / 3</div>
+            <div class="center-align b-text-gray">3 / 3</div>
         </div>
         <div class="col s6 m4 l4">
             
-            <a href="/archives/2020/page/2/"
-               class="right btn-floating btn-large waves-effect waves-light bg-color">
+            <a class="right btn-floating btn-large disabled">
                 <i class="fas fa-angle-right"></i>
             </a>
             

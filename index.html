@@ -690,6 +690,247 @@ Spring提供了中央缓存管理器的底层SPI接口：org.springframework.cac
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
+                    <a href="/2020/06/02/netty-wa-jue-ji-jiu-eventloop-di-ceng-yuan-li-3-zhang-jie/">
+                        <div class="card-image">
+                            
+                            <img src="http://img.qiujy.com/cover_netty.png" class="responsive-img" alt="Netty挖掘机（九）EventLoop底层原理-3章节">
+                            
+                            <span class="card-title">Netty挖掘机（九）EventLoop底层原理-3章节</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                上一章节《Netty挖掘机（八）EventLoop底层原理-2章节》，主要分析了EventLoop的创建流程。其中有一块还没讲到，处理IO事件和队列任务。
+@Override
+protected void run() {
+    for (
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-06-02
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/Netty%E6%8C%96%E6%8E%98%E6%9C%BA/" class="post-category">
+                                    Netty挖掘机
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/Netty/">
+                            <span class="chip bg-color">Netty</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2020/06/02/netty-wa-jue-ji-ba-eventloop-di-ceng-yuan-li-2-zhang-jie/">
+                        <div class="card-image">
+                            
+                            <img src="http://img.qiujy.com/cover_netty.png" class="responsive-img" alt="Netty挖掘机（八）EventLoop底层原理-2章节">
+                            
+                            <span class="card-title">Netty挖掘机（八）EventLoop底层原理-2章节</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                上一章节《Netty挖掘机（七）EventLoop底层原理-1章节》，主要分析了EventLoopGroup的创建流程，这一章继续讲后续操作，EventLoop的创建。
+
+创建NioEventLoop时，发生了什么？
+分析源码
+4. 创建带
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-06-02
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/Netty%E6%8C%96%E6%8E%98%E6%9C%BA/" class="post-category">
+                                    Netty挖掘机
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/Netty/">
+                            <span class="chip bg-color">Netty</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2020/06/02/netty-wa-jue-ji-qi-eventloop-di-ceng-yuan-li-1-zhang-jie/">
+                        <div class="card-image">
+                            
+                            <img src="http://img.qiujy.com/cover_netty.png" class="responsive-img" alt="Netty挖掘机（七）EventLoop底层原理-1章节">
+                            
+                            <span class="card-title">Netty挖掘机（七）EventLoop底层原理-1章节</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                
+EventLoop
+顾名思义，事件循环。在前面的文章已经讲到，NIO内部使用了Reactor模型，而Reactor模型的核心就是事件驱动。事件驱动中就有这么一个事件循环器在工作。接下来我们开始从源码入手，了解Netty的EventLoop
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-06-02
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/Netty%E6%8C%96%E6%8E%98%E6%9C%BA/" class="post-category">
+                                    Netty挖掘机
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/Netty/">
+                            <span class="chip bg-color">Netty</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2020/06/02/netty-wa-jue-ji-liu-shi-me-shi-reactor-io-style/">
+                        <div class="card-image">
+                            
+                            <img src="http://img.qiujy.com/cover_netty.png" class="responsive-img" alt="Netty挖掘机（六）什么是Reactor_IO_Style">
+                            
+                            <span class="card-title">Netty挖掘机（六）什么是Reactor_IO_Style</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                前面几篇文章讲解的内容都是偏向表面，比如介绍了JAVA NIO，Netty的实现流程，实现一套基于Spring+Netty的API服务模块等。 接下来开始深入挖掘，汲取Netty底层的设计思想和引用的优秀的框架、原理等。
+
+总之，拭目以待吧
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-06-02
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/Netty%E6%8C%96%E6%8E%98%E6%9C%BA/" class="post-category">
+                                    Netty挖掘机
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/Netty/">
+                            <span class="chip bg-color">Netty</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2020/06/02/netty-wa-jue-ji-wu-di-ceng-lian-jie-pei-zhi-zhi-channeloption/">
+                        <div class="card-image">
+                            
+                            <img src="http://img.qiujy.com/cover_netty.png" class="responsive-img" alt="Netty挖掘机（五）底层连接配置之ChannelOption">
+                            
+                            <span class="card-title">Netty挖掘机（五）底层连接配置之ChannelOption</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                上两篇主要介绍了如何结合spring和springboot搭建netty脚手架，其中在启动类中，我们通常会通过ServerBootstrap.option或者ServerBootstrap.childOption来配置TCP参数，合理的TC
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-06-02
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/Netty%E6%8C%96%E6%8E%98%E6%9C%BA/" class="post-category">
+                                    Netty挖掘机
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/Netty/">
+                            <span class="chip bg-color">Netty</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
                     <a href="/2020/05/31/netty-wa-jue-ji-si-jie-he-springboot-da-jian-netty-jiao-shou-jia/">
                         <div class="card-image">
                             
@@ -826,262 +1067,6 @@ Spring提供了中央缓存管理器的底层SPI接口：org.springframework.cac
                 </div>
             </div>
             
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2020/05/30/api-she-ji-zhi-cuo-wu-ma-er/">
-                        <div class="card-image">
-                            
-                            <img src="http://img.qiujy.com/cover3.jpg" class="responsive-img" alt="API设计之错误码（二）">
-                            
-                            <span class="card-title">API设计之错误码（二）</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                
-错误码类型上一篇说到，错误码类型会有业务错误码和系统错误码，所以我们必须要将其考虑进来
-
-错误码设计错误码设计原则是，尽可能做到简洁。故我将错误码分成两部分：系统码（前4位）+错误码（后4位）系统码和错误码区间区间 需通过后台申请。由于要
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-05-30
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/API%E9%94%99%E8%AF%AF%E7%A0%81%E8%AE%BE%E8%AE%A1/" class="post-category">
-                                    API错误码设计
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/API/">
-                            <span class="chip bg-color">API</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2020/05/03/api-she-ji-zhi-cuo-wu-ma-yi/">
-                        <div class="card-image">
-                            
-                            <img src="http://img.qiujy.com/cover3.jpg" class="responsive-img" alt="API设计之错误码（一）">
-                            
-                            <span class="card-title">API设计之错误码（一）</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                背景由于项目中自己负责的一块业务，经常会出现产品反馈给我“xxx失败了，帮忙看看什么问题”，而我就会马不停蹄地上服务器see logs。再者后续平台可能会做开放API的处理，此时此刻，亟不可待，需要一套完整的错误码设计方案出炉。用户—客服—
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-05-03
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/API%E9%94%99%E8%AF%AF%E7%A0%81%E8%AE%BE%E8%AE%A1/" class="post-category">
-                                    API错误码设计
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/API/">
-                            <span class="chip bg-color">API</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2020/03/25/rabbitmq-yin-fa-de-nei-cun-yi-chu/">
-                        <div class="card-image">
-                            
-                            <img src="http://img.qiujy.com/cover_rabbitmq.jpeg" class="responsive-img" alt="Rabbitmq引发的内存溢出">
-                            
-                            <span class="card-title">Rabbitmq引发的内存溢出</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                背景某一天，和我们配合的中台组给我们部门发了一组新的MQ配置，用于支付回调消息的接收，原来我们的某个项目已经有一个MQ，所以项目需要适配两个MQ（该项目都是作为消费者的角色）。rabbitmq使用的版本是
-&lt;dependency>
- 
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-25
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/Rabbitmq/" class="post-category">
-                                    Rabbitmq
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/Rabbitmq/">
-                            <span class="chip bg-color">Rabbitmq</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2020/03/18/fu-wu-qi-jian-kong-netdata/">
-                        <div class="card-image">
-                            
-                            <img src="http://img.qiujy.com/cover_netdata.gif" class="responsive-img" alt="服务器监控netdata">
-                            
-                            <span class="card-title">服务器监控netdata</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                什么是Netdata简单一句话，Netdata是一个分布式的实时健康监测系统。
-
-
-
-
-说明
-
-
-
-对象
-针对系统和应用程序的分布式，实时，性能和运行状况监视
-
-
-可视化
-Netdata使用高度互动的Web仪表板实时提供无与伦比的洞察力，以
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-18
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/%E7%9B%91%E6%8E%A7/" class="post-category">
-                                    监控
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/netdata/">
-                            <span class="chip bg-color">netdata</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2020/02/27/fen-bu-shi-ren-wu-diao-du-ping-tai-xxl-job/">
-                        <div class="card-image">
-                            
-                            <img src="/images/conver_xxljob.jpg" class="responsive-img" alt="分布式任务调度平台XXL-JOB">
-                            
-                            <span class="card-title">分布式任务调度平台XXL-JOB</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                一、需求背景以往系统中的周期性任务执行，一般有以下几种方式
-
-引入quartz or spring-task ，每一个任务对应编写一个执行类，配置调度规则执行
-使用系统的执行器，比如centos的crontab，每一个任务对应编写一个执行类
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-02-27
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/" class="post-category">
-                                    分布式
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">
-                            <span class="chip bg-color">分布式</span>
-                        </a>
-                        
-                        <a href="/tags/XXL-JOB/">
-                            <span class="chip bg-color">XXL-JOB</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
         </div>
     </article>
 
@@ -1180,7 +1165,7 @@ Netdata使用高度互动的Web仪表板实时提供无与伦比的洞察力，�
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">46.3k</span>&nbsp;字
+                class="white-color">56.3k</span>&nbsp;字
             
             
             

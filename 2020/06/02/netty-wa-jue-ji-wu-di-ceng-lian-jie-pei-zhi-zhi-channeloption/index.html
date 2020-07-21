@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="AWS集成lambda+ApiGateway">
+    <meta name="keywords" content="Netty挖掘机（五）底层连接配置之ChannelOption">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>AWS集成lambda+ApiGateway | Jerry Blog</title>
+    <title>Netty挖掘机（五）底层连接配置之ChannelOption | Jerry Blog</title>
     <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -242,12 +242,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('http://img.qiujy.com/cover_aws_lambda.png')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('http://img.qiujy.com/cover_netty.png')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">AWS集成lambda+ApiGateway</h1>
+                    <h1 class="description center-align post-title">Netty挖掘机（五）底层连接配置之ChannelOption</h1>
                 </div>
             </div>
         </div>
@@ -364,16 +364,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/AWS/">
-                                <span class="chip bg-color">AWS</span>
-                            </a>
-                        
-                            <a href="/tags/AWS-Lambda/">
-                                <span class="chip bg-color">AWS Lambda</span>
-                            </a>
-                        
-                            <a href="/tags/AWS-APIGateway/">
-                                <span class="chip bg-color">AWS APIGateway</span>
+                            <a href="/tags/Netty/">
+                                <span class="chip bg-color">Netty</span>
                             </a>
                         
                     </div>
@@ -384,8 +376,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/AWS/" class="post-category">
-                                AWS
+                            <a href="/categories/Netty%E6%8C%96%E6%8E%98%E6%9C%BA/" class="post-category">
+                                Netty挖掘机
                             </a>
                         
                     </div>
@@ -397,7 +389,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-06-04
+                    2020-06-02
                 </div>
                 
 
@@ -428,93 +420,111 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>由于项目不大，但是使用了AWS的服务，挺贵的。。咨询了AWS的技术人员后，他们提供了lambda + Apigateway的方案，可以节省很多的资源。<br /><br><br />尝试过以java为开发语言，springboot为函数框架，冷启动时间很长，响应慢的情况下，还会导致收费增加，故我这里改成脚本语言去实现<br /></p>
-<p><a name="9cjSK"></a></p>
-<h2 id="配置流程"><a href="#配置流程" class="headerlink" title="配置流程"></a>配置流程</h2><p><a name="nTF9S"></a></p>
-<h3 id="1-创建lamda函数"><a href="#1-创建lamda函数" class="headerlink" title="1. 创建lamda函数"></a>1. 创建lamda函数</h3><p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1589954896351-0c676797-73b9-468b-af75-865b5be48f62.png#align=left&display=inline&height=367&margin=%5Bobject%20Object%5D&name=image.png&originHeight=367&originWidth=1795&size=33210&status=done&style=none&width=1795" alt="image.png"><br />下面创建了一个函数名为test-function，运行时为python<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663472276-7f372b8f-fd59-4c05-b1cc-238848425296.png#align=left&display=inline&height=755&margin=%5Bobject%20Object%5D&name=image.png&originHeight=755&originWidth=1794&size=84896&status=done&style=none&width=1794" alt="image.png"><br /></p>
-<p><a name="M1May"></a></p>
-<h3 id="2-配置测试事件"><a href="#2-配置测试事件" class="headerlink" title="2. 配置测试事件"></a>2. 配置测试事件</h3><p>主要用于测试这个函数有没有跑成功<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663537636-1b758b45-a1e5-4a1c-9c4a-afc530b3756a.png#align=left&display=inline&height=117&margin=%5Bobject%20Object%5D&name=image.png&originHeight=117&originWidth=676&size=8127&status=done&style=none&width=676" alt="image.png"><br />下面配置了一个事件名称为test的测试事件<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1589956651446-b410c5f1-f57d-4718-a61e-08cfeac2cb38.png#align=left&display=inline&height=538&margin=%5Bobject%20Object%5D&name=image.png&originHeight=538&originWidth=826&size=32547&status=done&style=none&width=826" alt="image.png"><br /></p>
-<p><a name="I7wNH"></a></p>
-<h3 id="3-添加函数代码"><a href="#3-添加函数代码" class="headerlink" title="3. 添加函数代码"></a>3. 添加函数代码</h3><p>由于上面设置的运行时环境是JAVA8，AWS暂时不支持在面板上编辑代码，故我们可以通过本地写完代码后，上传到S3、或者直接手动上传。这个待定~~<br><a name="HdGAJ"></a></p>
-<h4 id="使用python实现一个函数"><a href="#使用python实现一个函数" class="headerlink" title="使用python实现一个函数"></a>使用python实现一个函数</h4><pre class=" language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">handler</span><span class="token punctuation">(</span>event<span class="token punctuation">,</span> context<span class="token punctuation">)</span><span class="token punctuation">:</span>
-    data <span class="token operator">=</span> event<span class="token punctuation">[</span><span class="token string">'queryStringParameters'</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'data'</span><span class="token punctuation">]</span>
+                <p>上两篇主要介绍了如何结合spring和springboot搭建netty脚手架，其中在启动类中，我们通常会通过<code>ServerBootstrap.option</code>或者<code>ServerBootstrap.childOption</code>来配置TCP参数，合理的TCP参数配置对于项目的可用性还是挺重要的！<br /><br><br />那这一次我们来介绍一下Netty的TCP连接的底层参数配置：<code>io.netty.channel.ChannelOption</code><br /></p>
+<p><a name="CxBF8"></a></p>
+<h2 id="ChannelOption套接字配置"><a href="#ChannelOption套接字配置" class="headerlink" title="ChannelOption套接字配置"></a>ChannelOption套接字配置</h2><blockquote>
+<p>Netty中关于套接字选项的设置，在<code>io.netty.channel.ChannelOption</code>这个类中。</p>
+</blockquote>
+<br />
 
-    protocol <span class="token operator">=</span> <span class="token string">'http'</span>
-    domain_name <span class="token operator">=</span> event<span class="token punctuation">[</span><span class="token string">'requestContext'</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'domainName'</span><span class="token punctuation">]</span>
-    request_url <span class="token operator">=</span> protocol <span class="token operator">+</span> <span class="token string">'://'</span> <span class="token operator">+</span> domain_name <span class="token operator">+</span> event<span class="token punctuation">[</span><span class="token string">'requestContext'</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'path'</span><span class="token punctuation">]</span>
-    request_ip <span class="token operator">=</span> event<span class="token punctuation">[</span><span class="token string">'requestContext'</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'identity'</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'sourceIp'</span><span class="token punctuation">]</span>
-    param <span class="token operator">=</span> event<span class="token punctuation">[</span><span class="token string">'queryStringParameters'</span><span class="token punctuation">]</span>
-    <span class="token keyword">if</span> param <span class="token keyword">is</span> None<span class="token punctuation">:</span>
-        <span class="token keyword">return</span> <span class="token punctuation">{</span><span class="token string">"statusCode"</span><span class="token punctuation">:</span> <span class="token number">200</span><span class="token punctuation">,</span> <span class="token string">"body"</span><span class="token punctuation">:</span> <span class="token string">'error.'</span><span class="token punctuation">}</span>
-    param_size <span class="token operator">=</span> len<span class="token punctuation">(</span>param<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-    <span class="token keyword">if</span> param_size <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">:</span>
-        param_str <span class="token operator">=</span> <span class="token string">'?'</span>
-    <span class="token keyword">for</span> <span class="token punctuation">(</span>key<span class="token punctuation">,</span> name<span class="token punctuation">)</span> <span class="token keyword">in</span> param<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-        param_str <span class="token operator">=</span> param_str <span class="token operator">+</span> key <span class="token operator">+</span> <span class="token string">'='</span> <span class="token operator">+</span> name <span class="token operator">+</span> <span class="token string">'&amp;'</span>
-    param_str <span class="token operator">=</span> param_str<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>
-    request_url <span class="token operator">=</span> request_url <span class="token operator">+</span> param_str
-    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'request url :'</span><span class="token punctuation">,</span> request_url<span class="token punctuation">,</span> <span class="token string">', request ip :'</span><span class="token punctuation">,</span> request_ip<span class="token punctuation">)</span>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SO_BROADCAST</td>
+<td>对应套接字层的套接字：SO_BROADCAST，将消息发送到广播地址。</td>
+</tr>
+<tr>
+<td>如果目标中指定的接口支持广播数据包，则启用此选项可让应用程序发送广播消息。</td>
+<td></td>
+</tr>
+<tr>
+<td>SO_KEEPALIVE</td>
+<td>对应套接字层的套接字：SO_KEEPALIVE，保持连接。</td>
+</tr>
+<tr>
+<td>在空闲套接字上发送探测，以验证套接字是否仍处于活动状态。</td>
+<td></td>
+</tr>
+<tr>
+<td>SO_SNDBUF</td>
+<td>对应套接字层的套接字：SO_SNDBUF，设置发送缓冲区的大小。</td>
+</tr>
+<tr>
+<td>SO_RCVBUF</td>
+<td>对应套接字层的套接字：SO_RCVBUF，获取接收缓冲区的大小。</td>
+</tr>
+<tr>
+<td>SO_REUSEADDR</td>
+<td>对应套接字层的套接字：SO_REUSEADDR，本地地址复用。</td>
+</tr>
+<tr>
+<td>启用此选项允许绑定已使用的本地地址。</td>
+<td></td>
+</tr>
+<tr>
+<td>SO_LINGER</td>
+<td>对应套接字层的套接字：SO_LINGER，延迟关闭连接。</td>
+</tr>
+<tr>
+<td>启用此选项，在调用close时如果存在未发送的数据时，在close期间将阻止调用应用程序，直到数据被传输或连接超时。</td>
+<td></td>
+</tr>
+<tr>
+<td>SO_BACKLOG</td>
+<td>对应TCP/IP协议中_backlog_参数，_backlog_即连接队列，设置TCP中的连接队列大小。如果队列满了，会发送一个ECONNREFUSED错误信息给C端，即“ Connection refused”。</td>
+</tr>
+<tr>
+<td>SO_TIMEOUT</td>
+<td>等待客户连接的超时时间。</td>
+</tr>
+<tr>
+<td>IP_TOS</td>
+<td>对应套接字层的套接字：IP_TOS，在IP标头中设置服务类型（TOS）和优先级。</td>
+</tr>
+<tr>
+<td>IP_MULTICAST_ADDR</td>
+<td>对应IP层的套接字选项：IP_MULTICAST_IF，设置应发送多播数据报的传出接口。</td>
+</tr>
+<tr>
+<td>IP_MULTICAST_IF</td>
+<td>对应IP层的套接字选项：IP_MULTICAST_IF2，设置应发送多播数据报的IPV6传出接口。</td>
+</tr>
+<tr>
+<td>IP_MULTICAST_TTL</td>
+<td>对应IP层的套接字选项：IP_MULTICAST_TTL，在传出的 多播数据报的IP头中设置生存时间（TTL）。</td>
+</tr>
+<tr>
+<td>IP_MULTICAST_LOOP_DISABLED</td>
+<td>取消 指定应将 传出的多播数据报的副本 回传到发送主机，只要它是多播组的成员即可。</td>
+</tr>
+<tr>
+<td>TCP_NODELAY</td>
+<td>对应TCP层的套接字选项：TCP_NODELAY，指定TCP是否遵循Nagle算法 决定何时发送数据。Nagle算法代表通过减少必须发送包的个数来增加网络软件系统的效率。即尽可能发送大块数据避免网络中充斥着大量的小数据块。如果要追求高实时性，需要设置关闭Nagle算法；如果需要追求减少网络交互次数，则设置开启Nagle算法。</td>
+</tr>
+</tbody></table>
+<br />
+<a name="K19pV"></a>
+## ChannelOption通用配置
+| 参数 | 解释 |
+| --- | --- |
+| ALLOCATOR | ByteBuf的分配器，默认值为ByteBufAllocator.DEFAULT。 |
+| RCVBUF_ALLOCATOR | 用于Channel分配接受Buffer的分配器，默认值为AdaptiveRecvByteBufAllocator.DEFAULT，是一个自适应的接受缓冲区分配器，能根据接受到的数据自动调节大小。可选值为FixedRecvByteBufAllocator，固定大小的接受缓冲区分配器。 |
+| MESSAGE_SIZE_ESTIMATOR | 消息大小估算器，默认为DefaultMessageSizeEstimator.DEFAULT。估算ByteBuf、ByteBufHolder和FileRegion的大小，其中ByteBuf和ByteBufHolder为实际大小，FileRegion估算值为0。该值估算的字节数在计算水位时使用，FileRegion为0可知FileRegion不影响高低水位。 |
+| CONNECT_TIMEOUT_MILLIS | 连接超时毫秒数，默认值30000毫秒即30秒。 |
+| WRITE_SPIN_COUNT | 一个Loop写操作执行的最大次数，默认值为16。也就是说，对于大数据量的写操作至多进行16次，如果16次仍没有全部写完数据，此时会提交一个新的写任务给EventLoop，任务将在下次调度继续执行。这样，其他的写请求才能被响应不会因为单个大数据量写请求而耽误。 |
+| WRITE_BUFFER_WATER_MARK |  |
+| ALLOW_HALF_CLOSURE | 一个连接的远端关闭时本地端是否关闭，默认值为False。值为False时，连接自动关闭；为True时，触发ChannelInboundHandler的userEventTriggered()方法，事件为ChannelInputShutdownEvent。 |
+| AUTO_READ | 自动读取，默认值为True。Netty只在必要的时候才设置关心相应的I/O事件。对于读操作，需要调用channel.read()设置关心的I/O事件为OP_READ，这样若有数据到达才能读取以供用户处理。该值为True时，每次读操作完毕后会自动调用channel.read()，从而有数据到达便能读取；否则，需要用户手动调用channel.read()。需要注意的是：当调用config.setAutoRead(boolean)方法时，如果状态由false变为true，将会调用channel.read()方法读取数据；由true变为false，将调用config.autoReadCleared()方法终止数据读取。 |
+| AUTO_CLOSE |  |
 
-    <span class="token keyword">return</span> <span class="token punctuation">{</span><span class="token string">"statusCode"</span><span class="token punctuation">:</span> <span class="token number">200</span><span class="token punctuation">,</span> <span class="token string">"body"</span><span class="token punctuation">:</span> <span class="token string">'success.'</span><span class="token punctuation">}</span></code></pre>
-<p>注意，如果用到了其他需安装的依赖的话，需要先将依赖下载到和python文件同个文件夹下</p>
-<pre class=" language-shell"><code class="language-shell">pip install pymsql -t .</code></pre>
-<p>如下，我安装了pymsql的依赖到文件夹中，并将其和python文件一起打成zip包，用于上传到lambda后台<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663135995-fa241d55-774f-4a3a-8baf-acdc1561e52d.png#align=left&display=inline&height=87&margin=%5Bobject%20Object%5D&name=image.png&originHeight=87&originWidth=261&size=4027&status=done&style=none&width=261" alt="image.png"><br />接着开始上传函数文件，后台支持在线编辑代码，但是由于函数引了其他依赖，故以zip包上传的形式打包上去<br />这里需要注意，处理程序要对应修改，形式为：文件名.方法名<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663678059-be7b88fd-7851-4e2a-b3e9-a1a373c5786a.png#align=left&display=inline&height=289&margin=%5Bobject%20Object%5D&name=image.png&originHeight=289&originWidth=1624&size=26931&status=done&style=none&width=1624" alt="image.png"><br /><br><br />上传后效果如下<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663787533-95eb8e9a-4cce-48d2-813a-2418eb03ed25.png#align=left&display=inline&height=586&margin=%5Bobject%20Object%5D&name=image.png&originHeight=586&originWidth=1488&size=70260&status=done&style=none&width=1488" alt="image.png"><br /></p>
-<p><a name="pINrp"></a></p>
-<h3 id="4-配置lambda环境"><a href="#4-配置lambda环境" class="headerlink" title="4. 配置lambda环境"></a>4. 配置lambda环境</h3><p><a name="GuVrW"></a></p>
-<h4 id="基本设置"><a href="#基本设置" class="headerlink" title="基本设置"></a>基本设置</h4><p>可根据函数实际运行情况，对其分配超时时间和内存<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663814291-ed8334ee-9924-476e-83b6-fbe7318e7a50.png#align=left&display=inline&height=248&margin=%5Bobject%20Object%5D&name=image.png&originHeight=248&originWidth=814&size=11185&status=done&style=none&width=814" alt="image.png"><br /></p>
-<p><a name="RbgOX"></a></p>
-<h4 id="并发设置"><a href="#并发设置" class="headerlink" title="并发设置"></a>并发设置</h4><p>可默认不改，使用预置并发需要收费<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663878594-1da573f8-941e-401c-abdf-b3f3ed2f1602.png#align=left&display=inline&height=548&margin=%5Bobject%20Object%5D&name=image.png&originHeight=548&originWidth=1596&size=43076&status=done&style=none&width=1596" alt="image.png"><br /></p>
-<p><a name="OBySq"></a></p>
-<h4 id="VPC设置"><a href="#VPC设置" class="headerlink" title="VPC设置"></a>VPC设置</h4><p>当需要调用其他aws服务时，需要配置再同个VPC下<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590663931128-187af22c-fbc8-4b6a-a41a-2a7fd45773cb.png#align=left&display=inline&height=239&margin=%5Bobject%20Object%5D&name=image.png&originHeight=239&originWidth=1642&size=17212&status=done&style=none&width=1642" alt="image.png"><br /></p>
-<p><a name="FrfvT"></a></p>
-<h3 id="5-API-Gateway创建一个API"><a href="#5-API-Gateway创建一个API" class="headerlink" title="5. API Gateway创建一个API"></a>5. API Gateway创建一个API</h3><ul>
-<li>若用到了aws服务，则用REST API，否则可使用HTTP API</li>
-</ul>
-<p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590664056048-cf85f66c-6f4f-477f-afae-d24f07ba096e.png#align=left&display=inline&height=730&margin=%5Bobject%20Object%5D&name=image.png&originHeight=730&originWidth=763&size=47464&status=done&style=none&width=763" alt="image.png"></p>
-<ul>
-<li>终端节点类型默认选择区域性，目前仅在一个区域内操作</li>
-</ul>
-<p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590664187817-35fc3f99-41d8-4543-b18e-dec83f104548.png#align=left&display=inline&height=553&margin=%5Bobject%20Object%5D&name=image.png&originHeight=553&originWidth=935&size=40197&status=done&style=none&width=935" alt="image.png"><br><a name="xELRF"></a></p>
-<h3 id="6-创建资源和方法"><a href="#6-创建资源和方法" class="headerlink" title="6. 创建资源和方法"></a>6. 创建资源和方法</h3><ul>
-<li>先创建一个get请求的方法</li>
-</ul>
-<p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590664293392-ccccd835-61cb-4d03-8ec1-92c0a216562d.png#align=left&display=inline&height=442&margin=%5Bobject%20Object%5D&name=image.png&originHeight=442&originWidth=691&size=35170&status=done&style=none&width=691" alt="image.png"></p>
-<ul>
-<li>托管给lambda代理</li>
-</ul>
-<p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590664340173-05fe4e25-892d-4053-82a9-f4da56c0ff1e.png#align=left&display=inline&height=508&margin=%5Bobject%20Object%5D&name=image.png&originHeight=508&originWidth=918&size=26734&status=done&style=none&width=918" alt="image.png"></p>
-<ul>
-<li>再新创建一个资源</li>
-</ul>
-<p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590664428852-cf003ceb-216e-4214-a9a5-637937880131.png#align=left&display=inline&height=485&margin=%5Bobject%20Object%5D&name=image.png&originHeight=485&originWidth=720&size=40343&status=done&style=none&width=720" alt="image.png"></p>
-<ul>
-<li>资源主要是对应一个路径参数，如<a href="http://localhost/pets/p，则需要先创建一个资源路径为pets，再创建一个资源路径为p，再在资源p下创建一个方法，用于访问该接口" target="_blank" rel="noopener">http://localhost/pets/p，则需要先创建一个资源路径为pets，再创建一个资源路径为p，再在资源p下创建一个方法，用于访问该接口</a></li>
-</ul>
-<p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590664452523-f1b8e30c-22b4-4f04-857d-7beef080a5d0.png#align=left&display=inline&height=415&margin=%5Bobject%20Object%5D&name=image.png&originHeight=415&originWidth=1054&size=31713&status=done&style=none&width=1054" alt="image.png"></p>
-<ul>
-<li>最终效果如下</li>
-</ul>
-<p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590664613111-c9a88799-1a45-44cc-92d0-044daf10e2ac.png#align=left&display=inline&height=561&margin=%5Bobject%20Object%5D&name=image.png&originHeight=561&originWidth=1762&size=63494&status=done&style=none&width=1762" alt="image.png"></p>
-<ul>
-<li>可对每个方法进行测试，这里不多讲，主要讲部署</li>
-</ul>
-<p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590664646244-9799a21d-afb5-4825-9197-99cb3ff4c23c.png#align=left&display=inline&height=565&margin=%5Bobject%20Object%5D&name=image.png&originHeight=565&originWidth=712&size=43518&status=done&style=none&width=712" alt="image.png"></p>
-<ul>
-<li>部署阶段名称为test，当发布生产时，可改为prod</li>
-</ul>
-<p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590664658831-7d4d2e61-79bf-4889-9aa4-d6b0de36a6eb.png#align=left&display=inline&height=370&margin=%5Bobject%20Object%5D&name=image.png&originHeight=370&originWidth=600&size=21600&status=done&style=none&width=600" alt="image.png"></p>
-<ul>
-<li>部署成功，如下，</li>
-</ul>
-<p>访问url：<a href="https://elxv6vagga.execute-api.us-west-2.amazonaws.com/test?data=1" target="_blank" rel="noopener">https://****.com/test?data=1</a>，可返回函数内定义的“success”<br />访问url：<a href="https://elxv6vagga.execute-api.us-west-2.amazonaws.com/test/pets?data=1" target="_blank" rel="noopener">https://***m/test/pets?data=1</a>，同样可返回“success”<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590664761645-44cb4f05-60bb-411f-8ca4-0f66f56adfb7.png#align=left&display=inline&height=745&margin=%5Bobject%20Object%5D&name=image.png&originHeight=745&originWidth=1508&size=77565&status=done&style=none&width=1508" alt="image.png"><br /><br><br /></p>
-<p><a name="YGQO9"></a></p>
-<h3 id="7-配置自定义域名"><a href="#7-配置自定义域名" class="headerlink" title="7. 配置自定义域名"></a>7. 配置自定义域名</h3><p>由于API Gateway 仅支持带证书的域名，所以这里我们要部署证书到aws<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590664939795-95c9247a-5466-42ae-b750-627d84fb00d2.png#align=left&display=inline&height=823&margin=%5Bobject%20Object%5D&name=image.png&originHeight=823&originWidth=1581&size=79195&status=done&style=none&width=1581" alt="image.png"><br />我使用的是腾讯云，故在腾讯云申请到免费证书后，上传到ACM后台：<a href="https://us-west-2.console.aws.amazon.com/acm/home?region=us-west-2" target="_blank" rel="noopener">https://us-west-2.console.aws.amazon.com/acm/home?region=us-west-2</a><br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590665143414-c869099e-e5b5-43d4-b532-a36c8720facd.png#align=left&display=inline&height=636&margin=%5Bobject%20Object%5D&name=image.png&originHeight=636&originWidth=1253&size=47713&status=done&style=none&width=1253" alt="image.png"><br /></p>
-<p><a name="cgASv"></a></p>
-<h3 id="8-域名映射路径"><a href="#8-域名映射路径" class="headerlink" title="8. 域名映射路径"></a>8. 域名映射路径</h3><p>开放接口有：/app/offers/get 和 /offers/get<br><a name="rpGXM"></a></p>
-<h4 id="1-先配置API映射，路径为None"><a href="#1-先配置API映射，路径为None" class="headerlink" title="1. 先配置API映射，路径为None"></a>1. 先配置API映射，路径为None</h4><p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590831480790-cb5b3dec-fe08-4c5a-9395-040a0b0d9edd.png#align=left&display=inline&height=202&margin=%5Bobject%20Object%5D&name=image.png&originHeight=202&originWidth=1138&size=13714&status=done&style=none&width=1138" alt="image.png"><br><a name="3T6Tg"></a></p>
-<h4 id="2-在API-内定好资源和方法"><a href="#2-在API-内定好资源和方法" class="headerlink" title="2. 在API 内定好资源和方法"></a>2. 在API 内定好资源和方法</h4><p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590831529725-4f9a134f-0b4e-4bf8-be0d-e876adef1990.png#align=left&display=inline&height=257&margin=%5Bobject%20Object%5D&name=image.png&originHeight=257&originWidth=216&size=6132&status=done&style=none&width=216" alt="image.png"><br /><br><br /><br><br /><del>这里我想实现的是，将原来的<a href="https://elxv6vagga.execute-api.us-west-2.amazonaws.com/test?data=1" target="_blank" rel="noopener">https://****.com/test?data=1</a>，通过自定义域名映射成，<a href="https://custom_domain.com?data=1" target="_blank" rel="noopener">https://custom_domain.com?data=1</a></del><br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590665287068-d22a62e2-22e2-4337-a9e0-e43361484313.png#align=left&display=inline&height=426&margin=%5Bobject%20Object%5D&name=image.png&originHeight=426&originWidth=1637&size=32241&status=done&style=none&width=1637" alt="image.png"><br /><del>以上配置后发现不生效，只能<a href="https://custom_domain.com?data=1" target="_blank" rel="noopener">https://custom_domain.com/test?data=1</a></del><br /><br><br /><del>查看资料发现，aws默认给我们生成的url是有特征的</del><br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590665407264-05a69e95-2a46-4e60-87c7-66191b791f03.png#align=left&display=inline&height=467&margin=%5Bobject%20Object%5D&name=image.png&originHeight=467&originWidth=1195&size=60799&status=done&style=none&width=1195" alt="image.png"><br /><del>所以在API映射中，我们是无法做到把stage通过映射关系替代掉的</del><br /><br><br /><del>幸好，后面查阅资料，翻到网友已经找到解决方案了：</del><a href="https://www.stacknoob.com/s/jNBYcCaDDAR5e7Y7GLPHbk" target="_blank" rel="noopener"><del>https://www.stacknoob.com/s/jNBYcCaDDAR5e7Y7GLPHbk</del></a><br /><del>创建API（或使用现有的API，并修改资源）并为其提供代理资源，以及源自根路径的简单GET方法，即可实现自定义域名成功映射，不用被 阶段名state 所影响</del><br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590665560580-17ee7c74-f2ea-4d61-8a2b-54239687eb47.png#align=left&display=inline&height=404&margin=%5Bobject%20Object%5D&name=image.png&originHeight=404&originWidth=969&size=32201&status=done&style=none&width=969" alt="image.png"><br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1590665658504-b2207ca6-64a5-4b59-8f38-4c88f1a22169.png#align=left&display=inline&height=590&margin=%5Bobject%20Object%5D&name=image.png&originHeight=590&originWidth=1751&size=63806&status=done&style=none&width=1751" alt="image.png"><br /><br><br /><del>重新部署，访问<a href="https://custom_domain.com?data=1" target="_blank" rel="noopener">https://custom_domain.com?data=1</a>，即可成功返回“success”</del><br /><del><br /></del><br><a name="gKHWS"></a></p>
-<h2 id="存在问题"><a href="#存在问题" class="headerlink" title="存在问题"></a>存在问题</h2><p><a name="TZoII"></a></p>
-<h3 id="1-Lambda存在函数有一定的约束条件"><a href="#1-Lambda存在函数有一定的约束条件" class="headerlink" title="1. Lambda存在函数有一定的约束条件"></a>1. Lambda存在函数有一定的约束条件</h3><p>参考<a href="https://docs.aws.amazon.com/zh_cn/lambda/latest/dg/gettingstarted-limits.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/zh_cn/lambda/latest/dg/gettingstarted-limits.html</a><br />实际项目中遇到返回的包体字节太大，导致报错，报错原因是因为LAMBDA函数设置的调用负载同步请求是6MB，实际大于6MB。<br />解决方案：参考<a href="https://theburningmonk.com/2020/04/hit-the-6mb-lambda-payload-limit-heres-what-you-can-do/" target="_blank" rel="noopener">https://theburningmonk.com/2020/04/hit-the-6mb-lambda-payload-limit-heres-what-you-can-do/</a></p>
+
+
+
 
             </div>
             <hr/>
@@ -540,7 +550,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://grr.qiujy.com/2020/06/04/aws-ji-cheng-lambda-apigateway/">https://grr.qiujy.com/2020/06/04/aws-ji-cheng-lambda-apigateway/</a>
+                    <a href="https://grr.qiujy.com/2020/06/02/netty-wa-jue-ji-wu-di-ceng-lian-jie-pei-zhi-zhi-channeloption/">https://grr.qiujy.com/2020/06/02/netty-wa-jue-ji-wu-di-ceng-lian-jie-pei-zhi-zhi-channeloption/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -578,16 +588,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/AWS/">
-                                    <span class="chip bg-color">AWS</span>
-                                </a>
-                            
-                                <a href="/tags/AWS-Lambda/">
-                                    <span class="chip bg-color">AWS Lambda</span>
-                                </a>
-                            
-                                <a href="/tags/AWS-APIGateway/">
-                                    <span class="chip bg-color">AWS APIGateway</span>
+                                <a href="/tags/Netty/">
+                                    <span class="chip bg-color">Netty</span>
                                 </a>
                             
                         </div>
@@ -759,31 +761,32 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2020/07/10/spring-huan-cun-wa-jue-ji-1-demo-ji-yuan-ma-pou-xi/">
+                <a href="/2020/06/02/netty-wa-jue-ji-liu-shi-me-shi-reactor-io-style/">
                     <div class="card-image">
                         
-                        <img src="http://img.qiujy.com/cover_spring_cache.png" class="responsive-img" alt="Spring缓存挖掘机（一）- demo及源码剖析">
+                        <img src="http://img.qiujy.com/cover_netty.png" class="responsive-img" alt="Netty挖掘机（六）什么是Reactor_IO_Style">
                         
-                        <span class="card-title">Spring缓存挖掘机（一）- demo及源码剖析</span>
+                        <span class="card-title">Netty挖掘机（六）什么是Reactor_IO_Style</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            背景由于系统中存在多方请求设备服务获取设备运行状态的现象，易出现重复请求的问题，故需要使用缓存去减缓调取频率，具体的方案是多级缓存操作本地缓存+redis缓存+调设备服务（慢，耗资源）先查本地缓存，若无则查redis缓存，否则再调服务
-缓存
+                            前面几篇文章讲解的内容都是偏向表面，比如介绍了JAVA NIO，Netty的实现流程，实现一套基于Spring+Netty的API服务模块等。 接下来开始深入挖掘，汲取Netty底层的设计思想和引用的优秀的框架、原理等。
+
+总之，拭目以待吧
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-07-10
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-06-02
                         </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Spring%E7%BC%93%E5%AD%98%E7%BB%84%E4%BB%B6/" class="post-category">
-                                    Spring缓存组件
+                            <a href="/categories/Netty%E6%8C%96%E6%8E%98%E6%9C%BA/" class="post-category">
+                                    Netty挖掘机
                                 </a>
                             
                             
@@ -793,12 +796,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Spring-cache/">
-                        <span class="chip bg-color">Spring cache</span>
-                    </a>
-                    
-                    <a href="/tags/Caffeine/">
-                        <span class="chip bg-color">Caffeine</span>
+                    <a href="/tags/Netty/">
+                        <span class="chip bg-color">Netty</span>
                     </a>
                     
                 </div>
@@ -812,26 +811,23 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/06/02/netty-wa-jue-ji-jiu-eventloop-di-ceng-yuan-li-3-zhang-jie/">
+                <a href="/2020/05/31/netty-wa-jue-ji-si-jie-he-springboot-da-jian-netty-jiao-shou-jia/">
                     <div class="card-image">
                         
-                        <img src="http://img.qiujy.com/cover_netty.png" class="responsive-img" alt="Netty挖掘机（九）EventLoop底层原理-3章节">
+                        <img src="http://img.qiujy.com/cover_netty.png" class="responsive-img" alt="Netty挖掘机（四）结合springboot搭建netty脚手架">
                         
-                        <span class="card-title">Netty挖掘机（九）EventLoop底层原理-3章节</span>
+                        <span class="card-title">Netty挖掘机（四）结合springboot搭建netty脚手架</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            上一章节《Netty挖掘机（八）EventLoop底层原理-2章节》，主要分析了EventLoop的创建流程。其中有一块还没讲到，处理IO事件和队列任务。
-@Override
-protected void run() {
-    for (
+                            上文《Netty挖掘机（三）结合spring搭建netty脚手架》，结合Spring+Netty实现API接口服务模块，本文继续码字，以Springboot的方式接入Netty实现API接口服务。我们知道，spring-boot-start
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-06-02
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-05-31
                             </span>
                         <span class="publish-author">
                             
