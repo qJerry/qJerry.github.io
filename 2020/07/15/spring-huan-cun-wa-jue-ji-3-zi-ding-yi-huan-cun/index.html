@@ -402,14 +402,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.5k
+                    1.3k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    8 分
+                    7 分
                 </div>
                 
 
@@ -617,27 +617,21 @@
 
 <h2 id="自定义缓存管理器"><a href="#自定义缓存管理器" class="headerlink" title="自定义缓存管理器"></a>自定义缓存管理器</h2><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">SaasCacheManager</span> <span class="token keyword">implements</span> <span class="token class-name">CacheManager</span> <span class="token punctuation">{</span>
 
-    <span class="token keyword">private</span> <span class="token keyword">final</span> ConcurrentMap<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> Cache<span class="token operator">></span> cacheMap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ConcurrentHashMap</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token keyword">private</span> RedisConnectionFactory redisConnectionFactory<span class="token punctuation">;</span>
-
-    <span class="token keyword">private</span> <span class="token keyword">boolean</span> dynamic <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
-
-    <span class="token keyword">public</span> Integer cacheExpire<span class="token punctuation">;</span>
-
-    <span class="token keyword">public</span> Integer cacheLevel<span class="token punctuation">;</span>
-
-    <span class="token keyword">public</span> <span class="token function">SaasCacheManager</span><span class="token punctuation">(</span>RedisConnectionFactory redisConnectionFactory<span class="token punctuation">,</span> String cacheName<span class="token punctuation">,</span> Integer cacheExpire<span class="token punctuation">,</span> Integer cacheLevel<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token function">SaasCacheManager</span><span class="token punctuation">(</span>RedisConnectionFactory redisConnectionFactory<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">this</span><span class="token punctuation">.</span>redisConnectionFactory <span class="token operator">=</span> redisConnectionFactory<span class="token punctuation">;</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>cacheExpire <span class="token operator">=</span> cacheExpire<span class="token punctuation">;</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>cacheLevel <span class="token operator">=</span> cacheLevel<span class="token punctuation">;</span>
-        <span class="token function">setCacheNames</span><span class="token punctuation">(</span>Lists<span class="token punctuation">.</span><span class="token function">newArrayList</span><span class="token punctuation">(</span>cacheName<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        Collection<span class="token operator">&lt;</span>String<span class="token operator">></span> cacheNames <span class="token operator">=</span> SaasCacheNameConfig<span class="token punctuation">.</span><span class="token function">getCacheNames</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"缓存开启，缓存名称列表：{}"</span><span class="token punctuation">,</span> cacheNames<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">setCacheNames</span><span class="token punctuation">(</span>cacheNames<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
     <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setCacheNames</span><span class="token punctuation">(</span><span class="token annotation punctuation">@Nullable</span> Collection<span class="token operator">&lt;</span>String<span class="token operator">></span> cacheNames<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">if</span> <span class="token punctuation">(</span>cacheNames <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token keyword">for</span> <span class="token punctuation">(</span>String name <span class="token operator">:</span> cacheNames<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                <span class="token keyword">this</span><span class="token punctuation">.</span>cacheMap<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> <span class="token function">newCache</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">synchronized</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>cacheMap<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">this</span><span class="token punctuation">.</span>cacheMap<span class="token punctuation">.</span><span class="token function">clear</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">for</span> <span class="token punctuation">(</span>String name <span class="token operator">:</span> cacheNames<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    <span class="token keyword">this</span><span class="token punctuation">.</span>cacheMap<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> <span class="token function">newCache</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> SaasCacheNameConfig<span class="token punctuation">.</span><span class="token function">getCacheExpire</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
             <span class="token punctuation">}</span>
             <span class="token keyword">this</span><span class="token punctuation">.</span>dynamic <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
@@ -646,44 +640,9 @@
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
 
-    <span class="token comment" spellcheck="true">/**
-     * 本地缓存默认5分钟过期
-     * @return
-     */</span>
-    <span class="token keyword">private</span> CaffeineCache <span class="token function">newCaffeineCache</span><span class="token punctuation">(</span>String name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">CaffeineCache</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> Caffeine<span class="token punctuation">.</span><span class="token function">newBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">expireAfterWrite</span><span class="token punctuation">(</span>cacheExpire<span class="token punctuation">,</span> TimeUnit<span class="token punctuation">.</span>MINUTES<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">expireAfterAccess</span><span class="token punctuation">(</span>cacheExpire<span class="token punctuation">,</span> TimeUnit<span class="token punctuation">.</span>MINUTES<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">maximumSize</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">private</span> RedisCache <span class="token function">newRedisCache</span><span class="token punctuation">(</span>String name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        RedisCacheWriter redisCacheWriter <span class="token operator">=</span> RedisCacheWriter<span class="token punctuation">.</span><span class="token function">nonLockingRedisCacheWriter</span><span class="token punctuation">(</span>redisConnectionFactory<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        RedisSerializer<span class="token operator">&lt;</span>Object<span class="token operator">></span> jsonSerializer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">GenericFastJsonRedisSerializer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        RedisSerializationContext<span class="token punctuation">.</span>SerializationPair<span class="token operator">&lt;</span>Object<span class="token operator">></span> pair <span class="token operator">=</span> RedisSerializationContext<span class="token punctuation">.</span>SerializationPair<span class="token punctuation">.</span><span class="token function">fromSerializer</span><span class="token punctuation">(</span>jsonSerializer<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        RedisCacheConfiguration cacheConfiguration <span class="token operator">=</span> RedisCacheConfiguration<span class="token punctuation">.</span><span class="token function">defaultCacheConfig</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">serializeValuesWith</span><span class="token punctuation">(</span>pair<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">entryTtl</span><span class="token punctuation">(</span>Duration<span class="token punctuation">.</span><span class="token function">ofMinutes</span><span class="token punctuation">(</span>cacheExpire<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">SaasRedisCache</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> redisCacheWriter<span class="token punctuation">,</span> cacheConfiguration<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">private</span> Cache <span class="token function">newCache</span><span class="token punctuation">(</span>String name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">SaasCache</span><span class="token operator">&lt;</span>String<span class="token punctuation">,</span> Object<span class="token operator">></span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> cacheLevel<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">,</span> <span class="token function">newCaffeineCache</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">newRedisCache</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> Cache <span class="token function">getCache</span><span class="token punctuation">(</span>String name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        Cache cache <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>cacheMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>Objects<span class="token punctuation">.</span><span class="token function">isNull</span><span class="token punctuation">(</span>cache<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token keyword">this</span><span class="token punctuation">.</span>dynamic<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token keyword">synchronized</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>cacheMap<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                cache <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>cacheMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token keyword">if</span><span class="token punctuation">(</span>Objects<span class="token punctuation">.</span><span class="token function">isNull</span><span class="token punctuation">(</span>cache<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                    cache <span class="token operator">=</span> <span class="token function">newCache</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    <span class="token keyword">this</span><span class="token punctuation">.</span>cacheMap<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> cache<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token punctuation">}</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-        <span class="token keyword">return</span> cache<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> Collection<span class="token operator">&lt;</span>String<span class="token operator">></span> <span class="token function">getCacheNames</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> Collections<span class="token punctuation">.</span><span class="token function">unmodifiableSet</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>cacheMap<span class="token punctuation">.</span><span class="token function">keySet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">private</span> Cache <span class="token function">newCache</span><span class="token punctuation">(</span>String name<span class="token punctuation">,</span> SaasCacheNameData cacheExpire<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"缓存名称：{}，缓存级别：{}，设置缓存时间：{}"</span><span class="token punctuation">,</span> name<span class="token punctuation">,</span> cacheExpire<span class="token punctuation">.</span><span class="token function">getCacheLevel</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> cacheExpire<span class="token punctuation">.</span><span class="token function">getCacheExpire</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">SaasCache</span><span class="token operator">&lt;</span>String<span class="token punctuation">,</span> Object<span class="token operator">></span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> cacheExpire<span class="token punctuation">.</span><span class="token function">getCacheLevel</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token boolean">true</span><span class="token punctuation">,</span> <span class="token function">newCaffeineCache</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> cacheExpire<span class="token punctuation">.</span><span class="token function">getCacheExpire</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">newRedisCache</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> cacheExpire<span class="token punctuation">.</span><span class="token function">getCacheExpire</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
 <span class="token punctuation">}</span></code></pre>
@@ -704,29 +663,15 @@
         <span class="token key atrule">max-wait</span><span class="token punctuation">:</span> <span class="token number">-1</span>
         <span class="token key atrule">max-idle</span><span class="token punctuation">:</span> <span class="token number">8</span>
         <span class="token key atrule">min-idle</span><span class="token punctuation">:</span> <span class="token number">0</span></code></pre>
-<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@EnableCaching</span>
+<pre class=" language-java"><code class="language-java">@<span class="token annotation punctuation">@EnableCaching</span>
 <span class="token annotation punctuation">@Configuration</span>
 <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">SaasCacheConfig</span> <span class="token punctuation">{</span>
-
-    <span class="token comment" spellcheck="true">/**
-     * 全局缓存名称
-     */</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> String cacheName <span class="token operator">=</span> <span class="token string">"saas-cache"</span><span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">/**
-     * 缓存过期时间，单位：分钟
-     */</span>
-    <span class="token keyword">public</span> Integer cacheExpire<span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">/**
-     * 缓存级别，1：本地caffeine，2：redis
-     */</span>
-    <span class="token keyword">public</span> Integer cacheLevel<span class="token punctuation">;</span>
-
     <span class="token annotation punctuation">@Autowired</span>
     RedisConnectionFactory redisConnectionFactory<span class="token punctuation">;</span>
 
     <span class="token annotation punctuation">@Bean</span><span class="token punctuation">(</span>name <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">"cacheManager"</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
     <span class="token keyword">public</span> CacheManager <span class="token function">getCache</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">SaasCacheManager</span><span class="token punctuation">(</span>redisConnectionFactory<span class="token punctuation">,</span> cacheName<span class="token punctuation">,</span> cacheExpire<span class="token punctuation">,</span> cacheLevel<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">SaasCacheManager</span><span class="token punctuation">(</span>redisConnectionFactory<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span></code></pre>
 <h2 id="测试用例"><a href="#测试用例" class="headerlink" title="测试用例"></a>测试用例</h2><h3 id="测试方法"><a href="#测试方法" class="headerlink" title="测试方法"></a>测试方法</h3><pre class=" language-JAVA"><code class="language-JAVA">@Service
@@ -996,6 +941,33 @@ success</code></pre>
             
         </div>
     </div>
+
+    
+        <link rel="stylesheet" href="/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; padding-left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: 'cd6e78c6a8088a54b9fe',
+        clientSecret: '5f720ffce7dcd390e5709da12f296d6cfeb1614e',
+        repo: 'qJerry.github.io',
+        owner: 'qJerry',
+        admin: "qJerry",
+        id: '2020-07-15T23-01-16',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
 
     
 
@@ -1356,7 +1328,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">56.3k</span>&nbsp;字
+                class="white-color">56.1k</span>&nbsp;字
             
             
             
