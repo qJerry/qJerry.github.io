@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>老生常谈(三)一致性哈希算法</title>
+      <link href="/2020/08/02/lao-sheng-chang-tan-san-yi-zhi-xing-ha-xi-suan-fa/"/>
+      <url>/2020/08/02/lao-sheng-chang-tan-san-yi-zhi-xing-ha-xi-suan-fa/</url>
+      
+        <content type="html"><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>哈希算法，多应用于多数框架的底层实现，在JAVA中与其相关的有HashMap、HashTable等。</p><p>首先抛几个问题</p><ul><li>都知道Hashmap底层使用了hash（取模）算法，它与一致性hash算法有什么区别呢？</li><li>在分布式缓存中，hash算法起了很大的作用，它也是上述提到的取模算法吗？</li><li>取模法与一致性哈希算法有什么区别？</li></ul><h2 id="什么是哈希算法"><a href="#什么是哈希算法" class="headerlink" title="什么是哈希算法"></a>什么是哈希算法</h2><blockquote><p>hash即散列，哈希算法又称散列算法，将任意长度的二进制值映射为较短的固定长度的二进制值（哈希值），哈希值是一段数据唯一且极其紧凑的数值表示形式，常用于快速查找和加密算法。</p></blockquote><h2 id="传统取模法（以Hashmap为例）"><a href="#传统取模法（以Hashmap为例）" class="headerlink" title="传统取模法（以Hashmap为例）"></a>传统取模法（以Hashmap为例）</h2><blockquote><p>HashMap底层结构是数组+链表+红黑树。数组相当于一个bucket，在bucket这一层就用到了取模法。</p></blockquote><p>假设数组的长度为n，当一个Entry（key-value）加入时，先计算key的hash值，再通过 <code>（n -1）&amp; hash</code> 的位操作，得到bucket的下标。这里的位操作其实就是取模算法 <code>hash % n</code>的优化版。这时候问题来了，由于数组容量必定有限，当需要扩容（新增Node节点）时，Hashmap会rehash（重建hash表），可想而知重建会导致大量的key需要迁移并重新计算下标。 故Hashmap源码中提到了要合理设置初始长度和负载因子，以“内存换性能”的操作来避免rehash。</p><p>取模思路如下<br>假设数组初始长度n = 5，增加结点至n = 6，最终导致全部数据都需进行迁移，改变下标。</p><p><img src="/images/%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/20200731152435758_1941699246.jpg" alt="取模存储及查找"></p><p>换个角度思考，是否可以做到，在扩容的时候尽最大化地减少迁移的操作，并且保证原来的key仍在原来的位置（在分布式缓存系统中，这点尤为重要，否则容易引起缓存雪崩等情况）</p><h2 id="一致性哈希算法"><a href="#一致性哈希算法" class="headerlink" title="一致性哈希算法"></a>一致性哈希算法</h2><blockquote><p>引自wiki<br>一致哈希 是一种特殊的哈希算法。在使用一致哈希算法后，哈希表槽位数（大小）的改变平均只需要对K/n 个关键字重新映射，其中K是关键字的数量，n是槽位数量。然而在传统的哈希表中，添加或删除一个槽位的几乎需要对所有关键字进行重新映射。</p></blockquote><p>其实一致性哈希算法也是一种取模法，只不过不直接对服务器数量进行取模分发，而是对2^32进行取模，以此解决重新散列的问题。</p><p>实现原理大致如下</p><ul><li><p>构造由2^32个点位组成的环形hash空间</p></li><li><p>将服务器节点映射到hash空间</p></li><li><p>将存储对象映射到hash空间</p></li><li><p>将对象沿顺时针转动，碰到的第一个服务器节点，即当前对象应缓存的节点</p></li></ul><p>将上述原理概括成描述一致性哈希算法的规则：环形空间，节点映射，对象映射，顺时针相遇</p><p>它目前已经应用于<a href="https://github.com/papers-we-love/papers-we-love/blob/master/datastores/dynamo-amazons-highly-available-key-value-store.pdf" target="_blank" rel="noopener">AWS Dynamodb高可用 Nosql数据库</a>、<a href="https://www.last.fm/user/RJ/journal/2007/04/10/rz_libketama_-_a_consistent_hashing_algo_for_memcache_clients" target="_blank" rel="noopener">Memcached分布式缓存</a>、Nginx负载均衡等</p><h2 id="一致性哈希基于分布式缓存的应用"><a href="#一致性哈希基于分布式缓存的应用" class="headerlink" title="一致性哈希基于分布式缓存的应用"></a>一致性哈希基于分布式缓存的应用</h2><p>为什么说一致性哈希是一种特殊的哈希算法，可以借助分布式缓存的例子来说明。</p><p>假设现在有三个服务器节点A、B、C，三条待缓存的键值对数据a、b、c。</p><h3 id="初始节点"><a href="#初始节点" class="headerlink" title="初始节点"></a>初始节点</h3><ul><li>将三个服务器节点通过hash(ip地址) % 2^32 取模得到一个整数值（介于0 ~ 2^32），定位到环形空间上</li></ul><p><img src="/images/%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/20200731163639418_10607236.jpg" alt="服务器节点映射"></p><ul><li>将三个缓存对象通过hash(key) % 2^32 取模得到一个整数值（介于0 ~ 2^32），定位到环形空间上</li></ul><p><img src="/images/%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/20200731171432756_1761578491.png" alt="缓存数据对象映射"></p><ul><li>将缓存对象沿顺时针“转动”，当第一个遇到的服务器节点，就是缓存对象对应存储的节点</li></ul><p>如下图所示，缓存对象a在服务节点A上存储，缓存对象b在服务节点B上存储…</p><p><img src="/images/%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/20200731180418926_624189149.png" alt="缓存对象映射服务器节点"></p><h3 id="节点故障"><a href="#节点故障" class="headerlink" title="节点故障"></a>节点故障</h3><ul><li>假设此时节点B出现故障下线了，按照一致性哈希的规则中的“顺时针相遇”，缓存对象b应该与服务节点C相遇，存储位置变动，而其他节点按兵不动，不受影响</li></ul><p><img src="/images/%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/20200731180042941_566711142.png" alt="节点B故障"></p><h3 id="新增节点"><a href="#新增节点" class="headerlink" title="新增节点"></a>新增节点</h3><ul><li>假设此时新增一个节点D，位于A与C之间，如下图，按照一致性哈希的规则中的“顺时针相遇”可知，所有缓存对象无需再次转动</li></ul><p><img src="/images/%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/20200731180751711_289411648.png" alt="新增节点D"></p><ul><li>假设此时新增一个节点E，位于A与B之间，如下图，按照一致性哈希的规则中的“顺时针相遇”可知，缓存对象b与服务节点E相遇，存储位置变动</li></ul><p><img src="/images/%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/20200731181540803_91107481.png" alt="新增节点E"></p><h2 id="hash环倾斜"><a href="#hash环倾斜" class="headerlink" title="hash环倾斜"></a>hash环倾斜</h2><blockquote><p>在描述基于分布式缓存的应用时，看似一切都很理想化。<br>但是会遇到一种情况，实际服务节点的映射位置可能比较极端，进而造成数据倾斜，这种情况会导致大多数的缓存对象都集中在一个节点，失去了哈希算法存在的意义。</p></blockquote><p><img src="/images/%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/20200731182843005_87592856.png" alt="节点偏斜"></p><h3 id="虚拟节点"><a href="#虚拟节点" class="headerlink" title="虚拟节点"></a>虚拟节点</h3><blockquote><p>hash算法无法保证绝对的平衡，一致性哈希算法容易导致数据倾斜，故它又引入了“虚拟节点”，即实际节点在hash空间的复制节点，两者关系为1：n，虚拟节点在hash空间中以hash值排列</p></blockquote><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>一致性哈希算法，相较于常规的取模法，解决了增删节点导致的重新散列的问题，基于“环形空间，节点映射，对象映射，顺时针相遇”的规则，加上虚拟节点的引入，很大程度地解决了分布式系统的心结，故它常用于Nginx负载均衡、Dynamodb分布式数据库等。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 老生常谈 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 哈希算法 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Spring缓存挖掘机（三）- 自定义缓存</title>
       <link href="/2020/07/15/spring-huan-cun-wa-jue-ji-3-zi-ding-yi-huan-cun/"/>
       <url>/2020/07/15/spring-huan-cun-wa-jue-ji-3-zi-ding-yi-huan-cun/</url>
