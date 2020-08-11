@@ -15,6 +15,17 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
+<script async src="https://www.googletagmanager.com/gtag/js?id=ca-pub-8594828642825082"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', 'ca-pub-8594828642825082');
+</script>
+
 
     <title>AWS集成lambda+ApiGateway | Jerry Blog</title>
     <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
@@ -839,26 +850,30 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/06/02/netty-wa-jue-ji-jiu-eventloop-di-ceng-yuan-li-3-zhang-jie/">
+                <a href="/2020/06/03/netty-wa-jue-ji-shi-you-ya-tui-chu-shi-xian-luo-ji/">
                     <div class="card-image">
                         
-                        <img src="http://img.qiujy.com/cover_netty.png" class="responsive-img" alt="Netty挖掘机（九）EventLoop底层原理-3章节">
+                        <img src="http://img.qiujy.com/cover_netty.png" class="responsive-img" alt="Netty挖掘机（十）优雅退出实现逻辑">
                         
-                        <span class="card-title">Netty挖掘机（九）EventLoop底层原理-3章节</span>
+                        <span class="card-title">Netty挖掘机（十）优雅退出实现逻辑</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            上一章节《Netty挖掘机（八）EventLoop底层原理-2章节》，主要分析了EventLoop的创建流程。其中有一块还没讲到，处理IO事件和队列任务。
-@Override
-protected void run() {
-    for (
+                            
+作为高性能的异步通讯框架，Netty自身已经封装了优雅退出的实现机制。
+
+本篇内容参考了《Netty进阶之路-跟着案例学Netty》。
+
+回顾一下在Linux上重新部署程序的时候，通常我们会有两个命令杀掉进程
+# 正常停止
+kill pi
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-06-02
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-06-03
                             </span>
                         <span class="publish-author">
                             
@@ -1120,7 +1135,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">57.6k</span>&nbsp;字
+                class="white-color">60.5k</span>&nbsp;字
             
             
             
