@@ -431,16 +431,16 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p><br>对于业务系统，每天都会输出大量的日志，并且增长极快，久而久之在有限的容量内总会消耗完服务器的磁盘空间；<br><br><br>当我们遇到故障需要排查的时候，日志往往是第一选择，然而当日志日渐庞大的时候，排查成问题，空间也成问题；<br><br><br>线上埋点系统出现问题，排查发现硬盘被日志撑爆了。<br><br><br>。。。<br><br><br><a href="https://github.com/logrotate/logrotate" target="_blank" rel="noopener">logrotate</a>帮我们解决了日志方面的繁琐问题，<br></p>
+                <h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p><br />对于业务系统，每天都会输出大量的日志，并且增长极快，久而久之在有限的容量内总会消耗完服务器的磁盘空间；<br /><br><br />当我们遇到故障需要排查的时候，日志往往是第一选择，然而当日志日渐庞大的时候，排查成问题，空间也成问题；<br /><br><br />线上埋点系统出现问题，排查发现硬盘被日志撑爆了。<br /><br><br />。。。<br /><br><br /><a href="https://github.com/logrotate/logrotate" target="_blank" rel="noopener">logrotate</a>帮我们解决了日志方面的繁琐问题，<br /></p>
 <ul>
 <li>它支持自动执行日志的（周期性）切割，压缩，删除</li>
 <li>可以指定目录存放压缩日志文件</li>
 <li>当执行出错时可以指定email发出邮件报警</li>
 </ul>
 <p><a name="e05dce83"></a></p>
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><br><a href="https://linux.die.net/man/8/logrotate" target="_blank" rel="noopener">logrotate</a>旨在简化对生成大量日志文件的系统的管理。它允许自动旋转，压缩，删除和邮寄日志文件。每个日志文件可以每天，每周，每月或当它变得太大时处理。通常，logrotate作为每天cron任务运行。<br></p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><br /><a href="https://linux.die.net/man/8/logrotate" target="_blank" rel="noopener">logrotate</a>旨在简化对生成大量日志文件的系统的管理。它允许自动旋转，压缩，删除和邮寄日志文件。每个日志文件可以每天，每周，每月或当它变得太大时处理。通常，logrotate作为每天cron任务运行。<br /></p>
 <p><a name="e655a410"></a></p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><br>主流的Linux系统一般都会自带logrotate包，如果没有，则使用以下命令安装<br></p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><br />主流的Linux系统一般都会自带logrotate包，如果没有，则使用以下命令安装<br /></p>
 <pre class=" language-shell"><code class="language-shell">$ yum install logrotate crontabs 
 $ logrotate -v
 logrotate 3.8.6 - Copyright (C) 1995-2001 Red Hat, Inc.
@@ -449,16 +449,16 @@ This may be freely redistributed under the terms of the GNU Public License
 Usage: logrotate [-dfv?] [-d|--debug] [-f|--force] [-m|--mail command] [-s|--state statefile]
         [-v|--verbose] [-l|--log STRING] [--version] [-?|--help] [--usage] [OPTION...] <configfile></code></pre>
 <p><a name="6255b094"></a></p>
-<h3 id="主配置文件"><a href="#主配置文件" class="headerlink" title="主配置文件"></a>主配置文件</h3><p><br><a href="https://github.com/logrotate/logrotate" target="_blank" rel="noopener">logrotate</a>的默认配置文件放在 <code>/etc/logrotate.conf</code>，我们无需对它进行操作<br></p>
+<h3 id="主配置文件"><a href="#主配置文件" class="headerlink" title="主配置文件"></a>主配置文件</h3><p><br /><a href="https://github.com/logrotate/logrotate" target="_blank" rel="noopener">logrotate</a>的默认配置文件放在 <code>/etc/logrotate.conf</code>，我们无需对它进行操作<br /></p>
 <p><a name="95cfe8dc"></a></p>
-<h3 id="自定义配置文件"><a href="#自定义配置文件" class="headerlink" title="自定义配置文件"></a>自定义配置文件</h3><p><br><a href="https://github.com/logrotate/logrotate" target="_blank" rel="noopener">logrotate</a>有一个针对日志的自定义配置文件夹 <code>/etc/logrotate.d/</code>，可以看到系统已经默认配置了syslog、yum等日志管理配置<br></p>
+<h3 id="自定义配置文件"><a href="#自定义配置文件" class="headerlink" title="自定义配置文件"></a>自定义配置文件</h3><p><br /><a href="https://github.com/logrotate/logrotate" target="_blank" rel="noopener">logrotate</a>有一个针对日志的自定义配置文件夹 <code>/etc/logrotate.d/</code>，可以看到系统已经默认配置了syslog、yum等日志管理配置<br /></p>
 <pre><code>$ ll /etc/logrotate.d/
 -rw-r--r-- 1 root root  76 Aug  2  2018 bootlog
 -rw-r--r-- 1 root root 160 Sep 15  2017 chrony
 -rw-r--r-- 1 root root 408 Aug  2  2018 psacct
 -rw-r--r-- 1 root root 224 Aug  9  2018 syslog
 -rw-r--r-- 1 root root 100 Aug 21  2018 yum</code></pre><p><a name="19dc45e9"></a></p>
-<h3 id="执行文件"><a href="#执行文件" class="headerlink" title="执行文件"></a>执行文件</h3><p><br><a href="https://github.com/logrotate/logrotate" target="_blank" rel="noopener">logrotate</a>的执行文件放在 <code>/usr/sbin/logrotate</code><br></p>
+<h3 id="执行文件"><a href="#执行文件" class="headerlink" title="执行文件"></a>执行文件</h3><p><br /><a href="https://github.com/logrotate/logrotate" target="_blank" rel="noopener">logrotate</a>的执行文件放在 <code>/usr/sbin/logrotate</code><br /></p>
 <p><a name="8dac4304"></a></p>
 <h2 id="详细配置说明"><a href="#详细配置说明" class="headerlink" title="详细配置说明"></a>详细配置说明</h2><pre class=" language-shell"><code class="language-shell">/var/log/logback.log {
     daily
@@ -487,7 +487,7 @@ Usage: logrotate [-dfv?] [-d|--debug] [-f|--force] [-m|--mail command] [-s|--sta
 <li>dateext：使用当前日期作为命名格式</li>
 <li>dateformat _format_string_：配合dateext使用，紧跟在下一行出现，定义文件切割后的文件名，必须配合dateext使用，只支持 %Y %m %d %s 这四个参数</li>
 </ul>
-<p><br>更多配置查看<a href="https://linux.die.net/man/8/logrotate" target="_blank" rel="noopener">官方说明</a><br></p>
+<p><br />更多配置查看<a href="https://linux.die.net/man/8/logrotate" target="_blank" rel="noopener">官方说明</a><br /></p>
 <p><a name="4c763bb6"></a></p>
 <h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p><a name="ce559ba2"></a></p>
 <h3 id="运行命令"><a href="#运行命令" class="headerlink" title="运行命令"></a>运行命令</h3><ul>
@@ -499,7 +499,7 @@ Usage: logrotate [-dfv?] [-d|--debug] [-f|--force] [-m|--mail command] [-s|--sta
 </ul>
 <p><a name="17d444b6"></a></p>
 <h3 id="运行方式"><a href="#运行方式" class="headerlink" title="运行方式"></a>运行方式</h3><ul>
-<li>自动运行<br><br>默认情况下， <a href="https://github.com/logrotate/logrotate" target="_blank" rel="noopener">logrotate</a>在安装时已创建了以天为单位的定时任务<pre class=" language-shell"><code class="language-shell">$ cat /etc/cron.daily/logrotate
+<li>自动运行<br><br />默认情况下， <a href="https://github.com/logrotate/logrotate" target="_blank" rel="noopener">logrotate</a>在安装时已创建了以天为单位的定时任务<pre class=" language-shell"><code class="language-shell">$ cat /etc/cron.daily/logrotate
 </code></pre>
 </li>
 </ul>
@@ -519,15 +519,15 @@ $ logrotate -d /etc/logrotate.d/custom-log</code></pre><ul>
 </ul>
 <p><a name="9c5945ef"></a></p>
 <h3 id="问题处理"><a href="#问题处理" class="headerlink" title="问题处理"></a>问题处理</h3><ol>
-<li><p>强制模式不起作用<br><br>删除记录状态的文件</p>
+<li><p>强制模式不起作用<br><br />删除记录状态的文件</p>
 <pre class=" language-shell"><code class="language-shell">$ rm /var/lib/logrotate/logrotate.status</code></pre>
 </li>
-<li><p>日志文件为空无法执行<br><br>那就让它不为空呗</p>
+<li><p>日志文件为空无法执行<br><br />那就让它不为空呗</p>
 </li>
-<li><p>使用nohup进行日志输出，接着日志切割后，原日志大小不变<br><br>改变nohup输出方式：nohup xxx.sh &gt;&gt; nohup.out &amp;，要有两个&gt;</p>
+<li><p>使用nohup进行日志输出，接着日志切割后，原日志大小不变<br><br />改变nohup输出方式：nohup xxx.sh &gt;&gt; nohup.out &amp;，要有两个&gt;</p>
 </li>
 </ol>
-<p><br>大概就是这样，让我们尝试接入到我们的系统内吧！</p>
+<p><br />大概就是这样，让我们尝试接入到我们的系统内吧！</p>
 
             </div>
             <hr/>
@@ -1120,7 +1120,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">60.5k</span>&nbsp;字
+                class="white-color">73.1k</span>&nbsp;字
             
             
             

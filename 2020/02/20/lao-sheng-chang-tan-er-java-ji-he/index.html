@@ -455,7 +455,7 @@
 <ol>
 <li>底层是基于循环双向链表的数据结构，在非连续的内存空间中保存数据。在双向链表中，通过指针将各个内存单元连接在一起。每个节点都指向它的上一个和下一个节点。当需要存储数据时，分配一块内存空间并将这块内存插入链表中</li>
 <li>性能<ul>
-<li>添加（或删除）操作<br><br>时间复杂度为O(1)，不需重排原结构，只需要调整上一个和下一个节点的指针</li>
+<li>添加（或删除）操作<br><br />时间复杂度为O(1)，不需重排原结构，只需要调整上一个和下一个节点的指针</li>
 <li>查询操作。查找第n个数据或循环查找指定元素的时间复杂度为O(n)</li>
 </ul>
 </li>
@@ -499,12 +499,12 @@
 <p><a name="ed83bf84"></a></p>
 <h4 id="工作原理："><a href="#工作原理：" class="headerlink" title="工作原理："></a>工作原理：</h4><p>通过put和get存取对象。用put存储对象时，主要是先通过调用hashcode计算hash从而得到bucket(桶)的位置，而后进一步存储，如果没碰撞就直接放入bucket；如果碰撞了，就以链表的形式存入；如果碰撞导致链表长度&gt;=TREEIFY_THRESHOLD，则将链表转为红黑树；如果该节点已存在值，则替换。当发现数组元素个数超过Threshold （Capacity * Loadfactor）时，会自动扩容为原来的2倍，即数组容量始终是2的幂。用get获取对象时，主要是先通过调用hashcode计算hash从而得到bucket（桶）的位置，并进一步调用了equal()确定键值对。当在bucket的第一个节点找到，则直接命中，如果是树结构，则在树中调用key.equals(k)查找，时间复杂度为O(log n)，如果是链表结构，则在链表中调用key.equals(k)，时间复杂度为O(n)</p>
 <ol>
-<li>初始长度16，Loadfactor 负载因子（当前Capacity 填满程度的最大比例）默认0.75。<br><br>建议为了避免性能消耗，初始化时确定好Map的容量，并且需要注意<br><br>容量 = ((float)期望容量大小 / 0.75F ) + 1.0F，源码在putAll()内:float ft = ((float)s / loadFactor) + 1.0F;<br><br>当我们确定好容量（并且需要是2的幂次方，这样可以避免一次运算）时，就可以避免rehash的操作，即扩容。这是一种用内存换性能的操作。</li>
+<li>初始长度16，Loadfactor 负载因子（当前Capacity 填满程度的最大比例）默认0.75。<br><br />建议为了避免性能消耗，初始化时确定好Map的容量，并且需要注意<br><br />容量 = ((float)期望容量大小 / 0.75F ) + 1.0F，源码在putAll()内:float ft = ((float)s / loadFactor) + 1.0F;<br><br />当我们确定好容量（并且需要是2的幂次方，这样可以避免一次运算）时，就可以避免rehash的操作，即扩容。这是一种用内存换性能的操作。</li>
 <li>Capacity 当前数组容量，始终为2的幂。扩容后数组长度为原来的2倍。</li>
 <li>Threshold 扩容阈值，等于Capacity * Loadfactor。当数组元素个数超过阈值时需要进行扩容（需要重建hash表），数组长度为原来的2倍。</li>
 <li>可接受Null值</li>
 <li>非线程安全。也就是没有加锁，查询会很快。但是任意时刻多个线程同时写入，会导致数据错乱或者其他异常情况，比如死锁导致CPU100%（环形链表）等。</li>
-<li>发生hash碰撞时，jdk1.7是在链表头部添加元素（这也是导致死锁的原因之一），jdk1.8改进为在链表尾部添加元素<br><br>在多线程下，那些map是线程安全的<ul>
+<li>发生hash碰撞时，jdk1.7是在链表头部添加元素（这也是导致死锁的原因之一），jdk1.8改进为在链表尾部添加元素<br><br />在多线程下，那些map是线程安全的<ul>
 <li>Collections.synchronizedMap(内部用了synchronized，高并发效率低，不采用)</li>
 <li>HashTable(内部用了synchronized，高并发效率低，不采用)</li>
 <li>ConcurrentHashMap</li>
@@ -514,29 +514,29 @@
 </ol>
 <p><a name="d303267a"></a></p>
 <h4 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h4><ol>
-<li>在获取bucket下标的时候，为什么要用位操作：(n - 1) &amp; hash 来代替 取余操作 hash % n？<br><br>由于hashmap底层实现上规定数组长度为2的幂（就算初始化非2的幂也会强制换算为最接近的2的幂），所以在此条件下，(n - 1) &amp; hash = hash % n。一样的效果，但是位操作的效率更高。假设数组长度为8，此时hash值为15，15 % 8 = 7，15 &amp; (8-1)=7</li>
-<li>为什么数组长度必须是2的幂？<br><br>只有当数组长度为2的幂次方时，(n - 1) &amp; hash = hash % n，即实现了key的定位<br><br>2的幂次方也可以减少碰撞几率，提高HashMap的查询效率；当不是2的幂时，会导致(n-1)的二进制末位是0，进而导致数组可使用位置小了很多，导致碰撞的几率增大</li>
-<li>能否使用任何类作为Map的key？<br><br>可以，遵循equals()和hashCode()方法的定义规则。由于map中存取对象put和get时，会遇到计算key的hash值，进而确定它在bucket中的位置。然而当key是自定义对象时，假设它是一个可变对象，也就意味着它的hash值也是可变。当自定义对象在存到Map后，内部做了修改，此时再也无法在Map内通过它找到原来的Entry。所以自定义对象的话，需要将它变成不可变对象，即重写hashCode和equals()方法。所以我们一般会用String，Integer这种不可变对象来作为key。</li>
-<li>当两个键的hashcode相等时，如何获取值对象？<br><br>通过key的hash值找到bucket的位置，接着通过key.equals(k)方法找到对应的节点，最终找到值。</li>
-<li>为什么负载因子默认是0.75？<br><br>这是一种概率问题，当负载因子过大时，会导致hash碰撞的概率增大，而且在降低空间开销的同时，提高了查找的时间开销；当负载因子过小时，会导致rehash频率增加，而且增大了已使用和未使用的空间的差值，浪费空间；0.75的话，在源码里面有说到TreeNote大小大约是常规节点的两倍，在理想情况下一个bin（也就是bucket）中的链表长度达到8的概率是0.00000006。简单地总结就是空间与时间的权衡选择了0.75。所以我们在初始化hashmap设置负载因子时，需要考虑要在空间上做优化还是时间上。</li>
+<li>在获取bucket下标的时候，为什么要用位操作：(n - 1) &amp; hash 来代替 取余操作 hash % n？<br><br />由于hashmap底层实现上规定数组长度为2的幂（就算初始化非2的幂也会强制换算为最接近的2的幂），所以在此条件下，(n - 1) &amp; hash = hash % n。一样的效果，但是位操作的效率更高。假设数组长度为8，此时hash值为15，15 % 8 = 7，15 &amp; (8-1)=7</li>
+<li>为什么数组长度必须是2的幂？<br><br />只有当数组长度为2的幂次方时，(n - 1) &amp; hash = hash % n，即实现了key的定位<br><br />2的幂次方也可以减少碰撞几率，提高HashMap的查询效率；当不是2的幂时，会导致(n-1)的二进制末位是0，进而导致数组可使用位置小了很多，导致碰撞的几率增大</li>
+<li>能否使用任何类作为Map的key？<br><br />可以，遵循equals()和hashCode()方法的定义规则。由于map中存取对象put和get时，会遇到计算key的hash值，进而确定它在bucket中的位置。然而当key是自定义对象时，假设它是一个可变对象，也就意味着它的hash值也是可变。当自定义对象在存到Map后，内部做了修改，此时再也无法在Map内通过它找到原来的Entry。所以自定义对象的话，需要将它变成不可变对象，即重写hashCode和equals()方法。所以我们一般会用String，Integer这种不可变对象来作为key。</li>
+<li>当两个键的hashcode相等时，如何获取值对象？<br><br />通过key的hash值找到bucket的位置，接着通过key.equals(k)方法找到对应的节点，最终找到值。</li>
+<li>为什么负载因子默认是0.75？<br><br />这是一种概率问题，当负载因子过大时，会导致hash碰撞的概率增大，而且在降低空间开销的同时，提高了查找的时间开销；当负载因子过小时，会导致rehash频率增加，而且增大了已使用和未使用的空间的差值，浪费空间；0.75的话，在源码里面有说到TreeNote大小大约是常规节点的两倍，在理想情况下一个bin（也就是bucket）中的链表长度达到8的概率是0.00000006。简单地总结就是空间与时间的权衡选择了0.75。所以我们在初始化hashmap设置负载因子时，需要考虑要在空间上做优化还是时间上。</li>
 <li>为什么定义桶中个数超过8才转红黑树？</li>
 </ol>
 <ul>
-<li>首先我们要知道，桶中元素初始化是用链表保存的，其查找性能是O(n)，但是树结构决定了它的查找性能是O(log(n))，性能提升。<br><br>在链表长度很小时，即时遍历速度也很快，但是当不断变长后，链表的查询性能肯定会受影响<br><br>链表长度达到8就转成红黑树，当长度降到6就转成普通bin。</li>
+<li>首先我们要知道，桶中元素初始化是用链表保存的，其查找性能是O(n)，但是树结构决定了它的查找性能是O(log(n))，性能提升。<br /><br>在链表长度很小时，即时遍历速度也很快，但是当不断变长后，链表的查询性能肯定会受影响<br /><br>链表长度达到8就转成红黑树，当长度降到6就转成普通bin。</li>
 </ul>
 <p><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582195141518-0649f97a-d62d-422f-9cf7-1409022da25f.jpeg#align=left&display=inline&height=1845&name=hashmap_1.jpg&originHeight=1845&originWidth=1242&size=679596&status=done&style=none&width=1242" alt="hashmap_1.jpg"></p>
 <p>这段内容还说到：当hashCode离散性很好的时候，树型bin用到的概率非常小，因为数据均匀分布在每个bin中，几乎不会有bin中链表长度会达到阈值。但是在随机hashCode下，离散性可能会变差，然而JDK又不能阻止用户实现这种不好的hash算法，因此就可能导致不均匀的数据分布。不过理想情况下随机hashCode算法下所有bin中节点的分布频率会遵循泊松分布，我们可以看到，一个bin中链表长度达到8个元素的概率为0.00000006，几乎是不可能事件。所以，之所以选择8，不是拍拍屁股决定的，而是根据概率统计决定的。由此可见，发展30年的Java每一项改动和优化都是非常严谨和科学的。</p>
 <p>参考文章</p>
-<p><a href="https://www.cnblogs.com/chinajava/p/5808416.html" target="_blank" rel="noopener">深入理解哈希表</a><br><a href="http://www.importnew.com/14417.html" target="_blank" rel="noopener">Java 8：HashMap的性能提升</a><br><a href="https://yikun.github.io/2015/04/01/Java-HashMap%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0" target="_blank" rel="noopener">Java HashMap工作原理及实现</a><br><a href="https://www.hollischuang.com/archives/2431" target="_blank" rel="noopener">关于HashMap容量的初始化，还有这么多学问</a><br><a href="http://youzhixueyuan.com/the-underlying-structure-and-principle-of-hashmap.html" target="_blank" rel="noopener">深入探讨HashMap的底层结构、原理、扩容机制</a></p>
+<p><a href="https://www.cnblogs.com/chinajava/p/5808416.html" target="_blank" rel="noopener">深入理解哈希表</a><br /><a href="http://www.importnew.com/14417.html" target="_blank" rel="noopener">Java 8：HashMap的性能提升</a><br /><a href="https://yikun.github.io/2015/04/01/Java-HashMap%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0" target="_blank" rel="noopener">Java HashMap工作原理及实现</a><br /><a href="https://www.hollischuang.com/archives/2431" target="_blank" rel="noopener">关于HashMap容量的初始化，还有这么多学问</a><br /><a href="http://youzhixueyuan.com/the-underlying-structure-and-principle-of-hashmap.html" target="_blank" rel="noopener">深入探讨HashMap的底层结构、原理、扩容机制</a></p>
 <p><a name="ConcurrentHashmap"></a></p>
-<h3 id="ConcurrentHashmap"><a href="#ConcurrentHashmap" class="headerlink" title="ConcurrentHashmap"></a>ConcurrentHashmap</h3><p>以下是jdk1.7的整体结构图<br><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582195162939-6b3b269e-4d49-4c3f-b130-ffc742610f44.jpeg#align=left&display=inline&height=683&name=chashmap.jpg&originHeight=683&originWidth=1242&size=176252&status=done&style=none&width=1242" alt="chashmap.jpg"></p>
+<h3 id="ConcurrentHashmap"><a href="#ConcurrentHashmap" class="headerlink" title="ConcurrentHashmap"></a>ConcurrentHashmap</h3><p>以下是jdk1.7的整体结构图<br /><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582195162939-6b3b269e-4d49-4c3f-b130-ffc742610f44.jpeg#align=left&display=inline&height=683&name=chashmap.jpg&originHeight=683&originWidth=1242&size=176252&status=done&style=none&width=1242" alt="chashmap.jpg"></p>
 <ol>
 <li>一个Segment数组，每个Segment可看做一个hashmap，其引入了分段锁技术，即每一个Segment继承了Reentrantlock进而实现加锁，即每次保证线程安全锁住的是一个Segment，并行度默认为16，即最多可以有16个Segment(线程)支持并发写。而后java8也引入了红黑树<blockquote>
 <p>分段锁：锁的时候不锁住整个hash表，而是锁一个segment</p>
 </blockquote>
 </li>
 </ol>
-<p>假设出现极端情况下，所有数据都集中在一个Segment，相当于并发下锁住了全表，这种情况下其实和HashTable差不多，但是整体上看效率还是有提升。<br><br>所以在jdk1.8后，摒弃了Segment思想，加入Cas和synchronized组合的方式实现线程安全：</p>
+<p>假设出现极端情况下，所有数据都集中在一个Segment，相当于并发下锁住了全表，这种情况下其实和HashTable差不多，但是整体上看效率还是有提升。<br><br />所以在jdk1.8后，摒弃了Segment思想，加入Cas和synchronized组合的方式实现线程安全：</p>
 <ul>
 <li>若插入位置为空，则使用cas来将数据放入table 的第一个位置。若插入不成功，会一直自旋…</li>
 <li>若插入位置不为空，对当前数组位置的头节点上锁<ul>
@@ -550,8 +550,8 @@
 </ul>
 </li>
 </ul>
-<p>以下是jdk1.8的整体结构图，看似很像hashmap的结构。<br><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582195215246-97e06ea3-f1ec-426d-aa44-0320f4e33318.jpeg#align=left&display=inline&height=419&name=chashmap_1.jpg&originHeight=419&originWidth=1242&size=114087&status=done&style=none&width=1242" alt="chashmap_1.jpg"><br>链表为O（n），因为取决于链表的长度<br>红黑树为O(log n），取决于树的高度</p>
-<p>参考文章<br><a href="https://www.codercto.com/a/68503.html" target="_blank" rel="noopener">解读Java8中ConcurrentHashMap是如何保证线程安全的</a></p>
+<p>以下是jdk1.8的整体结构图，看似很像hashmap的结构。<br /><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582195215246-97e06ea3-f1ec-426d-aa44-0320f4e33318.jpeg#align=left&display=inline&height=419&name=chashmap_1.jpg&originHeight=419&originWidth=1242&size=114087&status=done&style=none&width=1242" alt="chashmap_1.jpg"><br />链表为O（n），因为取决于链表的长度<br />红黑树为O(log n），取决于树的高度</p>
+<p>参考文章<br /><a href="https://www.codercto.com/a/68503.html" target="_blank" rel="noopener">解读Java8中ConcurrentHashMap是如何保证线程安全的</a></p>
 <p><a name="TreeMap"></a></p>
 <h3 id="TreeMap"><a href="#TreeMap" class="headerlink" title="TreeMap"></a>TreeMap</h3><ol>
 <li>数据结构是红黑树，即自平衡的排序二叉树。与哈希映射不同，树映射能保证其元素按升序键进行排序</li>
@@ -595,7 +595,7 @@
 <p><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582195239143-93031ce5-6d92-411f-9fc1-4ae9850f070a.jpeg#align=left&display=inline&height=710&name=redwhitetree.jpg&originHeight=710&originWidth=1242&size=149130&status=done&style=none&width=1242" alt="redwhitetree.jpg"></p>
 <p><a name="ulGXu"></a></p>
 <h2 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h2><p><a name="HashSet"></a></p>
-<h3 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h3><p>即hash表，存放的是哈希值。存储顺序非插入顺序，按哈希值存取。底层是使用了Hashmap来保存元素。<br>如何判断相等？先判断哈希值是否一样，再判断equal方法是否为true，则为同一个元素。<br>问题来了，equal为false但是哈希值是相等的，是怎么存的。其实是把相等哈希值放到一个哈希桶里，哈希一样的存一列。如下图1代表哈希值不同，图2代表相同，但是equal为false</p>
+<h3 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h3><p>即hash表，存放的是哈希值。存储顺序非插入顺序，按哈希值存取。底层是使用了Hashmap来保存元素。<br />如何判断相等？先判断哈希值是否一样，再判断equal方法是否为true，则为同一个元素。<br />问题来了，equal为false但是哈希值是相等的，是怎么存的。其实是把相等哈希值放到一个哈希桶里，哈希一样的存一列。如下图1代表哈希值不同，图2代表相同，但是equal为false</p>
 <p><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582195268204-7cc58b51-3062-4e66-8285-3db4d9d90a30.jpeg#align=left&display=inline&height=392&name=hashset.jpg&originHeight=392&originWidth=1242&size=73700&status=done&style=none&width=1242" alt="hashset.jpg"></p>
 <p>最终可得结论，一个hashcode位置上可存放多个元素，Hashset通过hashcode确定元素在内存中的位置</p>
 <p><a name="3f52d474"></a></p>
@@ -1217,7 +1217,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">60.5k</span>&nbsp;字
+                class="white-color">73.1k</span>&nbsp;字
             
             
             

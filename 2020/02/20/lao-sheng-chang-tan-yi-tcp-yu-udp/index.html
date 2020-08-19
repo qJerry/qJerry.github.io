@@ -439,7 +439,7 @@
 <p>为了更进一步了解网络层面的知识，先晒出一张网络体系结构图，加深理解。</p>
 </blockquote>
 <p><a name="0qP7n"></a></p>
-<h1 id="计算机网络体系结构图"><a href="#计算机网络体系结构图" class="headerlink" title="计算机网络体系结构图"></a>计算机网络体系结构图</h1><p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1582188081209-c85b7515-50d4-42c9-baf8-702116242721.png#align=left&display=inline&height=621&name=all.png&originHeight=621&originWidth=1041&size=251518&status=done&style=none&width=1041" alt="all.png"><br><br><a name="4Wa7C"></a></p>
+<h1 id="计算机网络体系结构图"><a href="#计算机网络体系结构图" class="headerlink" title="计算机网络体系结构图"></a>计算机网络体系结构图</h1><p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1582188081209-c85b7515-50d4-42c9-baf8-702116242721.png#align=left&display=inline&height=621&name=all.png&originHeight=621&originWidth=1041&size=251518&status=done&style=none&width=1041" alt="all.png"><br /><br><a name="4Wa7C"></a></p>
 <h1 id="TCP-UDP的区别"><a href="#TCP-UDP的区别" class="headerlink" title="TCP UDP的区别"></a>TCP UDP的区别</h1><table>
 <thead>
 <tr>
@@ -500,20 +500,20 @@
 </blockquote>
 <p><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582191193844-5cd363e1-ca8f-42bc-8541-c6882e2d5ffe.jpeg#align=left&display=inline&height=421&name=3-way-handshake_1.jpg&originHeight=421&originWidth=572&size=35580&status=done&style=none&width=572" alt="3-way-handshake_1.jpg"></p>
 <ul>
-<li>Step 1（SYN）.<br>Client 端要和Server端 建立连接，所以要发一个SYN（即同步序列号）的包，初始序号x，保存在包头的序列号（Sequence Number）字段里，指明打算连接的Service port，。<br>用于告知Server：我（Client）可能要与你开始通讯了，现在发给你一个我（Client）启动段的序列号。<br>此时Client进入<code>SYN_SEND</code>状态<br></li>
-<li>Step 2（SYN+ACK）.<br>Server 端 接收到数据包（通知）后<br>使用一个SYN-ACK信号位设置，来响应Client 端的请求。<br>即发送了自己的序列号（SVN），初始序号为y，和确认号（ACK，即Client发来的序列号递增1， 即x + 1）。<br>此时Server进入 <code>SYN_RCVD</code> 状态<br></li>
-<li>Step 3（ACK）.<br>Client接收到Server端的响应后<br>发送确认包（ACK，即Server 发来的序列号递增1， 即y + 1）来确认收到响应，此时Client 进入 <code>ESTABLISHED</code> 状态，当Server 接收到该ACK包后，也进入 <code>ESTABLISHED</code> 状态。</li>
+<li>Step 1（SYN）.<br />Client 端要和Server端 建立连接，所以要发一个SYN（即同步序列号）的包，初始序号x，保存在包头的序列号（Sequence Number）字段里，指明打算连接的Service port，。<br />用于告知Server：我（Client）可能要与你开始通讯了，现在发给你一个我（Client）启动段的序列号。<br />此时Client进入<code>SYN_SEND</code>状态<br /></li>
+<li>Step 2（SYN+ACK）.<br>Server 端 接收到数据包（通知）后<br />使用一个SYN-ACK信号位设置，来响应Client 端的请求。<br />即发送了自己的序列号（SVN），初始序号为y，和确认号（ACK，即Client发来的序列号递增1， 即x + 1）。<br />此时Server进入 <code>SYN_RCVD</code> 状态<br /></li>
+<li>Step 3（ACK）.<br />Client接收到Server端的响应后<br />发送确认包（ACK，即Server 发来的序列号递增1， 即y + 1）来确认收到响应，此时Client 进入 <code>ESTABLISHED</code> 状态，当Server 接收到该ACK包后，也进入 <code>ESTABLISHED</code> 状态。</li>
 </ul>
 <p><a name="2kajc"></a></p>
 <h2 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h2><blockquote>
 <p>TCP 的连接的拆除需要发送四个包，因此称为四次挥手(Four-way handshake)。<br>需要四个包的原因是是因为TCP的半关闭引起的<br>客户端或服务器均可主动发起挥手动作，在 socket 编程中，任何一方执行 <code>close()</code> 操作即可产生挥手操作。</p>
 </blockquote>
-<p>下面假设Client主动发起挥手动作<br><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582191219910-edfed3ce-3fd3-42a2-97be-5274cc01272f.jpeg#align=left&display=inline&height=450&name=4-way-connect-termination.jpg&originHeight=450&originWidth=571&size=36350&status=done&style=none&width=571" alt="4-way-connect-termination.jpg"></p>
+<p>下面假设Client主动发起挥手动作<br /><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582191219910-edfed3ce-3fd3-42a2-97be-5274cc01272f.jpeg#align=left&display=inline&height=450&name=4-way-connect-termination.jpg&originHeight=450&originWidth=571&size=36350&status=done&style=none&width=571" alt="4-way-connect-termination.jpg"></p>
 <ul>
-<li>Step 1（FIN）.<br>Client 端（发起方）要关闭TCP连接，所以要发一个FIN包，序号为x。<br>发送完毕后，此时Client进入 <code>FIN_WAIT_1</code> 状态（此时表明无数据可发送，但仍可接受数据）<br></li>
-<li>Step 2（ACK）.<br>当Server 端 接收到FIN包后，立即向Client发送确认包（即Client发来的FIN包的序号递增1，x + 1）。<br>发送完毕后，此时Server 进入 <code>CLOSE_WAIT</code> 状态（此时表明接收到了Client的关闭，但还没做好“思想准备“关闭连接）<br>当Client 端 接收到ACK包后，进入 <code>FIN_WAIT_2</code> 状态<br></li>
-<li>Step 3（FIN）.<br>Server 端 发送ACK包一段时间（这段时间它有一些关闭过程）后，开始发送FIN包，序号为y<br>发送完毕后，此时Server 进入 <code>LAST_ACK</code> 状态<br></li>
-<li>Step 4（ACK）.<br>当Client 端 接收到FIN包，即关闭请求后，发送一个确认包（即Server发来的FIN包的序号递增1，y + 1）<br>发送完毕后，此时Client  进入 <code>TIME_WAIT</code> 状态，目的在于在时间周期n内，允许Client 在发送的ACK包丢失的情况下重新发<br>当Server 端接收到ACK包后，连接正式关闭，此时Server进入 <code>CLOSED</code> 状态。Client资源（包括端口号、缓冲区数据）都被释放<br>当Client在时间周期n结束后，仍没收到Server 发的ACK包，则认为已正常关闭连接，此时Client 也进入 <code>CLOSE</code> 状态</li>
+<li>Step 1（FIN）.<br />Client 端（发起方）要关闭TCP连接，所以要发一个FIN包，序号为x。<br />发送完毕后，此时Client进入 <code>FIN_WAIT_1</code> 状态（此时表明无数据可发送，但仍可接受数据）<br /></li>
+<li>Step 2（ACK）.<br />当Server 端 接收到FIN包后，立即向Client发送确认包（即Client发来的FIN包的序号递增1，x + 1）。<br />发送完毕后，此时Server 进入 <code>CLOSE_WAIT</code> 状态（此时表明接收到了Client的关闭，但还没做好“思想准备“关闭连接）<br />当Client 端 接收到ACK包后，进入 <code>FIN_WAIT_2</code> 状态<br /></li>
+<li>Step 3（FIN）.<br />Server 端 发送ACK包一段时间（这段时间它有一些关闭过程）后，开始发送FIN包，序号为y<br />发送完毕后，此时Server 进入 <code>LAST_ACK</code> 状态<br /></li>
+<li>Step 4（ACK）.<br />当Client 端 接收到FIN包，即关闭请求后，发送一个确认包（即Server发来的FIN包的序号递增1，y + 1）<br />发送完毕后，此时Client  进入 <code>TIME_WAIT</code> 状态，目的在于在时间周期n内，允许Client 在发送的ACK包丢失的情况下重新发<br />当Server 端接收到ACK包后，连接正式关闭，此时Server进入 <code>CLOSED</code> 状态。Client资源（包括端口号、缓冲区数据）都被释放<br />当Client在时间周期n结束后，仍没收到Server 发的ACK包，则认为已正常关闭连接，此时Client 也进入 <code>CLOSE</code> 状态</li>
 </ul>
 <p><a name="EdGau"></a></p>
 <h1 id="TCP协议如何保证可靠传输"><a href="#TCP协议如何保证可靠传输" class="headerlink" title="TCP协议如何保证可靠传输"></a>TCP协议如何保证可靠传输</h1><blockquote>
@@ -522,41 +522,41 @@
 <p><a name="ojMfe"></a></p>
 <h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><pre><code>宏观上看，从TCP的特性可以得知，它有自己的错误检测机制、数据按序传输、确认应答+序列号、支持重传的功能。然后具体的内部处理是怎样的呢？主要有以下两点</code></pre><ul>
 <li>停止等待协议这是最简单的保证可靠传输的协议以下会发生两种情况<ul>
-<li>无差错<br><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582191248595-92370406-641f-497b-a9c8-b50d1b81d4a7.jpeg#align=left&display=inline&height=452&name=%E5%81%9C%E6%AD%A2%E7%AD%89%E5%BE%85%E5%8D%8F%E5%8A%A9-%E6%97%A0%E5%B7%AE%E9%94%99.jpg&originHeight=452&originWidth=511&size=27921&status=done&style=none&width=511" alt="停止等待协助-无差错.jpg"><br>可以看到Client 在发送分组M1(即数据单元)后，暂停，等到Server发回确认后，继续发送下一个分组…<br>这是理想条件下的无差错情况</li>
+<li>无差错<br /><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582191248595-92370406-641f-497b-a9c8-b50d1b81d4a7.jpeg#align=left&display=inline&height=452&name=%E5%81%9C%E6%AD%A2%E7%AD%89%E5%BE%85%E5%8D%8F%E5%8A%A9-%E6%97%A0%E5%B7%AE%E9%94%99.jpg&originHeight=452&originWidth=511&size=27921&status=done&style=none&width=511" alt="停止等待协助-无差错.jpg"><br />可以看到Client 在发送分组M1(即数据单元)后，暂停，等到Server发回确认后，继续发送下一个分组…<br />这是理想条件下的无差错情况</li>
 <li>有差错</li>
 </ul>
 </li>
 </ul>
-<p><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582191306837-86029c09-7535-4067-ad2a-84a581932092.jpeg#align=left&display=inline&height=451&name=%E5%81%9C%E6%AD%A2%E7%AD%89%E5%BE%85%E5%8D%8F%E5%8A%A9-%E8%B6%85%E6%97%B6%E9%87%8D%E4%BC%A0.jpg&originHeight=451&originWidth=513&size=33516&status=done&style=none&width=513" alt="停止等待协助-超时重传.jpg"><br>当Client 发送 分组M1（会先设置一个计时器，在此计时器内M1仍存在，以便重传）时，可能会遇到数据无法到达Server，或者Server 检测出问题并丢弃了它，在指定时间内Client 如果未收到来自Server 的确认，则会重传M1，即人们常说的<code>超时重传</code>超时重传会有以下情况</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582191306837-86029c09-7535-4067-ad2a-84a581932092.jpeg#align=left&display=inline&height=451&name=%E5%81%9C%E6%AD%A2%E7%AD%89%E5%BE%85%E5%8D%8F%E5%8A%A9-%E8%B6%85%E6%97%B6%E9%87%8D%E4%BC%A0.jpg&originHeight=451&originWidth=513&size=33516&status=done&style=none&width=513" alt="停止等待协助-超时重传.jpg"><br />当Client 发送 分组M1（会先设置一个计时器，在此计时器内M1仍存在，以便重传）时，可能会遇到数据无法到达Server，或者Server 检测出问题并丢弃了它，在指定时间内Client 如果未收到来自Server 的确认，则会重传M1，即人们常说的<code>超时重传</code>超时重传会有以下情况</p>
 <pre><code>  - 确认丢失（发回延迟）&lt;br /&gt;Client发送分组M1,Server收到M1并发送确认分组，而在指定的时间内Client没有收到确认，后会重传M1.&lt;br /&gt;而由于Server 已经收到过M1了， 所以此时它需要 丢弃M1分组, 发送确认分组&lt;br /&gt;
   - 确认迟到（发送延迟）&lt;br /&gt;由于网络延迟等原因，Client发送的分组M1，在指定时间后才到Server， 此时Client 还没来得及收到确认，再次发送分组M1&lt;br /&gt;而由于Server 刚好收到了M1，所以此时它需要 丢弃M1分组, 发送确认分组，&lt;br /&gt;Client 收到&gt;=2个以上的确认，会执行丢弃操作，并且停止发送&lt;br /&gt;</code></pre><ul>
-<li>连续ARQ协议<br>由于停止等待协议对信道的利用率太低，故可以采用流水线的方式来传输，即连续ARQ协议。<br>这里需要提到一个<code>发送窗口</code>的概念。发送窗口支持滑动，所以也有<code>滑动窗口</code>这么一个概念<br>    Client 会维护一个发送窗口，一个窗口内可以有多个连续分组进行发送，而不必等待对方的确认一条条分组发。<br>    Server 亦不会对每个分组进行回传确认，而是在按需发送到达的最后一个分组到达之后，发送确认，代表这个窗口的分组已经发送成功</li>
+<li>连续ARQ协议<br />由于停止等待协议对信道的利用率太低，故可以采用流水线的方式来传输，即连续ARQ协议。<br />这里需要提到一个<code>发送窗口</code>的概念。发送窗口支持滑动，所以也有<code>滑动窗口</code>这么一个概念<br />    Client 会维护一个发送窗口，一个窗口内可以有多个连续分组进行发送，而不必等待对方的确认一条条分组发。<br />    Server 亦不会对每个分组进行回传确认，而是在按需发送到达的最后一个分组到达之后，发送确认，代表这个窗口的分组已经发送成功</li>
 </ul>
 <p><a name="1Ljjk"></a></p>
 <h2 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h2><p><a name="3vTak"></a></p>
 <h3 id="1-使用滑动窗口"><a href="#1-使用滑动窗口" class="headerlink" title="1. 使用滑动窗口"></a>1. 使用滑动窗口</h3><pre><code>窗口主要分为接收窗口和发送窗口</code></pre><ul>
-<li>接收窗口<br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1582191463835-75b3e1a7-bae5-40e1-b310-3efe8b95950f.png#align=left&display=inline&height=104&name=%E6%8E%A5%E6%94%B6%E7%AA%97%E5%8F%A3.png&originHeight=104&originWidth=636&size=21213&status=done&style=none&width=636" alt="接收窗口.png"></li>
+<li>接收窗口<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1582191463835-75b3e1a7-bae5-40e1-b310-3efe8b95950f.png#align=left&display=inline&height=104&name=%E6%8E%A5%E6%94%B6%E7%AA%97%E5%8F%A3.png&originHeight=104&originWidth=636&size=21213&status=done&style=none&width=636" alt="接收窗口.png"></li>
 </ul>
-<p>“接收窗口”大小取决于应用（比如说tomcat：8080端口的监听进程）、系统、硬件的限制。图中，接收窗口是31~50，大小为20。<br>　　在接收窗口中，黑色的表示已收到的数据，白色的表示未收到的数据。<br>　　当收到窗口左边的数据，如27，则丢弃，因为这部分已经交付给主机；<br>　　当收到窗口右边的数据，如52，则丢弃，因为还没轮到它；<br>　　当收到已收到的窗口中的数据，如32，丢弃；<br>　　当收到未收到的窗口中的数据，如35，缓存在窗口中。</p>
+<p>“接收窗口”大小取决于应用（比如说tomcat：8080端口的监听进程）、系统、硬件的限制。图中，接收窗口是31~50，大小为20。<br />　　在接收窗口中，黑色的表示已收到的数据，白色的表示未收到的数据。<br />　　当收到窗口左边的数据，如27，则丢弃，因为这部分已经交付给主机；<br />　　当收到窗口右边的数据，如52，则丢弃，因为还没轮到它；<br />　　当收到已收到的窗口中的数据，如32，丢弃；<br />　　当收到未收到的窗口中的数据，如35，缓存在窗口中。</p>
 <ul>
-<li><p>发送窗口<br></p>
+<li><p>发送窗口<br /></p>
 <pre><code>  ![发送窗口.png](https://cdn.nlark.com/yuque/0/2020/png/243176/1582191487752-d6496e44-5da6-4121-922b-845d2dfbcf60.png#align=left&amp;display=inline&amp;height=126&amp;name=%E5%8F%91%E9%80%81%E7%AA%97%E5%8F%A3.png&amp;originHeight=126&amp;originWidth=636&amp;size=20821&amp;status=done&amp;style=none&amp;width=636)</code></pre></li>
 </ul>
-<p>发送窗口的大小swnd=min（rwnd，cwnd）。rwnd是接收窗口，cwnd用于拥塞控制，暂时可以理解swnd= rwnd =20。<br>　　图中分为四个区段，其中P1到P3是发送窗口。<br>　　tips：发送窗口以字节为单位。为了方便画图，图中展示得像以报文为单位一样。但这不影响理解。</p>
+<p>发送窗口的大小swnd=min（rwnd，cwnd）。rwnd是接收窗口，cwnd用于拥塞控制，暂时可以理解swnd= rwnd =20。<br />　　图中分为四个区段，其中P1到P3是发送窗口。<br />　　tips：发送窗口以字节为单位。为了方便画图，图中展示得像以报文为单位一样。但这不影响理解。</p>
 <p><a name="eXF2w"></a></p>
 <h3 id="2-重传与确认"><a href="#2-重传与确认" class="headerlink" title="2. 重传与确认"></a>2. 重传与确认</h3><ul>
-<li>确认<br>这里主要是通过累计确认的方式<br></li>
-<li>重传<br>这里主要是上面说的<code>超时重传</code>，每一个报文都会有超时计数器，当超过指定时间后，Client（发送方）会触发重传报文</li>
+<li>确认<br />这里主要是通过累计确认的方式<br /></li>
+<li>重传<br />这里主要是上面说的<code>超时重传</code>，每一个报文都会有超时计数器，当超过指定时间后，Client（发送方）会触发重传报文</li>
 </ul>
 <p><a name="x3Wpy"></a></p>
 <h3 id="3-流量控制（基于滑动窗口）"><a href="#3-流量控制（基于滑动窗口）" class="headerlink" title="3. 流量控制（基于滑动窗口）"></a>3. 流量控制（基于滑动窗口）</h3><pre><code>流量即发送方发送的报文流量。当接收方来不及处理数据时，通过滑动窗口，告诉发送方能够接受的单位字节是多少，以降低发送的频率，防止包丢失&lt;br /&gt;![流量控制.png](https://cdn.nlark.com/yuque/0/2020/png/243176/1582191515681-2b00f8b3-3584-415e-9fb8-061bc3b5e8cc.png#align=left&amp;display=inline&amp;height=367&amp;name=%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6.png&amp;originHeight=367&amp;originWidth=619&amp;size=98699&amp;status=done&amp;style=none&amp;width=619)</code></pre><ul>
-<li><p>在建立连接时,接收方(B),告诉了发送方(A):<code>我的接收窗口是400(单位字节)</code>.<br></p>
+<li><p>在建立连接时,接收方(B),告诉了发送方(A):<code>我的接收窗口是400(单位字节)</code>.<br /></p>
 </li>
-<li><p>图中的<code>ACK</code>为TCP首部的ACK字段,<code>ack</code>为首部的确认号字段.<br></p>
+<li><p>图中的<code>ACK</code>为TCP首部的ACK字段,<code>ack</code>为首部的确认号字段.<br /></p>
 </li>
-<li><p>流量控制体现在:<code>rwnd=300, rwnd=100, rwnd=0</code>.在确认报文的窗口字段设定了发送方能够发出的数据多少,从而控制流量.注意只有到首部的<code>ACK</code>字段值为1,窗口字段的值才有效.<br></p>
+<li><p>流量控制体现在:<code>rwnd=300, rwnd=100, rwnd=0</code>.在确认报文的窗口字段设定了发送方能够发出的数据多少,从而控制流量.注意只有到首部的<code>ACK</code>字段值为1,窗口字段的值才有效.<br /></p>
 </li>
-<li><p>假设在B发送了<code>rwnd=0</code>之后,过段时间由于自己又希望接收到数据,于是发出<code>rwnd=400</code>的报文,但是该报文丢失了,这样A依然无法发送数据,B希望接收但接收不到数据.<br></p>
+<li><p>假设在B发送了<code>rwnd=0</code>之后,过段时间由于自己又希望接收到数据,于是发出<code>rwnd=400</code>的报文,但是该报文丢失了,这样A依然无法发送数据,B希望接收但接收不到数据.<br /></p>
 <p>  为解决该问题,TCP为每个链接都设有一个<code>持续计时器</code>.只要接收到对方窗口为0的通知,就启动持续计时器.在计时器到期后,就发送<code>探测报文</code>,对方可以在该报文的确认中告知当前的窗口值.若窗口任然为0,那么就重新设定计时器,若不为0,那么上述的问题就解决了。</p>
 </li>
 </ul>
@@ -567,32 +567,32 @@
 </blockquote>
 <p>参考下图，在不同的条件下，会发生多种现象</p>
 <ul>
-<li>Server 分别接收P1,P2，没有发生粘包、拆包<br></li>
-<li>Server 一次接收P1+P2两个报文，发生了粘包<br></li>
-<li>Server 先接收P2, 再分别接收了P1_1, P1_2，发生了拆包<br></li>
-<li>Server 先接收了P2+P1_2，再接收了P1_1，发生了粘包、拆包<br></li>
-<li>另一种极端情况，当窗口非常小，恰逢P1又很大时，可能会发生多次对P1进行拆包<br></li>
+<li>Server 分别接收P1,P2，没有发生粘包、拆包<br /></li>
+<li>Server 一次接收P1+P2两个报文，发生了粘包<br /></li>
+<li>Server 先接收P2, 再分别接收了P1_1, P1_2，发生了拆包<br /></li>
+<li>Server 先接收了P2+P1_2，再接收了P1_1，发生了粘包、拆包<br /></li>
+<li>另一种极端情况，当窗口非常小，恰逢P1又很大时，可能会发生多次对P1进行拆包<br /></li>
 </ul>
 <p><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582191541317-f601cb98-df74-4f9f-af86-e6a992687057.jpeg#align=left&display=inline&height=482&name=%E7%B2%98%E5%8C%85%E4%B8%8E%E6%8B%86%E5%8C%85.jpg&originHeight=482&originWidth=601&size=22960&status=done&style=none&width=601" alt="粘包与拆包.jpg"></p>
-<p>首先我们要知道，发送的数据会先传入发送缓冲区，再通过网络传输发送到接收端的缓冲区<br>以上现象发生的原因主要是</p>
+<p>首先我们要知道，发送的数据会先传入发送缓冲区，再通过网络传输发送到接收端的缓冲区<br />以上现象发生的原因主要是</p>
 <ul>
-<li>发送的字节 大于 TCP发送缓冲区的大小，会发生拆包<br></li>
-<li>发送的报文 大于 MSS(最大报文长度)，会发生拆包<br></li>
-<li>发送的字节 小于 TCP发送缓冲区的大小，会将多次写入缓冲区的报文一并发送，即发生粘包<br></li>
+<li>发送的字节 大于 TCP发送缓冲区的大小，会发生拆包<br /></li>
+<li>发送的报文 大于 MSS(最大报文长度)，会发生拆包<br /></li>
+<li>发送的字节 小于 TCP发送缓冲区的大小，会将多次写入缓冲区的报文一并发送，即发生粘包<br /></li>
 </ul>
 <p>解决方案，需要上层应用程序做对应的处理</p>
 <ul>
-<li><code>规定报文长度</code>。例如设定每条报文固定长度为200字节，当不够时，用空格填充<br></li>
-<li><code>报文末尾添加回车换行符</code>。例如FTP协议<br></li>
-<li><code>将报文分为header and body</code>，在头部中声明报文长度，然后根据这个长度来获取报文<br></li>
+<li><code>规定报文长度</code>。例如设定每条报文固定长度为200字节，当不够时，用空格填充<br /></li>
+<li><code>报文末尾添加回车换行符</code>。例如FTP协议<br /></li>
+<li><code>将报文分为header and body</code>，在头部中声明报文长度，然后根据这个长度来获取报文<br /></li>
 </ul>
-<p>我们常用的Netty 已经帮我们处理好这些问题，我们仅需调用特定的方法即可。这个在后续的Netty挖掘机系列文章会提到栗子。<br>比如有：</p>
+<p>我们常用的Netty 已经帮我们处理好这些问题，我们仅需调用特定的方法即可。这个在后续的Netty挖掘机系列文章会提到栗子。<br />比如有：</p>
 <ul>
-<li><code>LineBasedFrameDecoder</code>  基于换行符解决<br></li>
-<li><code>DelimiterBasedFrameDecoder</code> 基于分隔符解决<br></li>
+<li><code>LineBasedFrameDecoder</code>  基于换行符解决<br /></li>
+<li><code>DelimiterBasedFrameDecoder</code> 基于分隔符解决<br /></li>
 <li><code>FixedLengthFrameDecoder</code> 指定长度解决</li>
 </ul>
-<p>参考链接：<a href="https://juejin.im/post/5a49d95af265da430a50ed8c#heading-12" target="_blank" rel="noopener">【读】这一次,让我们再深入一点 - TCP协议</a><br>参考链接：<a href="https://juejin.im/post/5a49d95af265da430a50ed8c#heading-12" target="_blank" rel="noopener">什么是 TCP 拆、粘包？如何解决？</a></p>
+<p>参考链接：<a href="https://juejin.im/post/5a49d95af265da430a50ed8c#heading-12" target="_blank" rel="noopener">【读】这一次,让我们再深入一点 - TCP协议</a><br />参考链接：<a href="https://juejin.im/post/5a49d95af265da430a50ed8c#heading-12" target="_blank" rel="noopener">什么是 TCP 拆、粘包？如何解决？</a></p>
 
             </div>
             <hr/>
@@ -1203,7 +1203,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">60.5k</span>&nbsp;字
+                class="white-color">73.1k</span>&nbsp;字
             
             
             

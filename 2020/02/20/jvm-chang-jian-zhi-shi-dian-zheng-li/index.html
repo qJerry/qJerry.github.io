@@ -441,7 +441,7 @@
 <h2 id="JVM-内存区域"><a href="#JVM-内存区域" class="headerlink" title="JVM 内存区域"></a>JVM 内存区域</h2><blockquote>
 <p>分为直接内存，线程私有内存，线程共享内存。私有内存包括程序计数器，虚拟机栈，本地方法栈</p>
 </blockquote>
-<p><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582185140199-d875bdd3-9c15-4dca-a3cd-88707999ece8.jpeg#align=left&display=inline&height=1041&name=jvm_1.jpg&originHeight=1041&originWidth=1242&size=137836&status=done&style=none&width=1242" alt="jvm_1.jpg"><br><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582185146698-c0172500-5c06-4ee7-919c-d0fb422e3be4.jpeg#align=left&display=inline&height=663&name=jvm_2.jpg&originHeight=663&originWidth=1242&size=116477&status=done&style=none&width=1242" alt="jvm_2.jpg"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582185140199-d875bdd3-9c15-4dca-a3cd-88707999ece8.jpeg#align=left&display=inline&height=1041&name=jvm_1.jpg&originHeight=1041&originWidth=1242&size=137836&status=done&style=none&width=1242" alt="jvm_1.jpg"><br /><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582185146698-c0172500-5c06-4ee7-919c-d0fb422e3be4.jpeg#align=left&display=inline&height=663&name=jvm_2.jpg&originHeight=663&originWidth=1242&size=116477&status=done&style=none&width=1242" alt="jvm_2.jpg"></p>
 <ul>
 <li>程序计数器，当前线程所执行的字节码的行号指示器，每个线程都需要一个独立的计数器</li>
 <li>虚拟机栈，线程私有，每执行一个方法都会创建一个栈帧，用于存储局部变量表、操作数栈，动态链接（运行期间获取对常量池的引用 等），方法出口等。方法从调用到执行完成，相当于一个栈帧在虚拟机栈入栈到出栈</li>
@@ -455,7 +455,7 @@
 </blockquote>
 <p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1582185182099-b5a37c1b-d668-423a-816f-ed576de3570a.png#align=left&display=inline&height=264&name=jvm_3.png&originHeight=264&originWidth=627&size=42184&status=done&style=none&width=627" alt="jvm_3.png"></p>
 <ul>
-<li>新生代<br>存放新生对象，占堆的1/3空间。会频繁触发MinorGC进行垃圾回收。分为Eden（原始区），ServivorFrom（存活区），ServivorTo（存活区）三个区</li>
+<li>新生代<br />存放新生对象，占堆的1/3空间。会频繁触发MinorGC进行垃圾回收。分为Eden（原始区），ServivorFrom（存活区），ServivorTo（存活区）三个区</li>
 </ul>
 <ol>
 <li><p>Eden——新对象的出生地。如果该对象占用内存太大则会被分配到老年代。当它内存不够时会触发MinorGC</p>
@@ -474,7 +474,7 @@
 </li>
 </ol>
 <ul>
-<li>老年代<br>主要存放生命周期长的内存对象。不会频繁执行MajorGC。当发生MajorGC时，至少已发生了一次MinorGC.当它满了装不下时，会产生OOM异常<blockquote>
+<li>老年代<br />主要存放生命周期长的内存对象。不会频繁执行MajorGC。当发生MajorGC时，至少已发生了一次MinorGC.当它满了装不下时，会产生OOM异常<blockquote>
 <p>简单描述下MajorGC：即扫描—标记—整理（回收）。采用标记清除和标记整理的混合算法（因为单独采用标记清除算法会产生内存碎片）</p>
 <ol>
 <li>先扫描一次所有的老年代</li>
@@ -485,7 +485,7 @@
 FullGC:针对整个堆的GC（新生代，老年代、元空间）操作，Full GC不等于Major GC，也不等于Minor GC+Major GC。</li>
 </ul>
 <ul>
-<li>永久代<br>内存的永久保存区域。存放class和元数据的信息。当class被加载后则放入永久代，GC并不会对其进行清理。所以有机会会因为Class文件过多加载而导致OOM异常<blockquote>
+<li>永久代<br />内存的永久保存区域。存放class和元数据的信息。当class被加载后则放入永久代，GC并不会对其进行清理。所以有机会会因为Class文件过多加载而导致OOM异常<blockquote>
 <p>JAVA8中已移除永久代，被一个元数据区（元空间）的区域取代。元空间不在虚拟机中，而是直接在本地内存，所以它受限于本地内存的大小，而不再是虚拟机分配的区域大小</p>
 </blockquote>
 </li>
@@ -494,7 +494,7 @@ FullGC:针对整个堆的GC（新生代，老年代、元空间）操作，Full 
 <h2 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h2><p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1582185270374-a17e3a59-33af-4afa-aea0-4d17210b0e98.png#align=left&display=inline&height=698&name=jvm_4.png&originHeight=698&originWidth=705&size=123324&status=done&style=none&width=705" alt="jvm_4.png"></p>
 <p><a name="iLMP6"></a></p>
 <h3 id="如何确定垃圾（对象已经死亡）"><a href="#如何确定垃圾（对象已经死亡）" class="headerlink" title="如何确定垃圾（对象已经死亡）"></a>如何确定垃圾（对象已经死亡）</h3><p><a name="klwkl"></a></p>
-<h4 id="引用计数法"><a href="#引用计数法" class="headerlink" title="引用计数法"></a>引用计数法</h4><p>每创建一个对象就会有一个引用计数器。当对象被引用一次则计数器+1，引用失效则-1。所以当计数器为0时会认定它是垃圾！即可被GC回收<br>看似很合理，嗯<br>但是！一旦两个对象相互引用的时候，计数器永远不为0。此时就会导致OOM！</p>
+<h4 id="引用计数法"><a href="#引用计数法" class="headerlink" title="引用计数法"></a>引用计数法</h4><p>每创建一个对象就会有一个引用计数器。当对象被引用一次则计数器+1，引用失效则-1。所以当计数器为0时会认定它是垃圾！即可被GC回收<br />看似很合理，嗯<br />但是！一旦两个对象相互引用的时候，计数器永远不为0。此时就会导致OOM！</p>
 <p><a name="3kKhM"></a></p>
 <h4 id="可达性算法（JVM采用）"><a href="#可达性算法（JVM采用）" class="headerlink" title="可达性算法（JVM采用）"></a>可达性算法（JVM采用）</h4><p>从GC Roots为起点开始搜索，整个连通图中的对象都是可达（活）对象。对于无法到达的对象，便是不可达对象。此时并非死刑（即非可回收对象）。它们需要至少两次的标记过程，才会变为可回收对象，进而被GC回收</p>
 <p><a name="JwUdv"></a></p>
@@ -502,12 +502,12 @@ FullGC:针对整个堆的GC（新生代，老年代、元空间）操作，Full 
 <h4 id="1-标记清除法"><a href="#1-标记清除法" class="headerlink" title="1. 标记清除法"></a>1. 标记清除法</h4><blockquote>
 <p>从GC Roots根节点开始标记对象，未被标记的就为垃圾对象，然后将未被标记的对象进行清除</p>
 </blockquote>
-<p>缺点是 1. 内存碎片化严重，导致后面分配较大对象时无法找到足够的连续内存，而不得不提前触发一次垃圾收集； 2.标记清除效率不高<br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1582185399768-6f3c72f5-5bc5-4ea1-a74a-796a26e81ebb.png#align=left&display=inline&height=442&name=jvm_5.png&originHeight=442&originWidth=716&size=86851&status=done&style=none&width=716" alt="jvm_5.png"></p>
+<p>缺点是 1. 内存碎片化严重，导致后面分配较大对象时无法找到足够的连续内存，而不得不提前触发一次垃圾收集； 2.标记清除效率不高<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1582185399768-6f3c72f5-5bc5-4ea1-a74a-796a26e81ebb.png#align=left&display=inline&height=442&name=jvm_5.png&originHeight=442&originWidth=716&size=86851&status=done&style=none&width=716" alt="jvm_5.png"></p>
 <p><a name="iXlTX"></a></p>
 <h4 id="2-复制（Copying）算法"><a href="#2-复制（Copying）算法" class="headerlink" title="2. 复制（Copying）算法"></a>2. 复制（Copying）算法</h4><blockquote>
 <p>为了解决效率问题而生。将可用内存按容量分为大小相等的两块，每次只使用一块（活动区间）。当这一块内存用完了，则将还存活的对象（按前面说的，什么是存活对象？即从GC Roots出发，能到达的每个对象都是存活对象）放（复制）到另一块（空闲区间）上，接着把原来那块内存清理掉。这里的复制是按照内存地址依次排列，每次复制后将该存活对象的引用地址指向新的内存地址</p>
 </blockquote>
-<p>优点：不必考虑内存碎片；高效<br>缺点：浪费了一半的内存空间，无法让可用内存得到充分利用。<br>总结：对象的存活率非常低的时候就可采用，且能够克服50%内存的浪费，如新生代就采用了<br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1582185433277-369ff9db-ae4e-4aa1-b519-93016fda9abf.png#align=left&display=inline&height=444&name=jvm_6.png&originHeight=444&originWidth=753&size=97721&status=done&style=none&width=753" alt="jvm_6.png"></p>
+<p>优点：不必考虑内存碎片；高效<br />缺点：浪费了一半的内存空间，无法让可用内存得到充分利用。<br />总结：对象的存活率非常低的时候就可采用，且能够克服50%内存的浪费，如新生代就采用了<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1582185433277-369ff9db-ae4e-4aa1-b519-93016fda9abf.png#align=left&display=inline&height=444&name=jvm_6.png&originHeight=444&originWidth=753&size=97721&status=done&style=none&width=753" alt="jvm_6.png"></p>
 <p><a name="w4tEz"></a></p>
 <h4 id="3-标记整理算法"><a href="#3-标记整理算法" class="headerlink" title="3. 标记整理算法"></a>3. 标记整理算法</h4><blockquote>
 <p>为了解决当对象存活率高无法采用复制算法而生。和标记清除法的标记过程一样，只是标记后不直接清除，而是将存活对象都移动到内存的一端。端外部分就直接清理掉。老年代就采用这种算法</p>
@@ -523,19 +523,19 @@ FullGC:针对整个堆的GC（新生代，老年代、元空间）操作，Full 
 <p>什么是引用？<br>一个对象的创建，会对应在内存中申请一块空间来存放数据。当访问该对象的时候，不是直接访问它的内存地址，而是通过（指向该对象的内存地址的）引用去访问</p>
 </blockquote>
 <ul>
-<li>强引用<br></li>
+<li>强引用<br /></li>
 </ul>
-<p>把一个对象赋给一个引用变量，则这个引用变量就是一个强引用<br>绝不会被GC回收<br>易造成内存泄漏<br>什么时候才会被回收？当不存在强引用，即没有任何引用对象指向它时</p>
+<p>把一个对象赋给一个引用变量，则这个引用变量就是一个强引用<br />绝不会被GC回收<br />易造成内存泄漏<br />什么时候才会被回收？当不存在强引用，即没有任何引用对象指向它时</p>
 <ul>
-<li>软引用<br></li>
-<li>弱引用<br></li>
-<li>虚引用<br></li>
+<li>软引用<br /></li>
+<li>弱引用<br /></li>
+<li>虚引用<br /></li>
 </ul>
 <p><a name="bd0012cf"></a></p>
 <h2 id="JVM类加载机制"><a href="#JVM类加载机制" class="headerlink" title="JVM类加载机制"></a>JVM类加载机制</h2><blockquote>
 <p>将类的.class文件中的二进制数据加载到内存中，将其储存在方法区内。在堆中创建一个java.lang.Class对象，用于封装方法区内的数据结构</p>
 </blockquote>
-<p>分为五部分：加载，验证，准备，解析，初始化<br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1582185499437-7ea7ffba-83c1-4ee7-b825-688cf4afc9e9.png#align=left&display=inline&height=400&name=jvm_8.png&originHeight=400&originWidth=1101&size=123605&status=done&style=none&width=1101" alt="jvm_8.png"></p>
+<p>分为五部分：加载，验证，准备，解析，初始化<br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1582185499437-7ea7ffba-83c1-4ee7-b825-688cf4afc9e9.png#align=left&display=inline&height=400&name=jvm_8.png&originHeight=400&originWidth=1101&size=123605&status=done&style=none&width=1101" alt="jvm_8.png"></p>
 <p><a name="ccc7aee1"></a></p>
 <h3 id="1-加载（注意是类加载）"><a href="#1-加载（注意是类加载）" class="headerlink" title="1. 加载（注意是类加载）"></a>1. 加载（注意是类加载）</h3><p>英文为loading，顾名思义，加载某个类的java.lang.Class的对象到内存，作为方法区这个类的各个数据的入口。</p>
 <ul>
@@ -552,8 +552,8 @@ FullGC:针对整个堆的GC（新生代，老年代、元空间）操作，Full 
 <p><a name="ee492a84"></a></p>
 <h3 id="2-验证"><a href="#2-验证" class="headerlink" title="2. 验证"></a>2. 验证</h3><p>确保Class文件中的字节流中包含的信息符合当前虚拟机的要求，而不会危害虚拟机</p>
 <p><a name="e88352bc"></a></p>
-<h3 id="3-准备"><a href="#3-准备" class="headerlink" title="3. 准备"></a>3. 准备</h3><p>正式为类变量分配内存并设置类变量（static修饰）初始值阶段。即为方法区中分配其中类信息，常量，静态变量等所需的内存空间<br>注意<br>这里的初始值需要理解<br>如果是</p>
-<pre><code>public static int num = 100</code></pre><p>则在准备阶段过后的初始化值为0而不是100。因为这阶段尚未执行任何JAVA方法，赋为100的操作是在程序被编译后，存放在类构造器方法之中<br>如果是</p>
+<h3 id="3-准备"><a href="#3-准备" class="headerlink" title="3. 准备"></a>3. 准备</h3><p>正式为类变量分配内存并设置类变量（static修饰）初始值阶段。即为方法区中分配其中类信息，常量，静态变量等所需的内存空间<br />注意<br />这里的初始值需要理解<br />如果是</p>
+<pre><code>public static int num = 100</code></pre><p>则在准备阶段过后的初始化值为0而不是100。因为这阶段尚未执行任何JAVA方法，赋为100的操作是在程序被编译后，存放在类构造器方法之中<br />如果是</p>
 <pre><code>public static final int num = 100</code></pre><p>则在准备阶段过后的初始化值为100，因为用final修饰则代表不可变性，非传递性</p>
 <blockquote>
 <p>延伸<br>final： 必须在声明的时候或者构造器初始化。不然编译器会报错</p>
@@ -566,7 +566,7 @@ FullGC:针对整个堆的GC（新生代，老年代、元空间）操作，Full 
 <p><a name="59d0c974"></a></p>
 <h3 id="4-解析"><a href="#4-解析" class="headerlink" title="4. 解析"></a>4. 解析</h3><p>虚拟机将常量池中的符号引用替换为直接引用的过程</p>
 <p><a name="97533e51"></a></p>
-<h3 id="5-初始化"><a href="#5-初始化" class="headerlink" title="5. 初始化"></a>5. 初始化</h3><p>执行类构造器方法的过程。方法是由编译器自动收集类中的类变<br>量的赋值操作和静态语句块中的语句合并而成的。虚拟机会保证子方法执行之前，父类<br>的方法已经执行完毕，如果一个类中没有对静态变量赋值也没有静态语句块，那么编译<br>器可以不为这个类生成()方法</p>
+<h3 id="5-初始化"><a href="#5-初始化" class="headerlink" title="5. 初始化"></a>5. 初始化</h3><p>执行类构造器方法的过程。方法是由编译器自动收集类中的类变<br />量的赋值操作和静态语句块中的语句合并而成的。虚拟机会保证子方法执行之前，父类<br />的方法已经执行完毕，如果一个类中没有对静态变量赋值也没有静态语句块，那么编译<br />器可以不为这个类生成()方法</p>
 <blockquote>
 <p>方法 与类的构造函数（实例构造器()方法）</p>
 </blockquote>
@@ -613,7 +613,7 @@ FullGC:针对整个堆的GC（新生代，老年代、元空间）操作，Full 
 <h4 id="1-类与类加载器"><a href="#1-类与类加载器" class="headerlink" title="1 类与类加载器"></a>1 类与类加载器</h4><blockquote>
 <p>一个类的唯一性的确定依赖于它类本身，加上加载它的类加载器。所以比较两个类是否相等，不仅要看它们是否有相同的全限定名，还要看他们是否属于同个类加载器加载。</p>
 </blockquote>
-<p>如下图所示，我们首先自定义了一个类加载器，用于加载同路径下的Class文件。然后使用这个加载器加载全限定名”jerry.jvm.ClassLoaderTest”的类。我们通过获取对象obj和ClassLoaderTest对应的类加载器，可以看出一个来自自定义的类加载器，另一个来自系统类加载器。故由以上的定义可得知，即使它两来自同个Class文件，但是所属的类加载器不同，所以它两本质上不相等。<br><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582185707991-cdaf3eab-ebdc-4960-b395-938d9bdf06d0.jpeg#align=left&display=inline&height=833&name=code_1.jpg&originHeight=833&originWidth=747&size=37166&status=done&style=none&width=747" alt="code_1.jpg"></p>
+<p>如下图所示，我们首先自定义了一个类加载器，用于加载同路径下的Class文件。然后使用这个加载器加载全限定名”jerry.jvm.ClassLoaderTest”的类。我们通过获取对象obj和ClassLoaderTest对应的类加载器，可以看出一个来自自定义的类加载器，另一个来自系统类加载器。故由以上的定义可得知，即使它两来自同个Class文件，但是所属的类加载器不同，所以它两本质上不相等。<br /><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582185707991-cdaf3eab-ebdc-4960-b395-938d9bdf06d0.jpeg#align=left&display=inline&height=833&name=code_1.jpg&originHeight=833&originWidth=747&size=37166&status=done&style=none&width=747" alt="code_1.jpg"></p>
 <p><a name="c53fbce4"></a></p>
 <h4 id="2-双亲委派模型（代理模式）"><a href="#2-双亲委派模型（代理模式）" class="headerlink" title="2 双亲委派模型（代理模式）"></a>2 双亲委派模型（代理模式）</h4><blockquote>
 <p>JVM加载类时默认使用了双亲委派模型。双亲委派模型要求除了最顶层的启动类加载器外，其他的类加载器都应当有自己的父类加载器。并且，这里的父子并不是由继承关系实现，而是由组合关系来复用父加载器的方法。</p>
@@ -664,7 +664,7 @@ FullGC:针对整个堆的GC（新生代，老年代、元空间）操作，Full 
 <h5 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h5><pre><code>为解决上述问题，JAVA设计团队引入了一个不太友好的设计：**线程上下文类加载器**（jdk1.2引入）。`java.lang.Thread`中的方法`getContextClassLoader()`和 `setContextClassLoader(ClassLoader cl)`来设置线程的上下文类加载器。若未通过 `setContextClassLoader(ClassLoader cl)`设置的话， 线程会继承父线程的上下文类加载器。Java 应用运行的初始线程的上下文类加载器是应用程序类加载器。在线程中运行的代码可以通过此类加载器来加载类和资源。
 
 通过**线程上下文类加载器**可以实现父类加载器去请求子类加载器完成类加载的操作。&lt;br /&gt;    这种行为实际上就是**打通了双亲委派模型的层次结构来逆向使用类加载器**，已经违背了双亲委派模型的一般性原则</code></pre><p><a name="8a30fc33"></a></p>
-<h5 id><a href="#" class="headerlink" title></a></h5><p><a name="pYdku"></a></p>
+<h5 id=""><a href="#" class="headerlink" title=""></a></h5><p><a name="pYdku"></a></p>
 <h5 id="思考—-gt-能不能自己写个类叫java-lang-System？"><a href="#思考—-gt-能不能自己写个类叫java-lang-System？" class="headerlink" title="思考—&gt;能不能自己写个类叫java.lang.System？"></a>思考—&gt;能不能自己写个类叫java.lang.System？</h5><p>肯定不行。从双亲委派的角度出发，System类最终会由启动类加载器加载并返回（从System.class.getClassLoader()==null 可以判断出）。假设不遵循双亲委派的话， 重写loadClass方法，尝试一下</p>
 <p>首先自定义一个包名为java.lang的System类</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> java<span class="token punctuation">.</span>lang<span class="token punctuation">;</span>
@@ -728,7 +728,7 @@ Exception in thread <span class="token string">"main"</span></code></pre>
 
     <span class="token keyword">return</span> pd<span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<p>可见在内部已经做了限制，不允许java开头的包名被defineClass方法构造，而且defineClass是final方法，也无法通过重写来绕过该判断。<br>所以最终答案是不能！</p>
+<p>可见在内部已经做了限制，不允许java开头的包名被defineClass方法构造，而且defineClass是final方法，也无法通过重写来绕过该判断。<br />所以最终答案是不能！</p>
 <p><a name="a11e41c7"></a></p>
 <h4 id="3-自定义类加载器"><a href="#3-自定义类加载器" class="headerlink" title="3. 自定义类加载器"></a>3. 自定义类加载器</h4><p>要手写一个类加载器，需要先了解ClassLoader的主要方法</p>
 <table>
@@ -822,7 +822,7 @@ Exception in thread <span class="token string">"main"</span></code></pre>
 <span class="token punctuation">}</span></code></pre>
 <p><a name="7efcb0ce"></a></p>
 <h5 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h5><ol>
-<li>容器资源隔离。如Tomcat，为了优化空间和防止不同webapp之间的jar包冲突，每个webapp都有自己的webAppClassLoader，用于加载自身classpath上的类，当遇到Tomcat容器自带的jar包时，委托给CommonClassLoader加载<br>
+<li>容器资源隔离。如Tomcat，为了优化空间和防止不同webapp之间的jar包冲突，每个webapp都有自己的webAppClassLoader，用于加载自身classpath上的类，当遇到Tomcat容器自带的jar包时，委托给CommonClassLoader加载<br />
 
 </li>
 </ol>
@@ -835,16 +835,16 @@ Exception in thread <span class="token string">"main"</span></code></pre>
 <h2 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h2><p><img src="https://cdn.nlark.com/yuque/0/2020/jpeg/243176/1582185871180-c755748c-d4fd-478d-883c-66d465109270.jpeg#align=left&display=inline&height=481&name=jvm_10.jpg&originHeight=481&originWidth=516&size=30525&status=done&style=none&width=516" alt="jvm_10.jpg"></p>
 <p><a name="14834039"></a></p>
 <h3 id="新生代收集器-Serial、ParNew、Parallel-Scavenge"><a href="#新生代收集器-Serial、ParNew、Parallel-Scavenge" class="headerlink" title="新生代收集器(Serial、ParNew、Parallel Scavenge)"></a>新生代收集器(Serial、ParNew、Parallel Scavenge)</h3><p><a name="6G2Yg"></a></p>
-<h4 id="Serial"><a href="#Serial" class="headerlink" title="Serial"></a>Serial</h4><p>运行在Client模式下的默认新生代单线程收集器。<br>单线程意味着必须暂停其他所有工作线程（即Stop The World）、串行，<br>采用复制算法进行垃圾收集<br>收集器组合：Serial + CMS 、Serial + Serial Old<br>使用场景：Client模式（桌面应用）、单核服务器<br>使用方式：用-XX:+UseSerialGC 来选择Serial +Serial OId进行垃圾收集</p>
+<h4 id="Serial"><a href="#Serial" class="headerlink" title="Serial"></a>Serial</h4><p>运行在Client模式下的默认新生代单线程收集器。<br />单线程意味着必须暂停其他所有工作线程（即Stop The World）、串行，<br />采用复制算法进行垃圾收集<br />收集器组合：Serial + CMS 、Serial + Serial Old<br />使用场景：Client模式（桌面应用）、单核服务器<br />使用方式：用-XX:+UseSerialGC 来选择Serial +Serial OId进行垃圾收集</p>
 <p><a name="UNYAY"></a></p>
-<h4 id="ParNew"><a href="#ParNew" class="headerlink" title="ParNew"></a>ParNew</h4><p>Serial 多线程版本，其他一致。<br>收集器组合：ParNew + CMS 、ParNew + Serial Old<br>使用场景：多核服务器<br>使用方式：用-XX:+UseParNewGC 来选择ParNew +Serial OId进行垃圾收集<br>           用-XX:+UseConcMarkSweepGC 来选择ParNew+CMS+Serial Old进行垃圾收集</p>
+<h4 id="ParNew"><a href="#ParNew" class="headerlink" title="ParNew"></a>ParNew</h4><p>Serial 多线程版本，其他一致。<br />收集器组合：ParNew + CMS 、ParNew + Serial Old<br />使用场景：多核服务器<br />使用方式：用-XX:+UseParNewGC 来选择ParNew +Serial OId进行垃圾收集<br />           用-XX:+UseConcMarkSweepGC 来选择ParNew+CMS+Serial Old进行垃圾收集</p>
 <p><a name="RI5Iy"></a></p>
-<h4 id="Parallel-Scavenge"><a href="#Parallel-Scavenge" class="headerlink" title="Parallel Scavenge"></a>Parallel Scavenge</h4><p>多线程收集器。<br>相较于以上的区别是尽可能缩短垃圾收集时用户线程停顿时间<br>目的是达到一个可控的吞吐量（CPU执行用户线程时间 / CPU执行总时间）<br>收集器组合：Parallel Scavenge + Serial Old、 Parallel Scavenge + Parallel Old<br>使用场景：注重吞吐量、高效利用CPU<br>使用方式：用-XX:+UseParallelGC 来选择Parallel Scavenge +Serial OId进行垃圾收集<br>           用-XX:+UseParallelOldGC 来选择 Parallel Scavenge + Parallel Old进行垃圾收集<br>相关参数：用-XX:+MaxGCPauseMillis 设置GC的最大停顿时间<br>           用-XX:+GCTimeRatio 设置GC时间占总时间的比率，默认值为99，即允许1%的GC时间<br>jdk1.7 1.8默认用它做新生代收集器</p>
+<h4 id="Parallel-Scavenge"><a href="#Parallel-Scavenge" class="headerlink" title="Parallel Scavenge"></a>Parallel Scavenge</h4><p>多线程收集器。<br />相较于以上的区别是尽可能缩短垃圾收集时用户线程停顿时间<br />目的是达到一个可控的吞吐量（CPU执行用户线程时间 / CPU执行总时间）<br />收集器组合：Parallel Scavenge + Serial Old、 Parallel Scavenge + Parallel Old<br />使用场景：注重吞吐量、高效利用CPU<br />使用方式：用-XX:+UseParallelGC 来选择Parallel Scavenge +Serial OId进行垃圾收集<br />           用-XX:+UseParallelOldGC 来选择 Parallel Scavenge + Parallel Old进行垃圾收集<br />相关参数：用-XX:+MaxGCPauseMillis 设置GC的最大停顿时间<br />           用-XX:+GCTimeRatio 设置GC时间占总时间的比率，默认值为99，即允许1%的GC时间<br />jdk1.7 1.8默认用它做新生代收集器</p>
 <p><a name="fc3995ae"></a></p>
 <h3 id="老年代收集器-Serial-Old、CMS、Parallel-Old"><a href="#老年代收集器-Serial-Old、CMS、Parallel-Old" class="headerlink" title="老年代收集器(Serial Old、CMS、Parallel Old)"></a>老年代收集器(Serial Old、CMS、Parallel Old)</h3><p><a name="9NibG"></a></p>
-<h4 id="Serial-Old"><a href="#Serial-Old" class="headerlink" title="Serial Old"></a>Serial Old</h4><p>Serial 的老年代版本<br>采用标记-整理算法<br>收集器组合：Serial Old + Parallel Scavenge 、Serial Old + ParNew + CMS<br>使用场景：Client模式（桌面应用）、单核服务器、作为CMS收集器的后备方案</p>
+<h4 id="Serial-Old"><a href="#Serial-Old" class="headerlink" title="Serial Old"></a>Serial Old</h4><p>Serial 的老年代版本<br />采用标记-整理算法<br />收集器组合：Serial Old + Parallel Scavenge 、Serial Old + ParNew + CMS<br />使用场景：Client模式（桌面应用）、单核服务器、作为CMS收集器的后备方案</p>
 <p><a name="hlJ9T"></a></p>
-<h4 id="CMS"><a href="#CMS" class="headerlink" title="CMS"></a>CMS</h4><p>以最短回收（用户线程）停顿时间为目标的收集器。<br>优点：并发收集、低停顿<br>缺点：</p>
+<h4 id="CMS"><a href="#CMS" class="headerlink" title="CMS"></a>CMS</h4><p>以最短回收（用户线程）停顿时间为目标的收集器。<br />优点：并发收集、低停顿<br />缺点：</p>
 <ul>
 <li>对CPU资源敏感。随CPU数量下降，占用CPU资源越多，吞吐量越小。</li>
 <li>无法处理浮动垃圾。可能会出现“Concurrent Mode Failure” 失败而导致另一次Full GC 的产生。在并发清理阶段，由于用户线程还在执行，伴随着有其他新的垃圾产生，导致因为出现在标记过后CMS无法在当次收集中处理掉他们。</li>
@@ -1610,7 +1610,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">60.5k</span>&nbsp;字
+                class="white-color">73.1k</span>&nbsp;字
             
             
             

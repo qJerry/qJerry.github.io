@@ -431,13 +431,13 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>某一天，和我们配合的中台组给我们部门发了一组新的MQ配置，用于支付回调消息的接收，原来我们的某个项目已经有一个MQ，所以项目需要适配两个MQ（该项目都是作为消费者的角色）。<br><br>rabbitmq使用的版本是<br></p>
+                <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>某一天，和我们配合的中台组给我们部门发了一组新的MQ配置，用于支付回调消息的接收，原来我们的某个项目已经有一个MQ，所以项目需要适配两个MQ（该项目都是作为消费者的角色）。<br /><br>rabbitmq使用的版本是<br /></p>
 <pre class=" language-xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-starter-amqp<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>2.1.5.RELEASE<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span></code></pre>
-<p><br>兼容多MQ的代码<br></p>
+<p><br />兼容多MQ的代码<br /></p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">import</span> lombok<span class="token punctuation">.</span>extern<span class="token punctuation">.</span>slf4j<span class="token punctuation">.</span>Slf4j<span class="token punctuation">;</span>
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>amqp<span class="token punctuation">.</span>core<span class="token punctuation">.</span>Queue<span class="token punctuation">;</span>
 <span class="token keyword">import</span> org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>amqp<span class="token punctuation">.</span>rabbit<span class="token punctuation">.</span>config<span class="token punctuation">.</span>SimpleRabbitListenerContainerFactory<span class="token punctuation">;</span>
@@ -529,29 +529,29 @@
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<br>
+<br />
 
-<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>开发环境验证通过，发布到测试环境时，出现了以下异常<br><br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1584962184230-94cacf83-10fa-4a66-82e6-b2d0866ac935.png#align=left&display=inline&height=309&originHeight=309&originWidth=1379&status=done&style=none&width=1379" alt><br><br>一下子就精神了，这就是臭名昭著的内存溢出<br>回顾以往出现内存溢出，往往有以下几种</p>
-<h3 id="内存溢出"><a href="#内存溢出" class="headerlink" title="内存溢出"></a>内存溢出</h3><p><br>#### 堆空间溢出<br>java.lang.OutOfMemoryError: Java heap space<br><br><br>出现的原因一般是</p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>开发环境验证通过，发布到测试环境时，出现了以下异常<br><br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1584962184230-94cacf83-10fa-4a66-82e6-b2d0866ac935.png#align=left&display=inline&height=309&originHeight=309&originWidth=1379&status=done&style=none&width=1379" alt=""><br /><br>一下子就精神了，这就是臭名昭著的内存溢出<br />回顾以往出现内存溢出，往往有以下几种</p>
+<h3 id="内存溢出"><a href="#内存溢出" class="headerlink" title="内存溢出"></a>内存溢出</h3><p><br />#### 堆空间溢出<br>java.lang.OutOfMemoryError: Java heap space<br /><br><br />出现的原因一般是</p>
 <ul>
 <li>数据突增。比如突然创建了大对象，超出了最大堆空间内存，可能还来不及回收，也可能根本就无法满足。</li>
 <li>对象堆积。一般是程序编码有问题，导致创建的对象一直堆积在堆内存，无法被GC探测回收。</li>
 </ul>
 <p><a name="5owiu"></a></p>
-<h4 id="永久代溢出"><a href="#永久代溢出" class="headerlink" title="永久代溢出"></a>永久代溢出</h4><p>java.lang.OutOfMemoryError: PermGen space<br></p>
+<h4 id="永久代溢出"><a href="#永久代溢出" class="headerlink" title="永久代溢出"></a>永久代溢出</h4><p>java.lang.OutOfMemoryError: PermGen space<br /></p>
 <p><a name="YBI5C"></a></p>
-<h4 id="元空间溢出"><a href="#元空间溢出" class="headerlink" title="元空间溢出"></a>元空间溢出</h4><p>java.lang.OutOfMemoryError: Metaspace<br><br><br>元空间的概念是在jdk1.8提出来的，用来取代以前的永久代。永久代<br><br><br>遇到这种问题，冷静，接着一步步校验<br><a name="74rSx"></a></p>
+<h4 id="元空间溢出"><a href="#元空间溢出" class="headerlink" title="元空间溢出"></a>元空间溢出</h4><p>java.lang.OutOfMemoryError: Metaspace<br /><br><br />元空间的概念是在jdk1.8提出来的，用来取代以前的永久代。永久代<br /><br><br />遇到这种问题，冷静，接着一步步校验<br><a name="74rSx"></a></p>
 <h3 id="查看jvm启动参数"><a href="#查看jvm启动参数" class="headerlink" title="查看jvm启动参数"></a>查看jvm启动参数</h3><pre class=" language-shell"><code class="language-shell">java -server -Xmx512M -Xms512M -Denv=FAT -XX:+UseCodeCacheFlushing -XX:+HeapDumpOnOutOfMemoryError -Xloggc:gc.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:-OmitStackTraceInFastThrow -jar /usr/local/application/**.jar</code></pre>
-<p><br>可以看出，启动参数限制了最大堆内存是515M，因为是测试环境，部署了很多个项目，保险起见设置的，平时也都正常。<br><br><br>那就是说调大最大堆内存就可以，接下来试一下把最大堆内存调整为1G。<br><br><br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1585108515492-d1f2688c-a8e7-431b-b0c3-e9e9d5588f6f.png#align=left&display=inline&height=197&name=image.png&originHeight=394&originWidth=1149&size=34669&status=done&style=none&width=574.5" alt="image.png"><br><br><br>使用了测试环境的配置，更改启动参数，本地运行后，仍然会报错<br><br><br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1585020549225-b792bbee-e45c-46db-a495-e6134b1b260c.png?x-oss-process=image/resize,w_1492#align=left&display=inline&height=385&originHeight=385&originWidth=1492&status=done&style=none&width=1492" alt><br><br><br>呃。。。。<br></p>
+<p><br />可以看出，启动参数限制了最大堆内存是515M，因为是测试环境，部署了很多个项目，保险起见设置的，平时也都正常。<br /><br><br />那就是说调大最大堆内存就可以，接下来试一下把最大堆内存调整为1G。<br /><br><br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1585108515492-d1f2688c-a8e7-431b-b0c3-e9e9d5588f6f.png#align=left&display=inline&height=197&name=image.png&originHeight=394&originWidth=1149&size=34669&status=done&style=none&width=574.5" alt="image.png"><br /><br><br />使用了测试环境的配置，更改启动参数，本地运行后，仍然会报错<br /><br><br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1585020549225-b792bbee-e45c-46db-a495-e6134b1b260c.png?x-oss-process=image/resize,w_1492#align=left&display=inline&height=385&originHeight=385&originWidth=1492&status=done&style=none&width=1492" alt=""><br /><br><br />呃。。。。<br /></p>
 <p><a name="8EZYi"></a></p>
-<h3 id="查看VisualVm"><a href="#查看VisualVm" class="headerlink" title="查看VisualVm"></a>查看VisualVm</h3><p>这时候打开VisualVm看看，可以看到设置的最大堆大小在1000MB，而已使用的堆内存大小才100多MB，此时能够笃定是创建了大对象而导致的内存溢出。<br><br><br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1585113933509-612e463d-c2de-4119-8f15-3b08aae91b9d.png#align=left&display=inline&height=198&name=image.png&originHeight=395&originWidth=938&size=39095&status=done&style=none&width=469" alt="image.png"><br><br><br></p>
-<h3 id="断点调试"><a href="#断点调试" class="headerlink" title="断点调试"></a>断点调试</h3><p>这一步开始来断点，排查大对象从哪里来，此时查看报错的源码，发现确实是因为大对象的创建导致<br>代码在<code>com.rabbitmq.client.impl.Frame</code> 类中，Frame是指AMQP协议层面的通信帧。</p>
-<p>对于Frame的理解，可以查看其它博客：<a href="https://blog.csdn.net/usagoole/article/details/83048009" target="_blank" rel="noopener">https://blog.csdn.net/usagoole/article/details/83048009</a><br><br><br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1585031558601-735fded5-3c8c-4a16-907b-37405ff6aa0a.png?x-oss-process=image/resize,w_968#align=left&display=inline&height=405&originHeight=405&originWidth=968&status=done&style=none&width=968" alt><br><br><br>从上图可以看到，输入流读取的字节数为1345270062，这时候即创建了一个大小为1345270062（1.2G）的字节数组，于是乎出现内存溢出。</p>
-<p>至于为什么会突然读取到这么大的字节数，重新调试，我把断点打在<code>com.rabbitmq.client.impl.SocketFrameHandler</code><br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1585114607912-18d1f90f-89d0-4828-a3b0-9bd8be57e17b.png#align=left&display=inline&height=124&name=image.png&originHeight=247&originWidth=1120&size=29771&status=done&style=none&width=560" alt="image.png"></p>
+<h3 id="查看VisualVm"><a href="#查看VisualVm" class="headerlink" title="查看VisualVm"></a>查看VisualVm</h3><p>这时候打开VisualVm看看，可以看到设置的最大堆大小在1000MB，而已使用的堆内存大小才100多MB，此时能够笃定是创建了大对象而导致的内存溢出。<br /><br><br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1585113933509-612e463d-c2de-4119-8f15-3b08aae91b9d.png#align=left&display=inline&height=198&name=image.png&originHeight=395&originWidth=938&size=39095&status=done&style=none&width=469" alt="image.png"><br /><br><br /></p>
+<h3 id="断点调试"><a href="#断点调试" class="headerlink" title="断点调试"></a>断点调试</h3><p>这一步开始来断点，排查大对象从哪里来，此时查看报错的源码，发现确实是因为大对象的创建导致<br />代码在<code>com.rabbitmq.client.impl.Frame</code> 类中，Frame是指AMQP协议层面的通信帧。</p>
+<p>对于Frame的理解，可以查看其它博客：<a href="https://blog.csdn.net/usagoole/article/details/83048009" target="_blank" rel="noopener">https://blog.csdn.net/usagoole/article/details/83048009</a><br /><br><br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1585031558601-735fded5-3c8c-4a16-907b-37405ff6aa0a.png?x-oss-process=image/resize,w_968#align=left&display=inline&height=405&originHeight=405&originWidth=968&status=done&style=none&width=968" alt=""><br /><br><br />从上图可以看到，输入流读取的字节数为1345270062，这时候即创建了一个大小为1345270062（1.2G）的字节数组，于是乎出现内存溢出。</p>
+<p>至于为什么会突然读取到这么大的字节数，重新调试，我把断点打在<code>com.rabbitmq.client.impl.SocketFrameHandler</code><br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1585114607912-18d1f90f-89d0-4828-a3b0-9bd8be57e17b.png#align=left&display=inline&height=124&name=image.png&originHeight=247&originWidth=1120&size=29771&status=done&style=none&width=560" alt="image.png"></p>
 <p>系统有两个MQ，原有的MQ一切正常，从支付回调MQ开始，就开始报错了，所以初步怀疑是这个MQ账号的问题，或许是账号不对？没有远程登录的权限？</p>
 <p><a name="MOeVr"></a></p>
-<h3 id="理解源码"><a href="#理解源码" class="headerlink" title="理解源码"></a>理解源码</h3><p>Rabbitmq是基于socket连接读取的输入流，再将它转成字节数组。<br>先熟悉一下<code>com.rabbitmq.client.impl.Frame</code><br>帧（Frame），AMQP协议层面的通信帧</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1585123637246-3dec2065-2aa4-4df0-98cd-37df07cf4ddd.png#align=left&display=inline&height=179&originHeight=179&originWidth=1162&size=0&status=done&style=none&width=1162" alt><br><br><br>上图从左到右依次为帧类型、通道编号、帧大小、内容、结束标记组成一个帧<br><br><br>从上面调试的代码可以看出，我们是打算取出payload这一段内容时，超出了长度。<br><br><br>再看看以下代码，<br>readInt()的作用是，读取四个输入字节，并做了位移运算，返回一个整型值。<br>一个int存储的是32位的整型数据，32bit = 4 * 1byte，即表明每次从输入流里读取4个字节的数据；<br></p>
+<h3 id="理解源码"><a href="#理解源码" class="headerlink" title="理解源码"></a>理解源码</h3><p>Rabbitmq是基于socket连接读取的输入流，再将它转成字节数组。<br />先熟悉一下<code>com.rabbitmq.client.impl.Frame</code><br />帧（Frame），AMQP协议层面的通信帧</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1585123637246-3dec2065-2aa4-4df0-98cd-37df07cf4ddd.png#align=left&display=inline&height=179&originHeight=179&originWidth=1162&size=0&status=done&style=none&width=1162" alt=""><br /><br><br />上图从左到右依次为帧类型、通道编号、帧大小、内容、结束标记组成一个帧<br /><br><br />从上面调试的代码可以看出，我们是打算取出payload这一段内容时，超出了长度。<br /><br><br />再看看以下代码，<br />readInt()的作用是，读取四个输入字节，并做了位移运算，返回一个整型值。<br />一个int存储的是32位的整型数据，32bit = 4 * 1byte，即表明每次从输入流里读取4个字节的数据；<br /></p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">int</span> payloadSize <span class="token operator">=</span> is<span class="token punctuation">.</span><span class="token function">readInt</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">int</span> <span class="token function">readInt</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> IOException <span class="token punctuation">{</span>
@@ -563,25 +563,25 @@
         <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">EOFException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>ch1 <span class="token operator">&lt;&lt;</span> <span class="token number">24</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span>ch2 <span class="token operator">&lt;&lt;</span> <span class="token number">16</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span>ch3 <span class="token operator">&lt;&lt;</span> <span class="token number">8</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span>ch4 <span class="token operator">&lt;&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre>
-<p><br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1585130485796-42921d27-6590-4d14-b9db-5f95b68556d5.png#align=left&display=inline&height=168&name=image.png&originHeight=168&originWidth=955&size=18264&status=done&style=none&width=955" alt="image.png"><br><br><br>断点可以看出，返回的整型值，也就是payload的长度，达到了1345270062，这样下一步创建byte对象的时候，就出现内存溢出的事故。</p>
-<p>但是为什么会出现这个大对象，回过头去分析readInt()，<code>in.read()</code>将16进制的网络字节码 转为10进制的数组，正<br>是因为读取的数据有问题，才导致位移运算后得到一个比较大的整型值。<br></p>
+<p><br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1585130485796-42921d27-6590-4d14-b9db-5f95b68556d5.png#align=left&display=inline&height=168&name=image.png&originHeight=168&originWidth=955&size=18264&status=done&style=none&width=955" alt="image.png"><br /><br><br />断点可以看出，返回的整型值，也就是payload的长度，达到了1345270062，这样下一步创建byte对象的时候，就出现内存溢出的事故。</p>
+<p>但是为什么会出现这个大对象，回过头去分析readInt()，<code>in.read()</code>将16进制的网络字节码 转为10进制的数组，正<br />是因为读取的数据有问题，才导致位移运算后得到一个比较大的整型值。<br /></p>
 <p><a name="1q2wB"></a></p>
-<h3 id="抓包"><a href="#抓包" class="headerlink" title="抓包"></a>抓包</h3><p>围绕着上面这个问题，此时需要抓个包看看，采取的是边断点边抓包的方式。<br></p>
+<h3 id="抓包"><a href="#抓包" class="headerlink" title="抓包"></a>抓包</h3><p>围绕着上面这个问题，此时需要抓个包看看，采取的是边断点边抓包的方式。<br /></p>
 <ul>
 <li>打开抓包工具，过滤器设置指定ip为MQ的host</li>
 <li>先断点到111行，接着启动程序</li>
 </ul>
-<p><br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1585131449012-9dfcd943-bf61-4827-83e7-67fa4b5f1aa8.png#align=left&display=inline&height=130&name=image.png&originHeight=130&originWidth=748&size=15506&status=done&style=none&width=748" alt="image.png"><br></p>
+<p><br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1585131449012-9dfcd943-bf61-4827-83e7-67fa4b5f1aa8.png#align=left&display=inline&height=130&name=image.png&originHeight=130&originWidth=748&size=15506&status=done&style=none&width=748" alt="image.png"><br /></p>
 <ul>
 <li>当打到该断点的时候，看到帧大小比较大的时候，进入readInt()</li>
 </ul>
-<p><br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1585131606794-e80def82-36f6-40b8-ab8d-beb113afa79a.png#align=left&display=inline&height=274&name=image.png&originHeight=274&originWidth=1157&size=30045&status=done&style=none&width=1157" alt="image.png"><br><br><br>可以看到此时读取的4个数值分别是80、47、49、46，由于是网络字节码转过来的，故转为16进制后，对应为<br></p>
+<p><br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1585131606794-e80def82-36f6-40b8-ab8d-beb113afa79a.png#align=left&display=inline&height=274&name=image.png&originHeight=274&originWidth=1157&size=30045&status=done&style=none&width=1157" alt="image.png"><br /><br><br />可以看到此时读取的4个数值分别是80、47、49、46，由于是网络字节码转过来的，故转为16进制后，对应为<br /></p>
 <pre class=" language-java"><code class="language-java">DEC<span class="token operator">:</span><span class="token number">80</span>    <span class="token number">47</span>    <span class="token number">49</span>    <span class="token number">46</span>
 HEX<span class="token operator">:</span><span class="token number">50</span>  <span class="token number">2F</span>    <span class="token number">31</span>    2E    </code></pre>
 <ul>
 <li>查看抓包</li>
 </ul>
-<p><br><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1585132560127-4d4a3dc5-2de0-4f22-aadb-b7557b62093a.png#align=left&display=inline&height=542&name=image.png&originHeight=542&originWidth=717&size=57551&status=done&style=none&width=717" alt="image.png"><br><br><br>从抓包可以看到，字节码对上了，而且看到响应码为400，Bad Request！！！<br><br><br>这也验证了一开始提到的猜测：MQ账号有问题，于是咨询了中台组，最终发现，是因为1.0部门给的端口有问题，导致socket无法连接！<br><br><br></p>
+<p><br /><img src="https://cdn.nlark.com/yuque/0/2020/png/243176/1585132560127-4d4a3dc5-2de0-4f22-aadb-b7557b62093a.png#align=left&display=inline&height=542&name=image.png&originHeight=542&originWidth=717&size=57551&status=done&style=none&width=717" alt="image.png"><br /><br><br />从抓包可以看到，字节码对上了，而且看到响应码为400，Bad Request！！！<br /><br><br />这也验证了一开始提到的猜测：MQ账号有问题，于是咨询了中台组，最终发现，是因为1.0部门给的端口有问题，导致socket无法连接！<br /><br><br /></p>
 
             </div>
             <hr/>
@@ -1185,7 +1185,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">60.5k</span>&nbsp;字
+                class="white-color">73.1k</span>&nbsp;字
             
             
             
