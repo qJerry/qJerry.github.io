@@ -1,0 +1,1749 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="SpringAOP+Transactional源码解析">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=ca-pub-8594828642825082"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', 'ca-pub-8594828642825082');
+</script>
+
+
+    <title>SpringAOP+Transactional源码解析 | Jerry Blog</title>
+    <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 4.2.1"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">Jerry Blog</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">Jerry Blog</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/qJerry" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/qJerry" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('http://img.qiujy.com/cover1.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">SpringAOP+Transactional源码解析</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Spring/">
+                                <span class="chip bg-color">Spring</span>
+                            </a>
+                        
+                            <a href="/tags/Spring-AOP/">
+                                <span class="chip bg-color">Spring AOP</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/SpringAOP/" class="post-category">
+                                SpringAOP
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2020-09-11
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    5.7k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    23 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="Spring-AOP-Transactional源码解析"><a href="#Spring-AOP-Transactional源码解析" class="headerlink" title="Spring AOP + Transactional源码解析"></a>Spring AOP + Transactional源码解析</h1><p>Spring AOP应用于多数场景</p>
+<ul>
+<li>缓存</li>
+<li>权限</li>
+<li>懒加载</li>
+<li>日志</li>
+<li>事务</li>
+<li>。。。</li>
+</ul>
+<p>这一篇将通过AOP源码的实现层面，结合事务的传播机制，来理解AOP是如何管理事务的。</p>
+<h2 id="生成AopProxy代理"><a href="#生成AopProxy代理" class="headerlink" title="生成AopProxy代理"></a>生成AopProxy代理</h2><p>Spring在启动期间，会将待注入的类注入到容器中，期间它会判断该类是否需要被代理，是的话将会创建该类实例的代理对象，代码片段如下<br>方法位于<code>org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator#postProcessAfterInitialization</code></p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> Object <span class="token function">postProcessAfterInitialization</span><span class="token punctuation">(</span><span class="token annotation punctuation">@Nullable</span> Object bean<span class="token punctuation">,</span> String beanName<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>bean <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        Object cacheKey <span class="token operator">=</span> <span class="token function">getCacheKey</span><span class="token punctuation">(</span>bean<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> beanName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>earlyProxyReferences<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>cacheKey<span class="token punctuation">)</span> <span class="token operator">!=</span> bean<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> <span class="token function">wrapIfNecessary</span><span class="token punctuation">(</span>bean<span class="token punctuation">,</span> beanName<span class="token punctuation">,</span> cacheKey<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> bean<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>先看一下生成代理对象的时序图<br><img src="/images/SpringAOP/20200827145310512_991703414.png" alt="createProxy"></p>
+<h3 id="检测是否要代理bean（AbstractAutoProxyCreator-wrapIfNecessary）"><a href="#检测是否要代理bean（AbstractAutoProxyCreator-wrapIfNecessary）" class="headerlink" title="检测是否要代理bean（AbstractAutoProxyCreator#wrapIfNecessary）"></a>检测是否要代理bean（AbstractAutoProxyCreator#wrapIfNecessary）</h3><ul>
+<li>检查是否有必要包装一下Bean，即是否需要往bean上添加代理对象，具体的检测逻辑如下</li>
+</ul>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> List<span class="token operator">&lt;</span>Advisor<span class="token operator">></span> <span class="token function">findEligibleAdvisors</span><span class="token punctuation">(</span>Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> beanClass<span class="token punctuation">,</span> String beanName<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 获取要在自动代理中使用的候选顾问（增强器，由Advisor和Advice组成）列表</span>
+    List<span class="token operator">&lt;</span>Advisor<span class="token operator">></span> candidateAdvisors <span class="token operator">=</span> <span class="token function">findCandidateAdvisors</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 过滤得到合格的候选顾问列表</span>
+    List<span class="token operator">&lt;</span>Advisor<span class="token operator">></span> eligibleAdvisors <span class="token operator">=</span> <span class="token function">findAdvisorsThatCanApply</span><span class="token punctuation">(</span>candidateAdvisors<span class="token punctuation">,</span> beanClass<span class="token punctuation">,</span> beanName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">extendAdvisors</span><span class="token punctuation">(</span>eligibleAdvisors<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>eligibleAdvisors<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        eligibleAdvisors <span class="token operator">=</span> <span class="token function">sortAdvisors</span><span class="token punctuation">(</span>eligibleAdvisors<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> eligibleAdvisors<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<ul>
+<li>检测返回的可用的增强器（<code>Advisor</code>和<code>Advice</code>）列表后，如果列表不为null，则将其作为被代理的bean的状态缓存起来，并且开始创建代理对象<pre class=" language-java"><code class="language-java">Object<span class="token punctuation">[</span><span class="token punctuation">]</span> specificInterceptors <span class="token operator">=</span> <span class="token function">getAdvicesAndAdvisorsForBean</span><span class="token punctuation">(</span>bean<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> beanName<span class="token punctuation">,</span> null<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>specificInterceptors <span class="token operator">!=</span> DO_NOT_PROXY<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// 缓存当前bean的代理状态</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>advisedBeans<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>cacheKey<span class="token punctuation">,</span> Boolean<span class="token punctuation">.</span>TRUE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  Object proxy <span class="token operator">=</span> <span class="token function">createProxy</span><span class="token punctuation">(</span>
+          bean<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> beanName<span class="token punctuation">,</span> specificInterceptors<span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">SingletonTargetSource</span><span class="token punctuation">(</span>bean<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">// 缓存代理类实例</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>proxyTypes<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>cacheKey<span class="token punctuation">,</span> proxy<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> proxy<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+</li>
+</ul>
+<p>创建代理工厂，通过工厂创建bean的代理对象</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> Object <span class="token function">createProxy</span><span class="token punctuation">(</span>Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> beanClass<span class="token punctuation">,</span> <span class="token annotation punctuation">@Nullable</span> String beanName<span class="token punctuation">,</span>
+        <span class="token annotation punctuation">@Nullable</span> Object<span class="token punctuation">[</span><span class="token punctuation">]</span> specificInterceptors<span class="token punctuation">,</span> TargetSource targetSource<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>beanFactory <span class="token keyword">instanceof</span> <span class="token class-name">ConfigurableListableBeanFactory</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        AutoProxyUtils<span class="token punctuation">.</span><span class="token function">exposeTargetClass</span><span class="token punctuation">(</span><span class="token punctuation">(</span>ConfigurableListableBeanFactory<span class="token punctuation">)</span> <span class="token keyword">this</span><span class="token punctuation">.</span>beanFactory<span class="token punctuation">,</span> beanName<span class="token punctuation">,</span> beanClass<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// 创建代理工厂，并且复制当前实例的相关属性</span>
+    ProxyFactory proxyFactory <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ProxyFactory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    proxyFactory<span class="token punctuation">.</span><span class="token function">copyFrom</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 是否设置直接代理目标类，而不是目标类接口</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>proxyFactory<span class="token punctuation">.</span><span class="token function">isProxyTargetClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">shouldProxyTargetClass</span><span class="token punctuation">(</span>beanClass<span class="token punctuation">,</span> beanName<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            proxyFactory<span class="token punctuation">.</span><span class="token function">setProxyTargetClass</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">else</span> <span class="token punctuation">{</span>
+            <span class="token function">evaluateProxyInterfaces</span><span class="token punctuation">(</span>beanClass<span class="token punctuation">,</span> proxyFactory<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// 根据可用的增强器列表构建真正适用于该bean的增强器列表</span>
+    Advisor<span class="token punctuation">[</span><span class="token punctuation">]</span> advisors <span class="token operator">=</span> <span class="token function">buildAdvisors</span><span class="token punctuation">(</span>beanName<span class="token punctuation">,</span> specificInterceptors<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    proxyFactory<span class="token punctuation">.</span><span class="token function">addAdvisors</span><span class="token punctuation">(</span>advisors<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 设置目标代理类</span>
+    proxyFactory<span class="token punctuation">.</span><span class="token function">setTargetSource</span><span class="token punctuation">(</span>targetSource<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">customizeProxyFactory</span><span class="token punctuation">(</span>proxyFactory<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    proxyFactory<span class="token punctuation">.</span><span class="token function">setFrozen</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>freezeProxy<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">advisorsPreFiltered</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        proxyFactory<span class="token punctuation">.</span><span class="token function">setPreFiltered</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> proxyFactory<span class="token punctuation">.</span><span class="token function">getProxy</span><span class="token punctuation">(</span><span class="token function">getProxyClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h3 id="代理工厂选取合适的AOP代理（ProxyFactory-getProxy）"><a href="#代理工厂选取合适的AOP代理（ProxyFactory-getProxy）" class="headerlink" title="代理工厂选取合适的AOP代理（ProxyFactory#getProxy）"></a>代理工厂选取合适的AOP代理（ProxyFactory#getProxy）</h3><p>上面创建的工厂代理类，配置了相应的属性后，将选取合适的AOP代理，并且生成代理对象</p>
+<h3 id="创建AOP代理"><a href="#创建AOP代理" class="headerlink" title="创建AOP代理"></a>创建AOP代理</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> <span class="token keyword">final</span> <span class="token keyword">synchronized</span> AopProxy <span class="token function">createAopProxy</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 如果代理未激活，则激活该代理配置</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token keyword">this</span><span class="token punctuation">.</span>active<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">activate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// 获取aop代理工厂类，并创建aop代理</span>
+    <span class="token keyword">return</span> <span class="token function">getAopProxyFactory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">createAopProxy</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>Spring内置的aop代理有两种：JDK和Cglib。之前创建的代理工厂在下面创建方法作为形参</p>
+<ul>
+<li>使用JDK动态代理<ul>
+<li>proxyTargetClass（是否直接代理目标类）为false </li>
+<li>指定的目标类为接口类型</li>
+<li>当且仅当使用<code>newProxyInstance</code>或<code>getProxyClass</code>动态将目标类生成代理类时</li>
+</ul>
+</li>
+<li>使用Cglib代理<ul>
+<li>proxyTargetClass（是否直接代理目标类）为true </li>
+<li>指定的目标类不为接口类型</li>
+<li>未使用<code>newProxyInstance</code>或<code>getProxyClass</code>动态将目标类生成代理类时</li>
+</ul>
+</li>
+</ul>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> AopProxy <span class="token function">createAopProxy</span><span class="token punctuation">(</span>AdvisedSupport config<span class="token punctuation">)</span> <span class="token keyword">throws</span> AopConfigException <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>config<span class="token punctuation">.</span><span class="token function">isOptimize</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">||</span> config<span class="token punctuation">.</span><span class="token function">isProxyTargetClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token function">hasNoUserSuppliedProxyInterfaces</span><span class="token punctuation">(</span>config<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> targetClass <span class="token operator">=</span> config<span class="token punctuation">.</span><span class="token function">getTargetClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>targetClass <span class="token operator">==</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">AopConfigException</span><span class="token punctuation">(</span><span class="token string">"TargetSource cannot determine target class: "</span> <span class="token operator">+</span>
+                    <span class="token string">"Either an interface or a target is required for proxy creation."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>targetClass<span class="token punctuation">.</span><span class="token function">isInterface</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">||</span> Proxy<span class="token punctuation">.</span><span class="token function">isProxyClass</span><span class="token punctuation">(</span>targetClass<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">JdkDynamicAopProxy</span><span class="token punctuation">(</span>config<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">ObjenesisCglibAopProxy</span><span class="token punctuation">(</span>config<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">JdkDynamicAopProxy</span><span class="token punctuation">(</span>config<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<ul>
+<li>在Spring5中，AOP默认还是用JDK动态代理，如果被代理类未实现接口才使用Cglib代理</li>
+<li>而在Springboot2.x中，AOP已默认使用Cglib代理<br>  即被代理类有没有实现接口，它都使用Cglib代理</li>
+</ul>
+<p>那如何更改为JDK代理呢？在Springboot中都是依靠自动装配来实现的，在启动过程中会加载各种配置，其中就涉及了AOP相关的配置，通过<code>spring.factories</code>可知相关配置代码在<code>org.springframework.boot.autoconfigure.aop.AopAutoConfiguration</code>。<br>从代码得知，Springboot2.x默认使用Cglib代理在于配置了<code>spring.aop.proxy-target-class=true</code>，故要切为JDK代理可配置<code>spring.aop.proxy-target-class=false</code></p>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Configuration</span><span class="token punctuation">(</span>proxyBeanMethods <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@ConditionalOnProperty</span><span class="token punctuation">(</span>prefix <span class="token operator">=</span> <span class="token string">"spring.aop"</span><span class="token punctuation">,</span> name <span class="token operator">=</span> <span class="token string">"auto"</span><span class="token punctuation">,</span> havingValue <span class="token operator">=</span> <span class="token string">"true"</span><span class="token punctuation">,</span> matchIfMissing <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AopAutoConfiguration</span> <span class="token punctuation">{</span>
+
+    <span class="token annotation punctuation">@Configuration</span><span class="token punctuation">(</span>proxyBeanMethods <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">)</span>
+    <span class="token annotation punctuation">@ConditionalOnClass</span><span class="token punctuation">(</span>Advice<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+    <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">AspectJAutoProxyingConfiguration</span> <span class="token punctuation">{</span>
+
+        <span class="token annotation punctuation">@Configuration</span><span class="token punctuation">(</span>proxyBeanMethods <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">)</span>
+        <span class="token annotation punctuation">@EnableAspectJAutoProxy</span><span class="token punctuation">(</span>proxyTargetClass <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">)</span>
+        <span class="token annotation punctuation">@ConditionalOnProperty</span><span class="token punctuation">(</span>prefix <span class="token operator">=</span> <span class="token string">"spring.aop"</span><span class="token punctuation">,</span> name <span class="token operator">=</span> <span class="token string">"proxy-target-class"</span><span class="token punctuation">,</span> havingValue <span class="token operator">=</span> <span class="token string">"false"</span><span class="token punctuation">,</span>
+                matchIfMissing <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">)</span>
+        <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">JdkDynamicAutoProxyConfiguration</span> <span class="token punctuation">{</span>
+
+        <span class="token punctuation">}</span>
+
+        <span class="token annotation punctuation">@Configuration</span><span class="token punctuation">(</span>proxyBeanMethods <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">)</span>
+        <span class="token annotation punctuation">@EnableAspectJAutoProxy</span><span class="token punctuation">(</span>proxyTargetClass <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+        <span class="token annotation punctuation">@ConditionalOnProperty</span><span class="token punctuation">(</span>prefix <span class="token operator">=</span> <span class="token string">"spring.aop"</span><span class="token punctuation">,</span> name <span class="token operator">=</span> <span class="token string">"proxy-target-class"</span><span class="token punctuation">,</span> havingValue <span class="token operator">=</span> <span class="token string">"true"</span><span class="token punctuation">,</span>
+                matchIfMissing <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+        <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">CglibAutoProxyConfiguration</span> <span class="token punctuation">{</span>
+
+        <span class="token punctuation">}</span>
+
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Configuration</span><span class="token punctuation">(</span>proxyBeanMethods <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">)</span>
+    <span class="token annotation punctuation">@ConditionalOnMissingClass</span><span class="token punctuation">(</span><span class="token string">"org.aspectj.weaver.Advice"</span><span class="token punctuation">)</span>
+    <span class="token annotation punctuation">@ConditionalOnProperty</span><span class="token punctuation">(</span>prefix <span class="token operator">=</span> <span class="token string">"spring.aop"</span><span class="token punctuation">,</span> name <span class="token operator">=</span> <span class="token string">"proxy-target-class"</span><span class="token punctuation">,</span> havingValue <span class="token operator">=</span> <span class="token string">"true"</span><span class="token punctuation">,</span>
+            matchIfMissing <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+    <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">ClassProxyingConfiguration</span> <span class="token punctuation">{</span>
+
+        <span class="token function">ClassProxyingConfiguration</span><span class="token punctuation">(</span>BeanFactory beanFactory<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>beanFactory <span class="token keyword">instanceof</span> <span class="token class-name">BeanDefinitionRegistry</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                BeanDefinitionRegistry registry <span class="token operator">=</span> <span class="token punctuation">(</span>BeanDefinitionRegistry<span class="token punctuation">)</span> beanFactory<span class="token punctuation">;</span>
+                AopConfigUtils<span class="token punctuation">.</span><span class="token function">registerAutoProxyCreatorIfNecessary</span><span class="token punctuation">(</span>registry<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                AopConfigUtils<span class="token punctuation">.</span><span class="token function">forceAutoProxyCreatorToUseClassProxying</span><span class="token punctuation">(</span>registry<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+
+    <span class="token punctuation">}</span>
+
+<span class="token punctuation">}</span></code></pre>
+<h3 id="使用类加载器创建代理对象"><a href="#使用类加载器创建代理对象" class="headerlink" title="使用类加载器创建代理对象"></a>使用类加载器创建代理对象</h3><p>类加载器一般使用应用类加载器<code>AppClassLoader</code>，也可以自己实现了自定义加载器。</p>
+<h4 id="Cglib代理"><a href="#Cglib代理" class="headerlink" title="Cglib代理"></a>Cglib代理</h4><p><img src="/images/SpringAOP/20200827145333136_1411722303.png" alt="createProxyInstance"></p>
+<p>Cglib代理是委托给<code>CglibAopProxy</code>去创建的，创建过程如下</p>
+<ul>
+<li>获得目标类<code>rootClass</code></li>
+<li>如果目标类已经被代理，则获取它的父类作为目标类</li>
+<li>验证目标类，检查是否需要写日志</li>
+<li>创建Enhancer对象（即代理增强器，类比于jdk自带的Proxy），准备创建代理类<ul>
+<li>设置目标类为代理增强器父类</li>
+<li>设置要实现的接口，有则使用目标类的接口，默认还会实现<code>SpringProxy</code>，<code>Advised</code>接口</li>
+<li>覆盖命名策略，一般生成的代理类都是有对应的命名策略，在spring中，命名规范是：目标类名+<code>$$EnhancerBySpringCGLIB</code></li>
+<li>设置生成字节码的策略，默认使用<code>DefaultGeneratorStrategy</code>，Spring中用了<code>GeneratorStrategy</code>的另一种实现<code>ClassLoaderAwareGeneratorStrategy</code></li>
+<li>设置回调过滤器,根据被拦截的方法执行不同的处理逻辑。<code>CallbackFilter#accpet</code>在实际调用中,会根据被拦截的方法返回对应的索引，在<code>Callback</code>中会根据索引值拿到对应的回调处理逻辑</li>
+</ul>
+</li>
+<li>创建目标类的代理类和目标类的代理类实例<ul>
+<li>创建代理类<code>proxyClass</code></li>
+<li>创建代理类实例<code>proxyInstance</code></li>
+<li>设置回调组<code>Callbacks</code>，和<code>CallbackFilter</code>结合使用，回调组中有一个通用回调处理器<code>DynamicAdvisedInterceptor</code>，其<code>intercept()</code>是拦截的首入口。</li>
+</ul>
+</li>
+</ul>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> Object <span class="token function">getProxy</span><span class="token punctuation">(</span><span class="token annotation punctuation">@Nullable</span> ClassLoader classLoader<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> rootClass <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>advised<span class="token punctuation">.</span><span class="token function">getTargetClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Assert<span class="token punctuation">.</span><span class="token function">state</span><span class="token punctuation">(</span>rootClass <span class="token operator">!=</span> null<span class="token punctuation">,</span> <span class="token string">"Target class must be available for creating a CGLIB proxy"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> proxySuperClass <span class="token operator">=</span> rootClass<span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>rootClass<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">contains</span><span class="token punctuation">(</span>ClassUtils<span class="token punctuation">.</span>CGLIB_CLASS_SEPARATOR<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            proxySuperClass <span class="token operator">=</span> rootClass<span class="token punctuation">.</span><span class="token function">getSuperclass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment" spellcheck="true">// ...</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token function">validateClassIfNecessary</span><span class="token punctuation">(</span>proxySuperClass<span class="token punctuation">,</span> classLoader<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        Enhancer enhancer <span class="token operator">=</span> <span class="token function">createEnhancer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>classLoader <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            enhancer<span class="token punctuation">.</span><span class="token function">setClassLoader</span><span class="token punctuation">(</span>classLoader<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>classLoader <span class="token keyword">instanceof</span> <span class="token class-name">SmartClassLoader</span> <span class="token operator">&amp;&amp;</span>
+                    <span class="token punctuation">(</span><span class="token punctuation">(</span>SmartClassLoader<span class="token punctuation">)</span> classLoader<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isClassReloadable</span><span class="token punctuation">(</span>proxySuperClass<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                enhancer<span class="token punctuation">.</span><span class="token function">setUseCache</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+        enhancer<span class="token punctuation">.</span><span class="token function">setSuperclass</span><span class="token punctuation">(</span>proxySuperClass<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        enhancer<span class="token punctuation">.</span><span class="token function">setInterfaces</span><span class="token punctuation">(</span>AopProxyUtils<span class="token punctuation">.</span><span class="token function">completeProxiedInterfaces</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>advised<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        enhancer<span class="token punctuation">.</span><span class="token function">setNamingPolicy</span><span class="token punctuation">(</span>SpringNamingPolicy<span class="token punctuation">.</span>INSTANCE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        enhancer<span class="token punctuation">.</span><span class="token function">setStrategy</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ClassLoaderAwareGeneratorStrategy</span><span class="token punctuation">(</span>classLoader<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        Callback<span class="token punctuation">[</span><span class="token punctuation">]</span> callbacks <span class="token operator">=</span> <span class="token function">getCallbacks</span><span class="token punctuation">(</span>rootClass<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span><span class="token punctuation">[</span><span class="token punctuation">]</span> types <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Class</span><span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span><span class="token punctuation">[</span>callbacks<span class="token punctuation">.</span>length<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> x <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> x <span class="token operator">&lt;</span> types<span class="token punctuation">.</span>length<span class="token punctuation">;</span> x<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            types<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">=</span> callbacks<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        enhancer<span class="token punctuation">.</span><span class="token function">setCallbackFilter</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ProxyCallbackFilter</span><span class="token punctuation">(</span>
+                <span class="token keyword">this</span><span class="token punctuation">.</span>advised<span class="token punctuation">.</span><span class="token function">getConfigurationOnlyCopy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>fixedInterceptorMap<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>fixedInterceptorOffset<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        enhancer<span class="token punctuation">.</span><span class="token function">setCallbackTypes</span><span class="token punctuation">(</span>types<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">return</span> <span class="token function">createProxyClassAndInstance</span><span class="token punctuation">(</span>enhancer<span class="token punctuation">,</span> callbacks<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">CodeGenerationException</span> <span class="token operator">|</span> IllegalArgumentException ex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">AopConfigException</span><span class="token punctuation">(</span><span class="token string">"Could not generate CGLIB subclass of "</span> <span class="token operator">+</span> <span class="token keyword">this</span><span class="token punctuation">.</span>advised<span class="token punctuation">.</span><span class="token function">getTargetClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+                <span class="token string">": Common causes of this problem include using a final class or a non-visible class"</span><span class="token punctuation">,</span>
+                ex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Throwable</span> ex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">AopConfigException</span><span class="token punctuation">(</span><span class="token string">"Unexpected AOP exception"</span><span class="token punctuation">,</span> ex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<h4 id="JDK代理"><a href="#JDK代理" class="headerlink" title="JDK代理"></a>JDK代理</h4><p><img src="/images/SpringAOP/20200827171028608_1306162524.png" alt="createJdkProxy"></p>
+<p>JDK代理是委托给<code>JdkDynamicAopProxy</code>去创建的，创建过程如下</p>
+<ul>
+<li>设置要实现的接口，有则使用目标类的接口，默认还会实现<code>SpringProxy</code>，<code>Advised</code>接口</li>
+<li>查找目标类是否定义了<code>equals</code>和<code>hashcode</code>，是的话分别标记<code>equalsDefined</code>为true，<code>hashCodeDefined</code>为true</li>
+<li>调用<code>Proxy.newProxyInstance</code>生成目标类的代理类实例</li>
+</ul>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> Object <span class="token function">getProxy</span><span class="token punctuation">(</span><span class="token annotation punctuation">@Nullable</span> ClassLoader classLoader<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span><span class="token punctuation">[</span><span class="token punctuation">]</span> proxiedInterfaces <span class="token operator">=</span> AopProxyUtils<span class="token punctuation">.</span><span class="token function">completeProxiedInterfaces</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>advised<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">findDefinedEqualsAndHashCodeMethods</span><span class="token punctuation">(</span>proxiedInterfaces<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> Proxy<span class="token punctuation">.</span><span class="token function">newProxyInstance</span><span class="token punctuation">(</span>classLoader<span class="token punctuation">,</span> proxiedInterfaces<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h2 id="事务传播机制"><a href="#事务传播机制" class="headerlink" title="事务传播机制"></a>事务传播机制</h2><p>在Spring中，事务机制与AOP做了结合，通过AOP封装了事务管理的代码，接下来将会通过AOP理解事务的传播机制。</p>
+<h3 id="Propagation七种传播机制"><a href="#Propagation七种传播机制" class="headerlink" title="Propagation七种传播机制"></a>Propagation七种传播机制</h3><p>相关枚举在<code>org.springframework.transaction.annotation.Propagation</code>中</p>
+<table>
+<thead>
+<tr>
+<th>机制</th>
+<th>说明</th>
+<th>场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PROPAGATION_REQUIRED</td>
+<td>若线程上下文中存在事务则加入，<strong>不存在</strong>则创建一个新事务</td>
+<td>最常使用，因为它是Spring缺省的传播机制</td>
+</tr>
+<tr>
+<td>PROPAGATION_SUPPORTS</td>
+<td>若线程上下文中存在事务则加入，<strong>不存在</strong>则以非事务的模式执行</td>
+<td>-（使用场景较少）</td>
+</tr>
+<tr>
+<td>PROPAGATION_MANDATORY</td>
+<td>若线程上下文中存在事务则加入，<strong>不存在</strong>则抛出异常</td>
+<td>常用于检测调用代码的上下文是否存在事务，提醒必须以事务运行</td>
+</tr>
+<tr>
+<td>PROPAGATION_REQUIRES_NEW</td>
+<td>若线程上下文中存在事务则暂时挂起****，并创建一个新事务，执行完后才恢复其他上下文事务</td>
+<td>常用于内层事务异常会导致回滚时，外层事务（一般）不会被回滚</td>
+</tr>
+<tr>
+<td>PROPAGATION_NOT_SUPPORTED</td>
+<td>若线程上下文中存在事务则<strong>挂起</strong>，并以非事务的模式执行，执行完才恢复上下文事务</td>
+<td>常用于减少事务范围，同时避免内层事务异常而导致不必要的全局回滚的场景</td>
+</tr>
+<tr>
+<td>PROPAGATION_NEVER</td>
+<td>若线程上下文中存在事务，则<strong>抛出异常</strong></td>
+<td>-（使用场景较少）</td>
+</tr>
+<tr>
+<td>PROPAGATION_NESTED</td>
+<td>若线程上下文中存在则<strong>嵌套事务</strong>执行，不存在则创建一个新事务。<br>它仅支持“在特定的事务管理器<code>DataSourceTransactionManager</code>上，以及使用jdbc3.0驱动程序”的使用，其提供了一个“save point”的父子事务的概念，在进入子事务之前建立一个“save point”，当子事务回滚时会先滚到“save point”，而父事务可以选择性回滚。</td>
+<td>-（使用场景较少）</td>
+</tr>
+</tbody></table>
+<h3 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h3><p>关于传播机制，在上面已经做了描述，然而事实真的如以上描述一般的简单吗，接下来模拟做些测试用例，看看结论。</p>
+<p>首先，先清楚两个点</p>
+<ul>
+<li>Spring默认传播机制是<code>PROPAGATION_REQUIRED</code></li>
+<li><code>@Transactional</code>中默认回滚异常是<code>RuntimeException</code>，但是p3c建议我们显示的rollback</li>
+</ul>
+<h4 id="场景1：两个service-A-B-A方法调用B方法且都开启了事务（默认级别Propagation-REQUIRED），B方法抛出Runtime异常"><a href="#场景1：两个service-A-B-A方法调用B方法且都开启了事务（默认级别Propagation-REQUIRED），B方法抛出Runtime异常" class="headerlink" title="场景1：两个service A/B, A方法调用B方法且都开启了事务（默认级别Propagation.REQUIRED），B方法抛出Runtime异常"></a>场景1：两个service A/B, A方法调用B方法且都开启了事务（默认级别Propagation.REQUIRED），B方法抛出Runtime异常</h4><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Transactional</span><span class="token punctuation">(</span>rollbackFor <span class="token operator">=</span> Exception<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addUser</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    userMapper<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span>User<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token string">"Jerry"</span><span class="token punctuation">,</span> <span class="token number">21</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    userChannelService<span class="token punctuation">.</span><span class="token function">addUserChannel</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Transactional</span><span class="token punctuation">(</span>rollbackFor <span class="token operator">=</span> Exception<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addUserChannel</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">NullPointerException</span><span class="token punctuation">(</span><span class="token string">"在不同service内假装抛出Runtime异常"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h4 id="场景2：两个service-A-B-A方法调用B方法且都开启了事务（默认级别Propagation-REQUIRED），B方法抛出Runtime异常但是进行了异常捕获"><a href="#场景2：两个service-A-B-A方法调用B方法且都开启了事务（默认级别Propagation-REQUIRED），B方法抛出Runtime异常但是进行了异常捕获" class="headerlink" title="场景2：两个service A/B, A方法调用B方法且都开启了事务（默认级别Propagation.REQUIRED），B方法抛出Runtime异常但是进行了异常捕获"></a>场景2：两个service A/B, A方法调用B方法且都开启了事务（默认级别Propagation.REQUIRED），B方法抛出Runtime异常但是进行了异常捕获</h4><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Transactional</span><span class="token punctuation">(</span>rollbackFor <span class="token operator">=</span> Exception<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addUserV2</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    userMapper<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span>User<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token string">"Jerry"</span><span class="token punctuation">,</span> <span class="token number">22</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    userChannelService<span class="token punctuation">.</span><span class="token function">addUserChannelV2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Transactional</span><span class="token punctuation">(</span>rollbackFor <span class="token operator">=</span> Exception<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addUserChannelV2</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">NullPointerException</span><span class="token punctuation">(</span><span class="token string">"在不同service内假装抛出Runtime异常并捕获"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">NullPointerException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>以上是在内层事务捕获，同样考虑一下在外层事务捕获的结果</p>
+<h4 id="场景3：两个service-A-B-A方法调用B方法且都开启了事务，B方法抛出Runtime异常但是进行了异常捕获，且B方法事务指定了隔离级别为Propagation-REQUIRES-NEW"><a href="#场景3：两个service-A-B-A方法调用B方法且都开启了事务，B方法抛出Runtime异常但是进行了异常捕获，且B方法事务指定了隔离级别为Propagation-REQUIRES-NEW" class="headerlink" title="场景3：两个service A/B, A方法调用B方法且都开启了事务，B方法抛出Runtime异常但是进行了异常捕获，且B方法事务指定了隔离级别为Propagation.REQUIRES_NEW"></a>场景3：两个service A/B, A方法调用B方法且都开启了事务，B方法抛出Runtime异常但是进行了异常捕获，且B方法事务指定了隔离级别为Propagation.REQUIRES_NEW</h4><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Transactional</span><span class="token punctuation">(</span>rollbackFor <span class="token operator">=</span> Exception<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addUserV3</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    userMapper<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span>User<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token string">"Jerry"</span><span class="token punctuation">,</span> <span class="token number">23</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    userChannelService<span class="token punctuation">.</span><span class="token function">addUserChannelV3</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Transactional</span><span class="token punctuation">(</span>propagation <span class="token operator">=</span> Propagation<span class="token punctuation">.</span>REQUIRES_NEW<span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addUserChannelV3</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        userChannelMapper<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span>UserChannel<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"WX"</span><span class="token punctuation">,</span> <span class="token string">"111"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">NullPointerException</span><span class="token punctuation">(</span><span class="token string">"在不同service内假装抛出Runtime异常并捕获，但是我设置了隔离级别为新建事务"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">NullPointerException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>以上是在内层事务捕获，同样考虑一下在外层事务捕获的结果</p>
+<h4 id="场景4：两个service-A-B-A方法调用B方法且都开启了事务，B方法抛出Runtime异常，且B方法事务指定了隔离级别为Propagation-REQUIRES-NEW"><a href="#场景4：两个service-A-B-A方法调用B方法且都开启了事务，B方法抛出Runtime异常，且B方法事务指定了隔离级别为Propagation-REQUIRES-NEW" class="headerlink" title="场景4：两个service A/B, A方法调用B方法且都开启了事务，B方法抛出Runtime异常，且B方法事务指定了隔离级别为Propagation.REQUIRES_NEW"></a>场景4：两个service A/B, A方法调用B方法且都开启了事务，B方法抛出Runtime异常，且B方法事务指定了隔离级别为Propagation.REQUIRES_NEW</h4><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Transactional</span><span class="token punctuation">(</span>rollbackFor <span class="token operator">=</span> Exception<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addUserV4</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    userMapper<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span>User<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token string">"Jerry"</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    userChannelService<span class="token punctuation">.</span><span class="token function">addUserChannelV4</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Transactional</span><span class="token punctuation">(</span>rollbackFor <span class="token operator">=</span> Exception<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> propagation <span class="token operator">=</span> Propagation<span class="token punctuation">.</span>REQUIRES_NEW<span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addUserChannelV4</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">NullPointerException</span><span class="token punctuation">(</span><span class="token string">"在不同service内假装抛出Runtime异常，但是我设置了隔离级别为新建事务"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h4 id="场景5：两个service-A-B-A方法调用B方法且都开启了事务（默认级别Propagation-REQUIRED），B方法抛出自定义异常-非Runtime"><a href="#场景5：两个service-A-B-A方法调用B方法且都开启了事务（默认级别Propagation-REQUIRED），B方法抛出自定义异常-非Runtime" class="headerlink" title="场景5：两个service A/B, A方法调用B方法且都开启了事务（默认级别Propagation.REQUIRED），B方法抛出自定义异常(非Runtime)"></a>场景5：两个service A/B, A方法调用B方法且都开启了事务（默认级别Propagation.REQUIRED），B方法抛出自定义异常(非Runtime)</h4><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Transactional</span><span class="token punctuation">(</span>rollbackFor <span class="token operator">=</span> RuntimeException<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addUserV5</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> CustomException <span class="token punctuation">{</span>
+    userMapper<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span>User<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token string">"Jerry"</span><span class="token punctuation">,</span> <span class="token number">25</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    userChannelService<span class="token punctuation">.</span><span class="token function">addUserChannelV5</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Transactional</span><span class="token punctuation">(</span>rollbackFor <span class="token operator">=</span> RuntimeException<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addUserChannelV5</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> CustomException <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">CustomException</span><span class="token punctuation">(</span><span class="token string">"在不同service内假装抛出自定义异常"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>以上指定回滚异常为RuntimeException，要是设置为Exception，会是什么结果呢？</p>
+<h4 id="场景6：两个service-A-B-A方法调用B方法且都开启了事务（默认级别Propagation-REQUIRED），B方法抛出自定义异常-非Runtime-但是进行了异常捕获"><a href="#场景6：两个service-A-B-A方法调用B方法且都开启了事务（默认级别Propagation-REQUIRED），B方法抛出自定义异常-非Runtime-但是进行了异常捕获" class="headerlink" title="场景6：两个service A/B, A方法调用B方法且都开启了事务（默认级别Propagation.REQUIRED），B方法抛出自定义异常(非Runtime)但是进行了异常捕获"></a>场景6：两个service A/B, A方法调用B方法且都开启了事务（默认级别Propagation.REQUIRED），B方法抛出自定义异常(非Runtime)但是进行了异常捕获</h4><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Transactional</span><span class="token punctuation">(</span>rollbackFor <span class="token operator">=</span> RuntimeException<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addUserV6</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    userMapper<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span>User<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token string">"Jerry"</span><span class="token punctuation">,</span> <span class="token number">26</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    userChannelService<span class="token punctuation">.</span><span class="token function">addUserChannelV6</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Transactional</span><span class="token punctuation">(</span>rollbackFor <span class="token operator">=</span> RuntimeException<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addUserChannelV6</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        userChannelMapper<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span>UserChannel<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"WX"</span><span class="token punctuation">,</span> <span class="token string">"111"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">CustomException</span><span class="token punctuation">(</span><span class="token string">"在不同service内假装抛出自定义异常并捕获"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">CustomException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>以上指定回滚异常为RuntimeException，要是设置为Exception，会是什么结果呢？</p>
+<h4 id="场景7：service-A-a方法调用内部方法b且都开启了事务（默认级别Propagation-REQUIRED），b方法抛出Runtime异常"><a href="#场景7：service-A-a方法调用内部方法b且都开启了事务（默认级别Propagation-REQUIRED），b方法抛出Runtime异常" class="headerlink" title="场景7：service A, a方法调用内部方法b且都开启了事务（默认级别Propagation.REQUIRED），b方法抛出Runtime异常"></a>场景7：service A, a方法调用内部方法b且都开启了事务（默认级别Propagation.REQUIRED），b方法抛出Runtime异常</h4><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Transactional</span><span class="token punctuation">(</span>rollbackFor <span class="token operator">=</span> Exception<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addUserV7</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    userMapper<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span>User<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token string">"Jerry"</span><span class="token punctuation">,</span> <span class="token number">27</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">exception</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token annotation punctuation">@Transactional</span><span class="token punctuation">(</span>rollbackFor <span class="token operator">=</span> Exception<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">exception</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">NullPointerException</span><span class="token punctuation">(</span><span class="token string">"在同个service内假装抛出异常"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h4 id="场景8：service-A-a方法调用内部方法b且都开启了事务（默认级别Propagation-REQUIRED），b方法抛出Runtime异常，且c方法事务指定了隔离级别为Propagation-REQUIRES-NEW"><a href="#场景8：service-A-a方法调用内部方法b且都开启了事务（默认级别Propagation-REQUIRED），b方法抛出Runtime异常，且c方法事务指定了隔离级别为Propagation-REQUIRES-NEW" class="headerlink" title="场景8：service A, a方法调用内部方法b且都开启了事务（默认级别Propagation.REQUIRED），b方法抛出Runtime异常，且c方法事务指定了隔离级别为Propagation.REQUIRES_NEW"></a>场景8：service A, a方法调用内部方法b且都开启了事务（默认级别Propagation.REQUIRED），b方法抛出Runtime异常，且c方法事务指定了隔离级别为Propagation.REQUIRES_NEW</h4><pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Transactional</span><span class="token punctuation">(</span>rollbackFor <span class="token operator">=</span> Exception<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addUserV8</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    userMapper<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span>User<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token string">"Jerry"</span><span class="token punctuation">,</span> <span class="token number">28</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">exceptionV2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token annotation punctuation">@Transactional</span><span class="token punctuation">(</span>rollbackFor <span class="token operator">=</span> Exception<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> propagation <span class="token operator">=</span> Propagation<span class="token punctuation">.</span>REQUIRES_NEW<span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">exceptionV2</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">NullPointerException</span><span class="token punctuation">(</span><span class="token string">"在同个service内假装抛出异常，但是我设置了隔离级别为新建事务，也会回滚"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h2 id="AopProxy代理事务的操作过程"><a href="#AopProxy代理事务的操作过程" class="headerlink" title="AopProxy代理事务的操作过程"></a>AopProxy代理事务的操作过程</h2><p>上面提供了8个场景，在获取测试结果之前，先看下AOP代理事务的操作流程</p>
+<h3 id="Cglib代理过程"><a href="#Cglib代理过程" class="headerlink" title="Cglib代理过程"></a>Cglib代理过程</h3><p>同样，Cglib代理过程也是委托给<code>CglibAopProxy</code>去执行的，那结合上面创建代理对象的流程，我们如何得知代理执行的入口和代理流程呢？</p>
+<p>在Cglib代理对象的创建过程中设置的回调组<code>Callbacks</code>中，回调类如下</p>
+<pre class=" language-java"><code class="language-java">Callback aopInterceptor <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DynamicAdvisedInterceptor</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>advised<span class="token punctuation">)</span><span class="token punctuation">;</span>
+Callback<span class="token punctuation">[</span><span class="token punctuation">]</span> mainCallbacks <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Callback</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token punctuation">{</span>
+        aopInterceptor<span class="token punctuation">,</span>  <span class="token comment" spellcheck="true">// for normal advice</span>
+        targetInterceptor<span class="token punctuation">,</span>  <span class="token comment" spellcheck="true">// invoke target without considering advice, if optimized</span>
+        <span class="token keyword">new</span> <span class="token class-name">SerializableNoOp</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>  <span class="token comment" spellcheck="true">// no override for methods mapped to this</span>
+        targetDispatcher<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>advisedDispatcher<span class="token punctuation">,</span>
+        <span class="token keyword">new</span> <span class="token class-name">EqualsInterceptor</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>advised<span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token keyword">new</span> <span class="token class-name">HashCodeInterceptor</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>advised<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
+<p>结合前面提到的，它一般和<code>CallbackFilter</code>结合使用，<code>CglibAopProxy#accpet</code>在实际调用中,会根据被拦截的方法返回对应的索引，在<code>Callback</code>中会根据索引值拿到对应的回调处理逻辑，其实<code>CglibAopProxy</code>中已经声明了对应静态不可变的成员变量</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> AOP_PROXY <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> INVOKE_TARGET <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> NO_OVERRIDE <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+<span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> DISPATCH_TARGET <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span>
+<span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> DISPATCH_ADVISED <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>
+<span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> INVOKE_EQUALS <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
+<span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> INVOKE_HASHCODE <span class="token operator">=</span> <span class="token number">6</span><span class="token punctuation">;</span></code></pre>
+<p>在<code>org.springframework.cglib.proxy.Enhancer#emitMethods</code>中，会遍历被代理类的方法，并且设置切入点，初始默认会返回<code>AOP_PROXY</code>，即回调处理逻辑将在通用AOP回调<code>DynamicAdvisedInterceptor#intercept</code>中进行，具体看源码即可</p>
+<p>好了，知道了代理的入口，再整理下代理流程</p>
+<ul>
+<li>调用方法<code>method</code>，首先拦截于<code>DynamicAdvisedInterceptor#intercept</code>；</li>
+<li>获取目标类实例<code>targetClass</code>，根据<code>method</code> + <code>targetClass</code>从代理配置管理器<code>AdvisedSupport</code>中获取拦截器（Advice通知）链条<code>chain</code>；</li>
+<li>创建一个Cglib方法调用对象<code>CglibMethodInvocation</code>，执行调用方法<code>proceed</code>，准备调用拦截器链条</li>
+<li><code>CglibMethodInvocation</code>中维护着当前拦截器索引<code>currentInterceptorIndex</code>，当它小于拦截器链条长度时，会自增并依次作为索引条件获取指定拦截器，并执行它的切入点<code>TransactionInterceptor#invoke()</code>，从名字可以看出是一个事务操作的拦截器，当自增到等于拦截器链条长度时，开始真正调用被代理方法；</li>
+<li>接下来会执行<code>TransactionAspectSupport#invokeWithinTransaction</code>，在被代理方法前先开启事务，接着回调到上一步，循环执行拦截器；</li>
+</ul>
+<p><img src="_v_images/20200828124511456_281569522.png" alt="Cglib代理过程"></p>
+<h4 id="事务执行过程"><a href="#事务执行过程" class="headerlink" title="事务执行过程"></a>事务执行过程</h4><blockquote>
+<p>在Spring事务执行中，它提供了抽象事务管理器类<code>AbstractPlatformTransactionManager</code>来处理通用的事务处理流程，而它的子类将做具体的实现，如事务开始，事务提交、事务回滚等，如<code>DataSourceTransactionManager</code>、<code>JpaTransactionManager</code>等。</p>
+</blockquote>
+<p>上面代理执行过程中，在事务拦截器阶段，将会执行一段事务操作，其中最核心的过程和代码片段如下</p>
+<ul>
+<li>开启事务</li>
+<li>执行被代理的业务方法</li>
+<li>异常则回滚事务</li>
+<li>提交事务</li>
+</ul>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">final</span> TransactionAttribute txAttr <span class="token operator">=</span> <span class="token punctuation">(</span>tas <span class="token operator">!=</span> null <span class="token operator">?</span> tas<span class="token punctuation">.</span><span class="token function">getTransactionAttribute</span><span class="token punctuation">(</span>method<span class="token punctuation">,</span> targetClass<span class="token punctuation">)</span> <span class="token operator">:</span> null<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>txAttr <span class="token operator">==</span> null <span class="token operator">||</span> <span class="token operator">!</span><span class="token punctuation">(</span>ptm <span class="token keyword">instanceof</span> <span class="token class-name">CallbackPreferringPlatformTransactionManager</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    TransactionInfo txInfo <span class="token operator">=</span> <span class="token function">createTransactionIfNecessary</span><span class="token punctuation">(</span>ptm<span class="token punctuation">,</span> txAttr<span class="token punctuation">,</span> joinpointIdentification<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    Object retVal<span class="token punctuation">;</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        retVal <span class="token operator">=</span> invocation<span class="token punctuation">.</span><span class="token function">proceedWithInvocation</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Throwable</span> ex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">completeTransactionAfterThrowing</span><span class="token punctuation">(</span>txInfo<span class="token punctuation">,</span> ex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">throw</span> ex<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">finally</span> <span class="token punctuation">{</span>
+        <span class="token function">cleanupTransactionInfo</span><span class="token punctuation">(</span>txInfo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">//...</span>
+
+    <span class="token function">commitTransactionAfterReturning</span><span class="token punctuation">(</span>txInfo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> retVal<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>执行过程很清晰，值得注意的是，在<code>completeTransactionAfterThrowing</code>中，并不一定直接回滚，如果发现当前异常非指定的rollback异常，则会直接<code>commit()</code>，再将异常抛到外部，你觉得此 <code>commit()</code>真的会成功吗？看下面场景5的结果吧！</p>
+<p>再看下回滚事务的代码，位于抽象事务管理器<code>AbstractPlatformTransactionManager#processRollback</code>，有下面几种回滚原因</p>
+<ul>
+<li><p>原因一：如果事务设置了“save point”，即使用了<code>PROPAGATION_NESTED</code>嵌套事务的传播机制，则回滚到“save point”</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">if</span> <span class="token punctuation">(</span>status<span class="token punctuation">.</span><span class="token function">hasSavepoint</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>status<span class="token punctuation">.</span><span class="token function">isDebug</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      logger<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"Rolling back transaction to savepoint"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  status<span class="token punctuation">.</span><span class="token function">rollbackToHeldSavepoint</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+</li>
+<li><p>原因二：如果事务是新开事务（单一事务也算），则直接让该事务回滚</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>status<span class="token punctuation">.</span><span class="token function">isNewTransaction</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>status<span class="token punctuation">.</span><span class="token function">isDebug</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      logger<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"Initiating transaction rollback"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">doRollback</span><span class="token punctuation">(</span>status<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+</li>
+<li><p>原因三：如果当前事务有回滚标志，或者当前事务开启了全局事务回滚</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">if</span> <span class="token punctuation">(</span>status<span class="token punctuation">.</span><span class="token function">hasTransaction</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>status<span class="token punctuation">.</span><span class="token function">isLocalRollbackOnly</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token function">isGlobalRollbackOnParticipationFailure</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>status<span class="token punctuation">.</span><span class="token function">isDebug</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          logger<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"Participating transaction failed - marking existing transaction as rollback-only"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token function">doSetRollbackOnly</span><span class="token punctuation">(</span>status<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>status<span class="token punctuation">.</span><span class="token function">isDebug</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          logger<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"Participating transaction failed - letting transaction originator decide on rollback"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+</li>
+<li><p>原因四：以上几种都属于上述步骤的第三步：异常则回滚事务，即在<code>commit()</code>之前就导致的异常回滚，而当在请求<code>commit()</code>时检测到全局事务被标记了<code>rollback-only</code>，这是一种不期望的行为，也会导致回滚</p>
+</li>
+</ul>
+<p><code>commit()</code>过程的回滚代码，位于<code>AbstractPlatformTransactionManager#commit</code></p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">shouldCommitOnGlobalRollbackOnly</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> defStatus<span class="token punctuation">.</span><span class="token function">isGlobalRollbackOnly</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>defStatus<span class="token punctuation">.</span><span class="token function">isDebug</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        logger<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"Global transaction is marked as rollback-only but transactional code requested commit"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token function">processRollback</span><span class="token punctuation">(</span>defStatus<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>在<code>AbstractPlatformTransactionManager#processRollback</code>中，会直接打印出错误信息：不期望的回滚异常</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">if</span> <span class="token punctuation">(</span>unexpectedRollback<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">UnexpectedRollbackException</span><span class="token punctuation">(</span>
+            <span class="token string">"Transaction rolled back because it has been marked as rollback-only"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<p>由于这里使用的具体实现是<code>DataSourceTransactionManager</code>，故实际的回滚操作<code>doRollback</code>、<code>doSetRollbackOnly</code>将会在其中操作。</p>
+<h2 id="结合代理操作过程得出实践场景结果"><a href="#结合代理操作过程得出实践场景结果" class="headerlink" title="结合代理操作过程得出实践场景结果"></a>结合代理操作过程得出实践场景结果</h2><h3 id="场景1（默认级别Propagation-REQUIRED）"><a href="#场景1（默认级别Propagation-REQUIRED）" class="headerlink" title="场景1（默认级别Propagation.REQUIRED）"></a>场景1（默认级别Propagation.REQUIRED）</h3><ul>
+<li><p>结果：A/B都会回滚（从上一步分析得知，这里属于原因三的回滚行为）</p>
+</li>
+<li><p>总结：A类方法调用B类方法，且都开启事务，若B类方法抛出Runtime异常，则B方法会回滚，而因为和A方法处于同一事务，也导致A方法会回滚。</p>
+</li>
+</ul>
+<h3 id="场景2（默认级别Propagation-REQUIRED）"><a href="#场景2（默认级别Propagation-REQUIRED）" class="headerlink" title="场景2（默认级别Propagation.REQUIRED）"></a>场景2（默认级别Propagation.REQUIRED）</h3><ul>
+<li><p>结果：</p>
+<ul>
+<li>在A方法捕获：A、B会回滚（从上一步分析得知，这里属于原因四的回滚行为）</li>
+<li>在B方法捕获：A、B不会回滚</li>
+</ul>
+</li>
+<li><p>总结：</p>
+<ul>
+<li>A类方法调用B类方法，且都开启事务，若B类方法抛出Runtime异常，并在外层A方法捕获，则B方法会回滚，而因为和A方法的同一事务，也导致A方法会回滚（不管A方法是否有做捕获操作），此时会抛出”Transaction rolled back because it has been marked as rollback-only”</li>
+<li>A类方法调用B类方法，且都开启事务，若B类方法抛出Runtime异常，并在内层捕获，则B方法不会回滚，A方法也不会回滚</li>
+</ul>
+</li>
+</ul>
+<h3 id="场景3（A：默认级别Propagation-REQUIRED，B：Propagation-REQUIRES-NEW）"><a href="#场景3（A：默认级别Propagation-REQUIRED，B：Propagation-REQUIRES-NEW）" class="headerlink" title="场景3（A：默认级别Propagation.REQUIRED，B：Propagation.REQUIRES_NEW）"></a>场景3（A：默认级别Propagation.REQUIRED，B：Propagation.REQUIRES_NEW）</h3><ul>
+<li><p>结果：</p>
+<ul>
+<li>A方法一定不会回滚</li>
+<li>在A方法捕获：B会回滚（从上一步分析得知，这里属于原因二的回滚行为）</li>
+<li>在B方法捕获：B不会回滚</li>
+</ul>
+</li>
+<li><p>总结：</p>
+<ul>
+<li>A类方法调用B类方法，且都开启事务，若B类方法抛出Runtime异常，并在外层A方法捕获，则B方法会回滚，但是因为和A方法不是同一事务，所以A方法不会回滚</li>
+<li>A类方法调用B类方法，且都开启事务，若B类方法抛出Runtime异常，并在内层B方法捕获，则B方法不会回滚，A方法也不会回滚</li>
+</ul>
+</li>
+</ul>
+<h3 id="场景4（A：默认级别Propagation-REQUIRED，B：Propagation-REQUIRES-NEW）"><a href="#场景4（A：默认级别Propagation-REQUIRED，B：Propagation-REQUIRES-NEW）" class="headerlink" title="场景4（A：默认级别Propagation.REQUIRED，B：Propagation.REQUIRES_NEW）"></a>场景4（A：默认级别Propagation.REQUIRED，B：Propagation.REQUIRES_NEW）</h3><ul>
+<li>结果：A/B方法都会回滚（从上一步分析得知，这里B方法的回滚属于原因二的回滚行为）</li>
+</ul>
+<p>可能有些人会有疑问，我已经将B方法设置为开启事务，怎么还会导致A方法回滚呢？<br>很简单，从A方法看起，它指定回滚的异常是<code>Exception</code>，而B方法抛出了NPE异常后又没有捕获，所以尽管B方法开启了新的事务，但是是由A发起的且抛出NPE异常，所以A方法也回滚了。<br>故可以换另一种角度，当A方法指定回滚异常是<code>RuntimeException</code>，而B方法回滚异常为非Runtime异常，此时可以发现A方法并不会回滚！并且B方法指定回滚异常也为<code>RuntimeException</code>，则B方法也不会回滚！</p>
+<ul>
+<li>总结：A类方法调用B类方法，且都开启事务，若B类方法抛出Runtime异常，则A、B方法都会回滚</li>
+</ul>
+<h3 id="场景5（默认级别Propagation-REQUIRED）"><a href="#场景5（默认级别Propagation-REQUIRED）" class="headerlink" title="场景5（默认级别Propagation.REQUIRED）"></a>场景5（默认级别Propagation.REQUIRED）</h3><ul>
+<li>结果：两个方法同时指定回滚异常为RuntimeException，才不会回滚，否则都会回滚</li>
+</ul>
+<p>在上面事务执行过程中，讲到了当前异常非rollback异常时会直接<code>commit()</code>，而此次<code>commit()</code>会不会成功呢？答案是不一定！<br>如果A/B都在同个事务中，并且内层B方法指定异常为<code>RuntimeException</code>，而抛出异常为自定义异常，则会<code>commit()</code>，由于没有捕获异常，故无论外层A方法指定什么异常，A/B方法的业务操作都会一起被回滚！（从上一步分析得知，这里的回滚属于原因二的回滚行为）；那怎样才能让此次<code>commit()</code>成功呢，只要在内层B方法中进行捕获即可</p>
+<ul>
+<li>总结：<ul>
+<li>A类方法(回滚异常为Exception)调用B类方法(回滚异常为RuntimeException)，且都开启事务，若B类方法抛出自定义异常(非Runtime)，则A、B都会回滚;</li>
+<li>A类方法(回滚异常为Exception)调用B类方法(回滚异常为Exception)，且都开启事务，若B类方法抛出自定义异常(非Runtime)，则A、B都会回滚;</li>
+<li>A类方法(回滚异常为RuntimeException)调用B类方法(回滚异常为Exception)，且都开启事务，若B类方法抛出自定义异常(非Runtime)，则A、B都会回滚;</li>
+<li>A类方法(回滚异常为RuntimeException)调用B类方法(回滚异常为RuntimeException)，且都开启事务，若B类方法抛出自定义异常(非Runtime)，则B会回滚，A不会回滚</li>
+</ul>
+</li>
+</ul>
+<h3 id="场景6（默认级别Propagation-REQUIRED）"><a href="#场景6（默认级别Propagation-REQUIRED）" class="headerlink" title="场景6（默认级别Propagation.REQUIRED）"></a>场景6（默认级别Propagation.REQUIRED）</h3><ul>
+<li>结果：不会回滚</li>
+<li>总结：A类方法调用B类方法，且都开启事务，若B类方法抛出自定义异常并且捕获，则不会回滚</li>
+</ul>
+<h3 id="场景7（默认级别Propagation-REQUIRED）"><a href="#场景7（默认级别Propagation-REQUIRED）" class="headerlink" title="场景7（默认级别Propagation.REQUIRED）"></a>场景7（默认级别Propagation.REQUIRED）</h3><ul>
+<li>结果：会回滚（从上一步分析得知，这里的回滚属于原因二的回滚行为）</li>
+<li>总结：在同个类中a方法调用b方法，b方法不会开启新事务，即不会用到事务的传播机制</li>
+</ul>
+<h3 id="场景8（默认级别Propagation-REQUIRED）"><a href="#场景8（默认级别Propagation-REQUIRED）" class="headerlink" title="场景8（默认级别Propagation.REQUIRED）"></a>场景8（默认级别Propagation.REQUIRED）</h3><ul>
+<li>结果：会回滚（从上一步分析得知，这里的回滚属于原因二的回滚行为）</li>
+<li>总结：在同个类中a方法调用b方法，b方法无论设置什么都不会开启新事务，即不会用到事务的传播机制</li>
+</ul>
+
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">阿黑</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://grr.qiujy.com/2020/09/11/springaop-transactional-yuan-ma-jie-xi/">https://grr.qiujy.com/2020/09/11/springaop-transactional-yuan-ma-jie-xi/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">阿黑</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Spring/">
+                                    <span class="chip bg-color">Spring</span>
+                                </a>
+                            
+                                <a href="/tags/Spring-AOP/">
+                                    <span class="chip bg-color">Spring AOP</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.jpg" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+
+            
+        </div>
+    </div>
+
+    
+        <link rel="stylesheet" href="/libs/gitalk/gitalk.css">
+<link rel="stylesheet" href="/css/my-gitalk.css">
+
+<div class="card gitalk-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; padding-left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="gitalk-container" class="card-content"></div>
+</div>
+
+<script src="/libs/gitalk/gitalk.min.js"></script>
+<script>
+    let gitalk = new Gitalk({
+        clientID: 'cd6e78c6a8088a54b9fe',
+        clientSecret: '5f720ffce7dcd390e5709da12f296d6cfeb1614e',
+        repo: 'qJerry.github.io',
+        owner: 'qJerry',
+        admin: "qJerry",
+        id: '2020-09-11T10-13-33',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/2020/09/11/springaop-transactional-yuan-ma-jie-xi/">
+                    <div class="card-image">
+                        
+                        <img src="http://img.qiujy.com/cover1.jpg" class="responsive-img" alt="SpringAOP+Transactional源码解析">
+                        
+                        <span class="card-title">SpringAOP+Transactional源码解析</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Spring AOP + Transactional源码解析Spring AOP应用于多数场景
+
+缓存
+权限
+懒加载
+日志
+事务
+。。。
+
+这一篇将通过AOP源码的实现层面，结合事务的传播机制，来理解AOP是如何管理事务的。
+生成AopPr
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-11
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/SpringAOP/" class="post-category">
+                                    SpringAOP
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Spring/">
+                        <span class="chip bg-color">Spring</span>
+                    </a>
+                    
+                    <a href="/tags/Spring-AOP/">
+                        <span class="chip bg-color">Spring AOP</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2020/08/15/mybatis-yuan-ma-wa-jue-ji-wu-te-xing-zhi-duo-ji-huan-cun/">
+                    <div class="card-image">
+                        
+                        <img src="http://img.qiujy.com/cover_mybatis1.png" class="responsive-img" alt="Mybatis源码挖掘机（五）特性之多级缓存">
+                        
+                        <span class="card-title">Mybatis源码挖掘机（五）特性之多级缓存</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Mybatis内置了一级缓存和二级缓存优化功能，默认开启一级缓存优化。
+一级缓存一级缓存默认开启，它有两个选项：SESSION（仅在一个事务内生效）、STATEMENT（仅在一个statement内生效，相当于没有一级缓存），默认是SESS
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-08-15
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Mybatis%E6%8C%96%E6%8E%98%E6%9C%BA/" class="post-category">
+                                    Mybatis挖掘机
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Mybatis/">
+                        <span class="chip bg-color">Mybatis</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: Jerry Blog<br />'
+            + '文章作者: 阿黑<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="503838841"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+
+    
+    <div class="container row center-align" style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2020</span>
+            <a href="/about" target="_blank">阿黑</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">78.7k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/qJerry" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:mail@qiujy.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/search.xml", 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
