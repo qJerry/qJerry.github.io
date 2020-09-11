@@ -854,7 +854,7 @@ Callback<span class="token punctuation">[</span><span class="token punctuation">
 <li><code>CglibMethodInvocation</code>中维护着当前拦截器索引<code>currentInterceptorIndex</code>，当它小于拦截器链条长度时，会自增并依次作为索引条件获取指定拦截器，并执行它的切入点<code>TransactionInterceptor#invoke()</code>，从名字可以看出是一个事务操作的拦截器，当自增到等于拦截器链条长度时，开始真正调用被代理方法；</li>
 <li>接下来会执行<code>TransactionAspectSupport#invokeWithinTransaction</code>，在被代理方法前先开启事务，接着回调到上一步，循环执行拦截器；</li>
 </ul>
-<p><img src="_v_images/20200828124511456_281569522.png" alt="Cglib代理过程"></p>
+<p><img src="/images/SpringAOP/20200828124511456_281569522.png" alt="Cglib代理过程"></p>
 <h4 id="事务执行过程"><a href="#事务执行过程" class="headerlink" title="事务执行过程"></a>事务执行过程</h4><blockquote>
 <p>在Spring事务执行中，它提供了抽象事务管理器类<code>AbstractPlatformTransactionManager</code>来处理通用的事务处理流程，而它的子类将做具体的实现，如事务开始，事务提交、事务回滚等，如<code>DataSourceTransactionManager</code>、<code>JpaTransactionManager</code>等。</p>
 </blockquote>
