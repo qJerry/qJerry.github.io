@@ -413,14 +413,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    5.7k
+                    6.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    23 分
+                    24 分
                 </div>
                 
 
@@ -1004,6 +1004,42 @@ Callback<span class="token punctuation">[</span><span class="token punctuation">
 <li>结果：会回滚（从上一步分析得知，这里的回滚属于原因二的回滚行为）</li>
 <li>总结：在同个类中a方法调用b方法，b方法无论设置什么都不会开启新事务，即不会用到事务的传播机制</li>
 </ul>
+<h2 id="事务管理范围"><a href="#事务管理范围" class="headerlink" title="事务管理范围"></a>事务管理范围</h2><p>前面讲了事务的传播机制，但是还有一点需要我们注意，即事务管理范围，也和我们日常开发息息相关，这里简单谈一下事务嵌套调用的情况。</p>
+<p>假设serviceA/B，A方法开启了事务，B方法没有开启事务，此时A方法内部调用了B方法，那你认为A方法的事务是在调用B方法之前还是之后关闭？</p>
+<p>看看栗子</p>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Transactional</span><span class="token punctuation">(</span>rollbackFor <span class="token operator">=</span> Exception<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addUserV9</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    userMapper<span class="token punctuation">.</span><span class="token function">selectById</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    userChannelService<span class="token punctuation">.</span><span class="token function">pretendDelayAndError</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserChannelServiceImpl</span> <span class="token keyword">implements</span> <span class="token class-name">UserChannelService</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">pretendDelayAndError</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"假装延时操作"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">{</span>
+            Thread<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">10000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">NullPointerException</span><span class="token punctuation">(</span><span class="token string">"在不同service内假装一个延时操作，并抛出Runtime异常，会回滚"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>得出结果</p>
+<pre><code>Creating a new SqlSession
+Registering transaction synchronization for SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@7bac686b]
+JDBC Connection [HikariProxyConnection@1750490055 wrapping com.mysql.cj.jdbc.ConnectionImpl@37baddde] will be managed by Spring
+==&gt;  Preparing: SELECT user_id,create_time,name,age FROM user WHERE user_id=? 
+==&gt; Parameters: 1(Integer)
+&lt;==    Columns: user_id, create_time, name, age
+&lt;==        Row: 1, null, jerry, 22
+&lt;==      Total: 1
+Releasing transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@7bac686b]
+假装延时操作
+Transaction synchronization deregistering SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@7bac686b]
+Transaction synchronization closing SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@7bac686b]
+
+java.lang.NullPointerException: 在不同service内假装一个延时操作，并抛出Runtime异常，会回滚</code></pre><p>可以看到，在调用B方法之前，事务开始释放，但是此时sqlSession还未关闭占用着，在调用完B方法后，才真正关闭事务中的sqlsession</p>
+<p>业务中极易出现这种问题，进而发现数据库连接资源不够用。那怎么解决上述问题呢？</p>
+<p>答案是service方法尽量不要嵌套调用，需要嵌套调用的可以放到外层，如控制层，或者接口调用。</p>
 
             </div>
             <hr/>
@@ -1267,61 +1303,46 @@ Callback<span class="token punctuation">[</span><span class="token punctuation">
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2020/09/11/springaop-transactional-yuan-ma-jie-xi/">
+                <a href="/2020/11/10/ru-he-cha-kan-java-de-hui-bian-zhi-ling/">
                     <div class="card-image">
                         
-                        <img src="http://img.qiujy.com/cover1.jpg" class="responsive-img" alt="SpringAOP+Transactional源码解析">
+                        <img src="http://img.qiujy.com/onepiece.jpg" class="responsive-img" alt="如何查看JAVA的汇编指令">
                         
-                        <span class="card-title">SpringAOP+Transactional源码解析</span>
+                        <span class="card-title">如何查看JAVA的汇编指令</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Spring AOP + Transactional源码解析Spring AOP应用于多数场景
-
-缓存
-权限
-懒加载
-日志
-事务
-。。。
-
-这一篇将通过AOP源码的实现层面，结合事务的传播机制，来理解AOP是如何管理事务的。
-生成AopPr
+                            如何查看JAVA的汇编指令背景在日常开发时，我们接触最多的就是java代码，进阶会去接触的，就是编译生成的字节码。然而在某些时候我们需要研究JDK更底层的实现时，字节码无法满足我们的需求，于是再进阶去接触汇编指令。
+配置JDK本身支持查看汇
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-09-11
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-11-10
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/SpringAOP/" class="post-category">
-                                    SpringAOP
+                            <a href="/categories/%E5%B7%A5%E5%85%B7/" class="post-category">
+                                    工具
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Spring/">
-                        <span class="chip bg-color">Spring</span>
-                    </a>
-                    
-                    <a href="/tags/Spring-AOP/">
-                        <span class="chip bg-color">Spring AOP</span>
+                    <a href="/tags/JAVA/">
+                        <span class="chip bg-color">JAVA</span>
                     </a>
                     
                 </div>
@@ -1614,7 +1635,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">78.7k</span>&nbsp;字
+                class="white-color">79.4k</span>&nbsp;字
             
             
             
