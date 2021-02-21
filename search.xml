@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>计算线程池最佳线程数</title>
+      <link href="/2021/02/21/ji-suan-xian-cheng-chi-zui-jia-xian-cheng-shu/"/>
+      <url>/2021/02/21/ji-suan-xian-cheng-chi-zui-jia-xian-cheng-shu/</url>
+      
+        <content type="html"><![CDATA[<h1 id="计算线程池最佳线程数"><a href="#计算线程池最佳线程数" class="headerlink" title="计算线程池最佳线程数"></a>计算线程池最佳线程数</h1><p>先看一道题目</p><blockquote><p>假设要求一个系统的TPS（Transaction Per Second或者Task Per Second）至少为20，然后假设每个Transaction由一个线程完成，继续假设平均每个线程处理一个Transaction的时间为4s。那么问题转化为：</p><p>如何设计线程池大小，使得可以在1s内处理完20个Transaction？</p><p>计算过程很简单，每个线程的处理能力为0.25TPS，那么要达到20TPS，显然需要20/0.25=80个线程。</p></blockquote><p>这个理论上成立的，但是实际情况中，一个系统最快的部分是CPU，所以决定一个系统吞吐量上限的是CPU。增强CPU处理能力，可以提高系统吞吐量上限。在考虑时需要把CPU吞吐量加进去。</p><p>在《Java Concurrency in Practice》一书中，给出了估算线程池大小的公式</p><ul><li><p>Nthreads = Ncpu x Ucpu x (1 + W/C)，其中</p></li><li><p>Ncpu = CPU核心数</p></li><li><p>Ucpu = CPU使用率，0~1</p></li><li><p>W/C = 等待时间与计算时间的比率</p></li></ul><p>即线程等待时间所占比例越高，需要越多线程。线程CPU时间所占比例越高，需要越少线程。这就可以划分成两种任务类型：</p><ul><li><p>IO密集型：一般情况下，如果存在IO，那么肯定W/C &gt; 1（阻塞耗时一般都是计算耗时的很多倍），但是需要考虑系统内存有限（每开启一个线程都需要内存空间），这里需要在服务器上测试具体多少个线程数适合（CPU占比、线程数、总耗时、内存消耗）。如果不想去测试，保守点取1即可，Nthreads = Ncpu x (1 + 1) = 2Ncpu。这样设置一般都OK。</p></li><li><p>计算密集型：假设没有等待W = 0，则W/C = 0。 Nthreads = Ncpu。</p></li></ul><p>原文地址：<a href="https://www.cnblogs.com/warehouse/p/10810338.html" target="_blank" rel="noopener">https://www.cnblogs.com/warehouse/p/10810338.html</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 整理 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 线程池 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>记录一次线程池引发的bug</title>
       <link href="/2021/01/16/ji-lu-yi-ci-xian-cheng-chi-yin-fa-de-bug/"/>
       <url>/2021/01/16/ji-lu-yi-ci-xian-cheng-chi-yin-fa-de-bug/</url>

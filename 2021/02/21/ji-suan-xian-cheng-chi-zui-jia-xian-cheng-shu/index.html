@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Netty挖掘机（五）底层连接配置之ChannelOption">
+    <meta name="keywords" content="计算线程池最佳线程数">
     <meta name="description" content="感兴趣的盆友,请关注微信公众号: 进击的阿黑">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -27,7 +27,7 @@
 </script>
 
 
-    <title>Netty挖掘机（五）底层连接配置之ChannelOption | Jerry Blog</title>
+    <title>计算线程池最佳线程数 | Jerry Blog</title>
     <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -253,12 +253,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('http://img.qiujy.com/cover_netty.png')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('http://img.qiujy.com/cover4.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Netty挖掘机（五）底层连接配置之ChannelOption</h1>
+                    <h1 class="description center-align post-title">计算线程池最佳线程数</h1>
                 </div>
             </div>
         </div>
@@ -375,8 +375,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Netty/">
-                                <span class="chip bg-color">Netty</span>
+                            <a href="/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
+                                <span class="chip bg-color">线程池</span>
                             </a>
                         
                     </div>
@@ -387,8 +387,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/Netty%E6%8C%96%E6%8E%98%E6%9C%BA/" class="post-category">
-                                Netty挖掘机
+                            <a href="/categories/%E6%95%B4%E7%90%86/" class="post-category">
+                                整理
                             </a>
                         
                     </div>
@@ -400,7 +400,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-06-02
+                    2021-02-21
                 </div>
                 
 
@@ -409,14 +409,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.2k
+                    470
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    4 分
+                    1 分
                 </div>
                 
 
@@ -431,111 +431,32 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>上两篇主要介绍了如何结合spring和springboot搭建netty脚手架，其中在启动类中，我们通常会通过<code>ServerBootstrap.option</code>或者<code>ServerBootstrap.childOption</code>来配置TCP参数，合理的TCP参数配置对于项目的可用性还是挺重要的！<br /><br><br />那这一次我们来介绍一下Netty的TCP连接的底层参数配置：<code>io.netty.channel.ChannelOption</code><br /></p>
-<p><a name="CxBF8"></a></p>
-<h2 id="ChannelOption套接字配置"><a href="#ChannelOption套接字配置" class="headerlink" title="ChannelOption套接字配置"></a>ChannelOption套接字配置</h2><blockquote>
-<p>Netty中关于套接字选项的设置，在<code>io.netty.channel.ChannelOption</code>这个类中。</p>
+                <h1 id="计算线程池最佳线程数"><a href="#计算线程池最佳线程数" class="headerlink" title="计算线程池最佳线程数"></a>计算线程池最佳线程数</h1><p>先看一道题目</p>
+<blockquote>
+<p>假设要求一个系统的TPS（Transaction Per Second或者Task Per Second）至少为20，然后假设每个Transaction由一个线程完成，继续假设平均每个线程处理一个Transaction的时间为4s。那么问题转化为：</p>
+<p>如何设计线程池大小，使得可以在1s内处理完20个Transaction？</p>
+<p>计算过程很简单，每个线程的处理能力为0.25TPS，那么要达到20TPS，显然需要20/0.25=80个线程。</p>
 </blockquote>
-<br />
-
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>解释</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>SO_BROADCAST</td>
-<td>对应套接字层的套接字：SO_BROADCAST，将消息发送到广播地址。</td>
-</tr>
-<tr>
-<td>如果目标中指定的接口支持广播数据包，则启用此选项可让应用程序发送广播消息。</td>
-<td></td>
-</tr>
-<tr>
-<td>SO_KEEPALIVE</td>
-<td>对应套接字层的套接字：SO_KEEPALIVE，保持连接。</td>
-</tr>
-<tr>
-<td>在空闲套接字上发送探测，以验证套接字是否仍处于活动状态。</td>
-<td></td>
-</tr>
-<tr>
-<td>SO_SNDBUF</td>
-<td>对应套接字层的套接字：SO_SNDBUF，设置发送缓冲区的大小。</td>
-</tr>
-<tr>
-<td>SO_RCVBUF</td>
-<td>对应套接字层的套接字：SO_RCVBUF，获取接收缓冲区的大小。</td>
-</tr>
-<tr>
-<td>SO_REUSEADDR</td>
-<td>对应套接字层的套接字：SO_REUSEADDR，本地地址复用。</td>
-</tr>
-<tr>
-<td>启用此选项允许绑定已使用的本地地址。</td>
-<td></td>
-</tr>
-<tr>
-<td>SO_LINGER</td>
-<td>对应套接字层的套接字：SO_LINGER，延迟关闭连接。</td>
-</tr>
-<tr>
-<td>启用此选项，在调用close时如果存在未发送的数据时，在close期间将阻止调用应用程序，直到数据被传输或连接超时。</td>
-<td></td>
-</tr>
-<tr>
-<td>SO_BACKLOG</td>
-<td>对应TCP/IP协议中_backlog_参数，_backlog_即连接队列，设置TCP中的连接队列大小。如果队列满了，会发送一个ECONNREFUSED错误信息给C端，即“ Connection refused”。</td>
-</tr>
-<tr>
-<td>SO_TIMEOUT</td>
-<td>等待客户连接的超时时间。</td>
-</tr>
-<tr>
-<td>IP_TOS</td>
-<td>对应套接字层的套接字：IP_TOS，在IP标头中设置服务类型（TOS）和优先级。</td>
-</tr>
-<tr>
-<td>IP_MULTICAST_ADDR</td>
-<td>对应IP层的套接字选项：IP_MULTICAST_IF，设置应发送多播数据报的传出接口。</td>
-</tr>
-<tr>
-<td>IP_MULTICAST_IF</td>
-<td>对应IP层的套接字选项：IP_MULTICAST_IF2，设置应发送多播数据报的IPV6传出接口。</td>
-</tr>
-<tr>
-<td>IP_MULTICAST_TTL</td>
-<td>对应IP层的套接字选项：IP_MULTICAST_TTL，在传出的 多播数据报的IP头中设置生存时间（TTL）。</td>
-</tr>
-<tr>
-<td>IP_MULTICAST_LOOP_DISABLED</td>
-<td>取消 指定应将 传出的多播数据报的副本 回传到发送主机，只要它是多播组的成员即可。</td>
-</tr>
-<tr>
-<td>TCP_NODELAY</td>
-<td>对应TCP层的套接字选项：TCP_NODELAY，指定TCP是否遵循Nagle算法 决定何时发送数据。Nagle算法代表通过减少必须发送包的个数来增加网络软件系统的效率。即尽可能发送大块数据避免网络中充斥着大量的小数据块。如果要追求高实时性，需要设置关闭Nagle算法；如果需要追求减少网络交互次数，则设置开启Nagle算法。</td>
-</tr>
-</tbody></table>
-<br />
-<a name="K19pV"></a>
-## ChannelOption通用配置
-| 参数 | 解释 |
-| --- | --- |
-| ALLOCATOR | ByteBuf的分配器，默认值为ByteBufAllocator.DEFAULT。 |
-| RCVBUF_ALLOCATOR | 用于Channel分配接受Buffer的分配器，默认值为AdaptiveRecvByteBufAllocator.DEFAULT，是一个自适应的接受缓冲区分配器，能根据接受到的数据自动调节大小。可选值为FixedRecvByteBufAllocator，固定大小的接受缓冲区分配器。 |
-| MESSAGE_SIZE_ESTIMATOR | 消息大小估算器，默认为DefaultMessageSizeEstimator.DEFAULT。估算ByteBuf、ByteBufHolder和FileRegion的大小，其中ByteBuf和ByteBufHolder为实际大小，FileRegion估算值为0。该值估算的字节数在计算水位时使用，FileRegion为0可知FileRegion不影响高低水位。 |
-| CONNECT_TIMEOUT_MILLIS | 连接超时毫秒数，默认值30000毫秒即30秒。 |
-| WRITE_SPIN_COUNT | 一个Loop写操作执行的最大次数，默认值为16。也就是说，对于大数据量的写操作至多进行16次，如果16次仍没有全部写完数据，此时会提交一个新的写任务给EventLoop，任务将在下次调度继续执行。这样，其他的写请求才能被响应不会因为单个大数据量写请求而耽误。 |
-| WRITE_BUFFER_WATER_MARK |  |
-| ALLOW_HALF_CLOSURE | 一个连接的远端关闭时本地端是否关闭，默认值为False。值为False时，连接自动关闭；为True时，触发ChannelInboundHandler的userEventTriggered()方法，事件为ChannelInputShutdownEvent。 |
-| AUTO_READ | 自动读取，默认值为True。Netty只在必要的时候才设置关心相应的I/O事件。对于读操作，需要调用channel.read()设置关心的I/O事件为OP_READ，这样若有数据到达才能读取以供用户处理。该值为True时，每次读操作完毕后会自动调用channel.read()，从而有数据到达便能读取；否则，需要用户手动调用channel.read()。需要注意的是：当调用config.setAutoRead(boolean)方法时，如果状态由false变为true，将会调用channel.read()方法读取数据；由true变为false，将调用config.autoReadCleared()方法终止数据读取。 |
-| AUTO_CLOSE |  |
-
-
-
-
+<p>这个理论上成立的，但是实际情况中，一个系统最快的部分是CPU，所以决定一个系统吞吐量上限的是CPU。增强CPU处理能力，可以提高系统吞吐量上限。在考虑时需要把CPU吞吐量加进去。</p>
+<p>在《Java Concurrency in Practice》一书中，给出了估算线程池大小的公式</p>
+<ul>
+<li><p>Nthreads = Ncpu x Ucpu x (1 + W/C)，其中</p>
+</li>
+<li><p>Ncpu = CPU核心数</p>
+</li>
+<li><p>Ucpu = CPU使用率，0~1</p>
+</li>
+<li><p>W/C = 等待时间与计算时间的比率</p>
+</li>
+</ul>
+<p>即线程等待时间所占比例越高，需要越多线程。线程CPU时间所占比例越高，需要越少线程。这就可以划分成两种任务类型：</p>
+<ul>
+<li><p>IO密集型：一般情况下，如果存在IO，那么肯定W/C &gt; 1（阻塞耗时一般都是计算耗时的很多倍），但是需要考虑系统内存有限（每开启一个线程都需要内存空间），这里需要在服务器上测试具体多少个线程数适合（CPU占比、线程数、总耗时、内存消耗）。如果不想去测试，保守点取1即可，Nthreads = Ncpu x (1 + 1) = 2Ncpu。这样设置一般都OK。</p>
+</li>
+<li><p>计算密集型：假设没有等待W = 0，则W/C = 0。 Nthreads = Ncpu。</p>
+</li>
+</ul>
+<p>原文地址：<a href="https://www.cnblogs.com/warehouse/p/10810338.html" target="_blank" rel="noopener">https://www.cnblogs.com/warehouse/p/10810338.html</a></p>
 
             </div>
             <hr/>
@@ -561,7 +482,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://grr.qiujy.com/2020/06/02/netty-wa-jue-ji-wu-di-ceng-lian-jie-pei-zhi-zhi-channeloption/">https://grr.qiujy.com/2020/06/02/netty-wa-jue-ji-wu-di-ceng-lian-jie-pei-zhi-zhi-channeloption/</a>
+                    <a href="https://grr.qiujy.com/2021/02/21/ji-suan-xian-cheng-chi-zui-jia-xian-cheng-shu/">https://grr.qiujy.com/2021/02/21/ji-suan-xian-cheng-chi-zui-jia-xian-cheng-shu/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -599,8 +520,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/Netty/">
-                                    <span class="chip bg-color">Netty</span>
+                                <a href="/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
+                                    <span class="chip bg-color">线程池</span>
                                 </a>
                             
                         </div>
@@ -771,7 +692,7 @@
         repo: 'qJerry.github.io',
         owner: 'qJerry',
         admin: "qJerry",
-        id: '2020-06-02T08-37-14',
+        id: '2021-02-21T14-34-40',
         distractionFreeMode: false  // Facebook-like distraction free mode
     });
 
@@ -795,47 +716,49 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2020/06/02/netty-wa-jue-ji-liu-shi-me-shi-reactor-io-style/">
+                <a href="/2021/02/21/ji-suan-xian-cheng-chi-zui-jia-xian-cheng-shu/">
                     <div class="card-image">
                         
-                        <img src="http://img.qiujy.com/cover_netty.png" class="responsive-img" alt="Netty挖掘机（六）什么是Reactor_IO_Style">
+                        <img src="http://img.qiujy.com/cover4.jpg" class="responsive-img" alt="计算线程池最佳线程数">
                         
-                        <span class="card-title">Netty挖掘机（六）什么是Reactor_IO_Style</span>
+                        <span class="card-title">计算线程池最佳线程数</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            前面几篇文章讲解的内容都是偏向表面，比如介绍了JAVA NIO，Netty的实现流程，实现一套基于Spring+Netty的API服务模块等。 接下来开始深入挖掘，汲取Netty底层的设计思想和引用的优秀的框架、原理等。
+                            计算线程池最佳线程数先看一道题目
 
-总之，拭目以待吧
+假设要求一个系统的TPS（Transaction Per Second或者Task Per Second）至少为20，然后假设每个Transaction由一个线程完成，继续假设平均每个线程处理一个Tran
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-06-02
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-02-21
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Netty%E6%8C%96%E6%8E%98%E6%9C%BA/" class="post-category">
-                                    Netty挖掘机
+                            <a href="/categories/%E6%95%B4%E7%90%86/" class="post-category">
+                                    整理
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Netty/">
-                        <span class="chip bg-color">Netty</span>
+                    <a href="/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
+                        <span class="chip bg-color">线程池</span>
                     </a>
                     
                 </div>
@@ -849,30 +772,34 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/05/31/netty-wa-jue-ji-si-jie-he-springboot-da-jian-netty-jiao-shou-jia/">
+                <a href="/2021/01/16/ji-lu-yi-ci-xian-cheng-chi-yin-fa-de-bug/">
                     <div class="card-image">
                         
-                        <img src="http://img.qiujy.com/cover_netty.png" class="responsive-img" alt="Netty挖掘机（四）结合springboot搭建netty脚手架">
+                        <img src="http://img.qiujy.com/cover4.jpg" class="responsive-img" alt="记录一次线程池引发的bug">
                         
-                        <span class="card-title">Netty挖掘机（四）结合springboot搭建netty脚手架</span>
+                        <span class="card-title">记录一次线程池引发的bug</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            上文《Netty挖掘机（三）结合spring搭建netty脚手架》，结合Spring+Netty实现API接口服务模块，本文继续码字，以Springboot的方式接入Netty实现API接口服务。我们知道，spring-boot-start
+                            记录一次线程池引发的bug背景
+系统中存在多数的调度任务执行
+
+项目使用的微服务架构是Spring Cloud，系统中服务间调用通过token来鉴权，即在header上添加token。于是就用上个了Threadlocal来管理token
+ 
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-05-31
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-01-16
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Netty%E6%8C%96%E6%8E%98%E6%9C%BA/" class="post-category">
-                                    Netty挖掘机
+                            <a href="/categories/BUG/" class="post-category">
+                                    BUG
                                 </a>
                             
                             
@@ -882,8 +809,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Netty/">
-                        <span class="chip bg-color">Netty</span>
+                    <a href="/tags/JAVA/">
+                        <span class="chip bg-color">JAVA</span>
+                    </a>
+                    
+                    <a href="/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
+                        <span class="chip bg-color">线程池</span>
                     </a>
                     
                 </div>
